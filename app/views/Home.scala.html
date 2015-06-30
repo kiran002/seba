@@ -1,4 +1,4 @@
-@(hasLoggedIn: Boolean)
+@(hasLoggedIn: Boolean, lists: List[models.Listings])
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,131 +14,156 @@
 </head>
 
 <body>
-<div class="container">
-  @navbar(hasLoggedIn)
-  <div class="row">
-    <div class="pull-left">
-      <h3>Offers</h3>
-    </div>
-    <div class="pull-right pad-top-25">
-      <b>3  result(s) </b> <!-- TODO: Make it dynamic - Include value based on search, replace 3 -->
-    </div>
-    <div class="clearfix"></div>
-    <hr/>
+	<div class="container">
+		<!-- Navigation bar code -->
+		@navbar(hasLoggedIn)
+		
+		<!-- Search criteria area -->
+		<div class="row">
+			<div class="col-md-3" style="text-align:center">
+				<h3>Search</h3>
+			</div>
+			
+			<div class="col-md-6">
+				<h3>Latest Offers and Requests</h3>
+			</div>
+			<div class="pull-right pad-top-25">
+				<b>3 result(s) </b>
+				<!-- TODO: Make it dynamic - Include value based on search, replace 3 -->
+			</div>
+			<div class="clearfix"></div>
+			<hr />
 
-    <div class="col-md-3 well">
-    <form>
-  <div class="form-group">
-    <label>Keywords</label>
-    <input type="text" class="form-control" placeholder="e.g. flat, bike">
-  </div>
-  <div class="form-group">
-    <label>Category</label>
-    <select class="form-control">
-      <option></option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label>Offer type</label>
-    <select class="form-control">
-      <option></option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label>Price (EUR)</label>
-    <div class="row">
-      <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Maximum">
-      </div>
-      <div class="col-md-6">
-        <select class="form-control">
-          <option></option>
-        </select>
-      </div>
-    </div>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox"> Negotiable price
-      </label>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>Availability</label>
-    <div class="input-group" id="from">
-      <div class="input-group-addon">Start</div>
-      <input type="text" class="form-control" placeholder="25.03.2014">
-      <div class="input-group-addon">
-        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-      </div>
-    </div>
-    <br/>
-    <div class="input-group" id="to">
-      <div class="input-group-addon">End</div>
-      <input type="text" class="form-control" placeholder="25.03.2014">
-      <div class="input-group-addon">
-        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-      </div>
-    </div>
-  </div>
-  <button type="submit" class="btn btn-success btn-block">
-    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
-  </button>
-</form>
-    
-    </div>
+			<div class="col-md-3 well">
+				<form>
+					<div class="form-group">
+						<label>Keywords</label> <input type="text" class="form-control"
+							placeholder="e.g. flat, bike">
+					</div>
+					<div class="form-group">
+						<label>Category</label> <select class="form-control">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Offer type</label> <select class="form-control">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Price (EUR)</label>
+						<div class="row">
+							<div class="col-md-6">
+								<input type="text" class="form-control" placeholder="Maximum">
+							</div>
+							<div class="col-md-6">
+								<select class="form-control">
+									<option></option>
+								</select>
+							</div>
+						</div>
+						<div class="checkbox">
+							<label> <input type="checkbox"> Negotiable price
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Availability</label>
+						<div class="input-group" id="from">
+							<div class="input-group-addon">Start</div>
+							<input type="text" class="form-control" placeholder="25.03.2014">
+							<div class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+							</div>
+						</div>
+						<br />
+						<div class="input-group" id="to">
+							<div class="input-group-addon">End</div>
+							<input type="text" class="form-control" placeholder="25.03.2014">
+							<div class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-success btn-block">
+						<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+						Search
+					</button>
+				</form>
 
-<!-- Display the list of search fields -->
-    <div class="col-md-6">
-    <!-- Add for loop to add values here based on search result  TODO-->
-      <div class="media" >
-        <div class="media-left">
-          <a href="#">
-            <img width="100" height="100" class="media-object" src="" alt="Display offer img">
-          </a>
-        </div>
-        <div class="media-body">
-          <div class="pull-left"><a href=""><h4 class="media-heading">Offer name</h4></a></div>
-          <div class="pull-right"><span class="label label-warning">Sponsored</span></div>
-          <div class="clearfix"></div>
-          <p>Description of offer: </p>
-          <b>offer.price EUR / offer.pricePeriod</b>
-        </div>
-      </div>
-    </div>
+			</div>
 
-    <div class="col-md-3">
-	    <div class="well">
-		    
-		  <a href="http://nic.tech/?utm_source=aw&utm_medium=banner&utm_campaign=New_DEV_ST_H" target="_blank">
-			  <img border="0" width="100%" height="350px" class="img_ad" 
-			  alt="Want to advertise on our site? We offer access to university staff, students and alumni." 
-			  src="/assets/images/Tech_Revolution.gif">  
-		  </a>  
+			<!-- Display the list of search fields -->
+			<div class="col-md-6">
+				<!-- Add for loop to add values here based on search result  TODO-->
+				@for(index <- 0 until lists.size) {
+					<div class="media">
+						<div class="media-left">
+							<a href="#"> <img width="100" height="100"
+								class="media-object" src="" alt="Image">
+							</a>
+						</div>
+						<div class="media-body">
+							<div class="pull-left">
+								<a href=""><h4 class="media-heading">@lists(index).Name</h4></a>
+							</div>
+							<div class="pull-right">
+								<span class="label label-warning">Sponsored</span>
+							</div>
+							<div class="clearfix"></div>
+							<p>@lists(index).Description</p>
+							<b>@lists(index).Price</b>
+							<b>@lists(index).PricePeriod</b>
+						</div>
+					</div>
+				}
+				
+			</div>
+
+			<div class="col-md-3">
+				<div class="well">
+
+					<a
+						href="http://nic.tech/?utm_source=aw&utm_medium=banner&utm_campaign=New_DEV_ST_H"
+						target="_blank"> <img border="0" width="100%" height="350px"
+						class="img_ad"
+						alt="Want to advertise on our site? We offer access to university staff, students and alumni."
+						src="/assets/images/Tech_Revolution.gif">
+					</a>
+				</div>
+			</div>
 		</div>
-    </div>
-  </div>
-</div>
+	</div>
 
-<script type="text/javascript">
-  $(function(){
-    $('#from').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
-    $('#to').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
-    $('#expire').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
+	<script type="text/javascript">
+		$(function() {
+			$('#from').datetimepicker({
+				minDate : moment(),
+				format : 'DD.MM.YYYY'
+			});
+			$('#to').datetimepicker({
+				minDate : moment(),
+				format : 'DD.MM.YYYY'
+			});
+			$('#expire').datetimepicker({
+				minDate : moment(),
+				format : 'DD.MM.YYYY'
+			});
 
-    $("#from").on("dp.change", function (e) {
-      $('#from').val(e.date.format('DD.MM.YYYY'));
-      $('#to').data("DateTimePicker").minDate(e.date);
-    });
-    $("#to").on("dp.change", function (e) {
-      $('#to').val(e.date.format('DD.MM.YYYY'));
-      $('#from').data("DateTimePicker").maxDate(e.date);
-      $('#expire').data("DateTimePicker").minDate(e.date);
-    });
-    $("#expire").on("dp.change", function (e) {
-      $('#expire').val(e.date.format('DD.MM.YYYY'));
-    });
-  });
-</script>
+			$("#from").on("dp.change", function(e) {
+				$('#from').val(e.date.format('DD.MM.YYYY'));
+				$('#to').data("DateTimePicker").minDate(e.date);
+			});
+			$("#to").on("dp.change", function(e) {
+				$('#to').val(e.date.format('DD.MM.YYYY'));
+				$('#from').data("DateTimePicker").maxDate(e.date);
+				$('#expire').data("DateTimePicker").minDate(e.date);
+			});
+			$("#expire").on("dp.change", function(e) {
+				$('#expire').val(e.date.format('DD.MM.YYYY'));
+			});
+		});
+	</script>
 
 
 </body>

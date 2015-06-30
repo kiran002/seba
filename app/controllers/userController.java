@@ -12,6 +12,9 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import java.util.*;
+import models.*;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class userController extends Controller {
@@ -144,7 +147,8 @@ public class userController extends Controller {
 													// already activate his
 													// account
 						session("usrid", "" + user.UserId);
-						return ok(views.html.Home.render(true));
+						List<Listings> allLists= ListingController.getNewListings();
+						return ok(views.html.Home.render(true, allLists));
 						
 					} else {
 						result.put("user", toJson(user)); // TODO @Efe analize

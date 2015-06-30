@@ -1,6 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.*;
+import models.*;
 
 import java.util.*;
 
@@ -59,6 +61,11 @@ public class ListingController extends Controller {
 		}
 		return pairs;
 	}
+	
+	@play.db.jpa.Transactional
+	public static List<Listings> getNewListings() {
+		return models.Listings.findAll();
+	}	
 
 	@play.db.jpa.Transactional
 	public Result createListing() {
