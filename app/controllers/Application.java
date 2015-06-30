@@ -15,6 +15,10 @@ public class Application extends Controller {
     	}
         return ok(views.html.Home.render(false));
     }
+    
+    public Result catchAll(String path) {
+    	return ok(views.html.Home.render(false));
+    }
 
  
     public static ObjectNode defaultError(String message){
