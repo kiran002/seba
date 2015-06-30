@@ -50,7 +50,7 @@ public class userController extends Controller {
 										// change in db or models
 						Logger.info(this.toString() + " in: User saved");
 						
-						return ok(views.html.login.render(user, 200));
+						return ok(views.html.login.render(true, user));
 						// return ok(result);
 					} else
 						return badRequest(Application
@@ -144,7 +144,8 @@ public class userController extends Controller {
 													// already activate his
 													// account
 						session("usrid", "" + user.UserId);
-						return ok(views.html.login.render(user, 200));
+						return ok(views.html.Home.render(true));
+						
 					} else {
 						result.put("user", toJson(user)); // TODO @Efe analize
 															// how to manage
@@ -155,7 +156,7 @@ public class userController extends Controller {
 						result.put(
 								"data",
 								"Welcome to Stumark. Please activate your account so you can use our services. ");
-						return ok(result);
+						return ok(views.html.login.render(false, user));
 					}
 
 				} else

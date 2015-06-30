@@ -1,4 +1,4 @@
-@(users: models.Users, status:Integer)
+@(hasLoggedIn: Boolean, users: models.Users)
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +14,7 @@
 <body>
 
 <div class="container">
-		@if(status == 200) { @navbar(true) } else { @navbar(false) }
+		@if(hasLoggedIn) { @navbar(true) } else { @navbar(false) }
 <div class="row">
     <h3>Login</h3>
     <hr/>

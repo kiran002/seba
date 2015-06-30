@@ -11,23 +11,21 @@ public class login extends Controller {
 	public Result index() {
 		if (session("usrid") != null && session("usrid").length() > 0) {
 			Logger.info(session("usrid") + " something is wrong");
-			return ok(views.html.login.render(
-					userController.getUser(Integer.parseInt(session("usrid"))),
-					200));
+			return ok(views.html.Home.render(true));
 		}
-		return ok(views.html.login.render(null, 201));
+		return ok(views.html.login.render(false, null));
 	}
 
 	public Result logout() {
 		try {
 			if (session("usrid") != null) {
 				session().clear();
-				return ok(views.html.login.render(null, 201));
+				return ok(views.html.login.render(false, null));
 			}
 		} catch (Exception e) {
-			return ok(views.html.login.render(null, 201));
+			return ok(views.html.login.render(false, null));
 		}
-		return ok(views.html.login.render(null, 201));
+		return ok(views.html.login.render(false, null));
 
 	}
 

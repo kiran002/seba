@@ -25,7 +25,11 @@ public class ListingController extends Controller {
 	ObjectNode result = Json.newObject();
 
 	public Result index() {
-		return ok(views.html.addListing.render());
+		
+		if(session("usrid")!=null && session("usrid").length() > 0) {
+    		return ok(views.html.addListing.render(true));
+    	}
+		return ok(views.html.addListing.render(false));
 	}
 
 	@play.db.jpa.Transactional
