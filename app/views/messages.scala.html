@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>StuMark Home</title>
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap-datetimepicker.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/app.css")">
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+<script src="@routes.Assets.versioned("javascripts/jquery.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/moment-with-locales.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="container">
+    <div>
+  <nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
+	    <div class="container">
+	        <div class="navbar-header">
+	            <a class="navbar-brand" href="/">
+	                <img alt="Stumark logo" src="/assets/images/stumark_alt.png">
+	            </a>
+	        </div>
+	        <div id="navbar" class="navbar-collapse collapse">
+	
+	            <ul class="nav navbar-nav">
+	                <li><a href="/">Offers</a></li>
+	                <li><a href="/requests">Requests</a></li>
+	            </ul>
+	
+	            <ul class="nav navbar-nav navbar-right">
+	                <li><a href="/messages">Messages <span class="badge">(5 TODO)</span></a></li>
+	                <li class="dropdown">
+	                    <a href="#!" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+	                        TODO: First
+	                        <span class="caret"></span>
+	                    </a>
+	                    <ul class="dropdown-menu" role="menu">
+	                        <li><a href="/profile">Profile</a></li>
+	                        <li><a href="/">Logout</a></li>
+	                    </ul>
+	                </li>
+	            </ul>
+	
+	            <div class="navbar-form navbar-right">
+	                <a class="btn btn-default" href="/login">Login</a>
+	                <a class="btn btn-success" href="/register">Register</a>
+	            </div>
+	
+	            <div class="navbar-form navbar-right">
+	                <a class="btn btn-default" href="/add_listing">
+	                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Listing
+	                </a>
+	            </div>
+	
+	        </div>
+	    </div>
+	</nav>
+	<div class="alert alert-dismissible"></div>
+  
+  </div>
+
+    <div class="row">
+        <div class="pull-left">
+            <h3>Messages</h3>
+        </div>
+        <div class="pull-right pad-top-25">
+	      <!-- <b>{{messages.length}} message(s) </b> -->
+	      <b>3 message(s) </b>
+	    </div>
+        <div class="clearfix"></div>
+        <hr/>
+
+        <div class="col-md-3 well">
+            <div class="form-group">
+                <input type="text" id="filter" placeholder="Filter" class="form-control">                
+            </div>            
+        </div>
+
+        <div class="col-md-6">
+        	<h4 style="text-align:center; font-weight: 900;">Summary of Messages</h4>
+            <table class="table">
+            <tbody class="searchable">
+                <tr>
+                        <td>Kiran</td>
+                        <td>Motor Cycle</td>
+                        <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#view_offer_details" data-backdrop="false">
+                                View Offer Details
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#response_message" data-backdrop="false">Respond</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fabi</td>
+                        <td>2 Bedroom flat</td>
+                        <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#view_offer_details" data-backdrop="false">
+                                View Offer Details
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#response_message" data-backdrop="false">Respond</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Efe</td>
+                        <td>Motor Boat</td>
+                        <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#view_offer_details" data-backdrop="false">
+                                View Offer Details
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#response_message" data-backdrop="false">Respond</button>
+                        </td>
+                    </tr>
+            </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-3">
+	    <div class="well">
+		    
+		  <a href="http://nic.tech/?utm_source=aw&utm_medium=banner&utm_campaign=New_DEV_ST_H" target="_blank">
+			  <img border="0" width="100%" height="350px" class="img_ad" 
+			  alt="Want to advertise on our site? We offer access to university staff, students and alumni." 
+			  src="/assets/images/Tech_Revolution.gif">  
+		  </a>  
+		</div>
+    </div>
+
+        <div class="modal fade" id="view_offer_details" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog standard-modal">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h2 style="text-align: center">Offer Details</h2>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <table class="table">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Material</th>
+                                        <th>Renting type</th>
+                                        <th>Valid Until</th>
+                                        <th>Price</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Kevin</td>
+                                        <td>Motor Boat</td>
+                                        <td>Daily Rent</td>
+                                        <td>14/July/2015</td>
+                                        <td>5 Euro</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="response_message" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog standard-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h2 style="text-align: center">Respond to the offer</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                        	<textarea class="col-sm-12" style="min-height: 250px;" id="user_text" placeholder="Enter response message"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <button class="btn btn-default pull-left">
+                                    Close
+                                </button>
+                                <button class="btn btn-primary pull-right">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        (function ($) {
+
+            $('#filter').keyup(function () {
+
+                var rex = new RegExp($(this).val(), 'i');
+                $('.searchable tr').hide();
+                $('.searchable tr').filter(function () {
+                    return rex.test($(this).text());
+                }).show();
+
+            })
+
+        }(jQuery));
+
+    });
+</script>
+
+
+</body>
+</html>

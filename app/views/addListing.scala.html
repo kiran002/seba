@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>StuMark Home</title>
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap-datetimepicker.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/app.css")">
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+<script src="@routes.Assets.versioned("javascripts/jquery.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/moment-with-locales.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="container">
+  <div>
+  <nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
+	    <div class="container">
+	        <div class="navbar-header">
+	            <a class="navbar-brand" href="/">
+	                <img alt="Stumark logo" src="/assets/images/stumark_alt.png">
+	            </a>
+	        </div>
+	        <div id="navbar" class="navbar-collapse collapse">
+	
+	            <ul class="nav navbar-nav">
+	                <li><a href="/">Offers</a></li>
+	                <li><a href="/requests">Requests</a></li>
+	            </ul>
+	
+	            <ul class="nav navbar-nav navbar-right">
+	                <li><a href="/messages">Messages <span class="badge">(5 TODO)</span></a></li>
+	                <li class="dropdown">
+	                    <a href="#!" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+	                        TODO: First lastname
+	                        <span class="caret"></span>
+	                    </a>
+	                    <ul class="dropdown-menu" role="menu">
+	                        <li><a href="/profile">Profile</a></li>
+	                        <li><a href="/">Logout</a></li>
+	                    </ul>
+	                </li>
+	            </ul>
+	
+	            <div class="navbar-form navbar-right">
+	                <a class="btn btn-default" href="/login">Login</a>
+	                <a class="btn btn-success" href="/register">Register</a>
+	            </div>
+	
+	            <div class="navbar-form navbar-right">
+	                <a class="btn btn-default" href="/add_listing">
+	                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Listing
+	                </a>
+	            </div>
+	
+	        </div>
+	    </div>
+	</nav>
+	<div class="alert alert-dismissible"></div>
+  
+  </div>
+  <div class="row">
+    <h3>Add Listing</h3>
+	<hr>
+<!-- Add listing details to database using post form method -->
+    <form name="addListing" novalidate class="form-horizontal">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="form-group">
+            <label class="col-md-4 control-label">Listing type</label>
+            <div class="col-md-8">
+              <select class="form-control" required>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label">Item name</label>
+            <div class="col-md-8">
+              <input type="text" class="form-control" placeholder="Item name" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label">Category</label>
+            <div class="col-md-8">
+              <select class="form-control" required>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label">Description</label>
+            <div class="col-md-8">
+              <textarea class="form-control" rows="4" required></textarea>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="row">
+          <div class="form-group">
+            <label class="col-md-4 control-label">Transaction type</label>
+            <div class="col-md-8">
+              <select class="form-control" required>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label">Price</label>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Price" required>
+                    <div class="input-group-addon">EUR</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <select class="form-control" required>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label">Item availability</label>
+            <div class="col-md-8">
+              <div class="input-group" id="from">
+                <div class="input-group-addon">From</div>
+                <input type="text" class="form-control" >
+                <div class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                </div>
+              </div>
+              <br/>
+              <div class="input-group" id="to">
+                <div class="input-group-addon">Until</div>
+                <input type="text" class="form-control" >
+                <div class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label">Listing expiry</label>
+            <div class="col-md-8">
+              <div class="input-group" id="expire">
+                <input type="text" class="form-control" >
+                <div class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- TODO: Many changed are required here -->
+<div class="row">
+    <div>
+      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+        Add Image
+      </button>
+      <a href="/" class="btn btn-success">Finish</a>
+    </div>
+
+    <div class="col-md-3">
+      <div class="thumbnail">
+        <img src="{{image.path}}" width="200" height="200">
+        <div class="caption">
+          <p><a href="#" class="btn btn-danger btn-sm btn-block" role="button">Remove</a> </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="form-group">
+            <div class="col-md-offset-4 col-md-4">
+              <button type="submit" class="btn btn-success">
+                Post offer
+              </button>
+            </div>
+          </div>
+    </form>
+  	
+  
+  </div>
+
+</div>
+
+<script type="text/javascript">
+  $(function(){
+    $('#from').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
+    $('#to').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
+    $('#expire').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
+
+    $("#from").on("dp.change", function (e) {
+      $('#from').val(e.date.format('DD.MM.YYYY'));
+      $('#to').data("DateTimePicker").minDate(e.date);
+    });
+    $("#to").on("dp.change", function (e) {
+      $('#to').val(e.date.format('DD.MM.YYYY'));
+      $('#from').data("DateTimePicker").maxDate(e.date);
+      $('#expire').data("DateTimePicker").minDate(e.date);
+    });
+    $("#expire").on("dp.change", function (e) {
+      $('#expire').val(e.date.format('DD.MM.YYYY'));
+    });
+  });
+</script>
+
+
+</body>
+</html>
