@@ -7,7 +7,7 @@ GET     /                           controllers.Application.index()
 GET     /login                 		controllers.login.index()
 
 GET     /logout                		controllers.login.logout()
-POST    /login                 		controllers.userController.login()
+POST    /home                 		controllers.userController.login()
 
 GET     /register                 	controllers.userController.index()
 POST    /register                   controllers.userController.createUser()
