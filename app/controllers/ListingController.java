@@ -1,12 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.*;
-import models.*;
 
-import models.Listings;
-import models.Pictures;
-import models.Users;
+import java.util.*;
+
+import models.*;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -28,27 +26,39 @@ public class ListingController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result index() {
-		
-		if(session("usrid")!=null && session("usrid").length() > 0) {
-    		return ok(views.html.addListing.render(true));
-    	}
+
+		if (session("usrid") != null && session("usrid").length() > 0) {
+			return ok(views.html.addListing.render(true));
+		}
 		return ok(views.html.addListing.render(false));
 	}
 
 	@play.db.jpa.Transactional
-	public static List<Listings> getTopOffers() {
-		return models.Listings.findAll("O");
+	public static Map<Listings, String> getTopOffers() {
+		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
+		for (Listings listing : models.Listings.findAll("O")) {
+			pairs.put(listing, Pictures.findById(listing.ListingId).path);
+		}
+		return pairs;
 	}
 
 	@play.db.jpa.Transactional
-	public static List<Listings> getTopRequests() {
-		return models.Listings.findAll("R");
+	public static Map<Listings, String> getTopRequests() {
+		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
+		for (Listings listing : models.Listings.findAll("R")) {
+			pairs.put(listing, Pictures.findById(listing.ListingId).path);
+		}
+		return pairs;
 	}
-	
+
 	@play.db.jpa.Transactional
-	public static List<Listings> getNewListings() {
-		return models.Listings.findAll();
-	}	
+	public static Map<Listings, String> getNewListings() {
+		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
+		for (Listings listing : models.Listings.findAll()) {
+			pairs.put(listing, Pictures.findById(listing.ListingId).path);
+		}
+		return pairs;
+	}
 
 	@play.db.jpa.Transactional
 	public Result createListing() {
@@ -57,7 +67,10 @@ public class ListingController extends Controller {
 		result.removeAll();
 
 		try {
-
+			play.mvc.Http.MultipartFormData body = request().body()
+					.asMultipartFormData();
+			play.mvc.Http.MultipartFormData.FilePart picture = body
+					.getFile("picture");
 			DynamicForm form = Form.form().bindFromRequest();
 			// Validate Login
 			Users currentUser = userController.getUser(Integer
@@ -105,6 +118,7 @@ public class ListingController extends Controller {
 					listing.TransactionEnd = transactionEnd;
 					listing.ExpiryDate = transactionExpire;
 					listing.save();
+					this.uploadImage(picture, listing.ListingId);
 					result.put("listingId", listing.ListingId);
 					result.put("status", "OK");
 					result.put("data", "Your listing: " + name
@@ -124,6 +138,45 @@ public class ListingController extends Controller {
 			e.printStackTrace();
 			return badRequest("Exception: "
 					+ Application.defaultError(e.getMessage()));
+		}
+	}
+
+	@play.db.jpa.Transactional
+	public Result uploadImage(play.mvc.Http.MultipartFormData.FilePart picture,
+			int ListingId) throws IOException {
+
+		Logger.info("UploadImage request");
+		try {
+			DynamicForm form = Form.form().bindFromRequest();
+			if (picture != null) {
+				Logger.info("Picture is not null");
+				String contentType = picture.getContentType();
+				java.io.File fileUpload = picture.getFile();
+				String fileUploadExtension = contentType.split("/")[1];
+				if (fileUploadExtension.equals("jpg")
+						|| fileUploadExtension.equals("png")) {
+					String fileName = "L"
+							+ ListingId
+							+ new SimpleDateFormat("yyyyMMddkkmmssS")
+									.format(new Date()) + "."
+							+ fileUploadExtension;
+					File file = new File("public/uploaded/" + fileName);
+					Pictures pictureToSave = new models.Pictures(ListingId,
+							fileName);
+					pictureToSave.save();
+					Files.copy(fileUpload.toPath(), file.toPath());
+					return ok(""); // TODO: fix this
+				} else
+					return badRequest(Application
+							.defaultError("File is not an available image format. Use jpg or png files."));
+
+			} else
+				return badRequest(Application
+						.defaultError("Please select a picture to upload"));
+
+		} catch (Exception e) {
+			return badRequest(Application.defaultError("Exception: "
+					+ e.getMessage()));
 		}
 	}
 

@@ -67,7 +67,7 @@
 			<hr>
 			<!-- Add listing details to database using post form method -->
 			<form name="addListing" action="/add_listing" method="post"
-				novalidate class="form-horizontal">
+				novalidate class="form-horizontal" enctype="multipart/form-data">
 				<div class="col-md-6">
 					<div class="row">
 						<div class="form-group">
@@ -175,6 +175,9 @@
 				<!-- TODO: Many changed are required here -->
 				<div class="row">
 					<div>
+					
+					Picture <input type="file" name="picture" />
+					
 						<button type="button" class="btn btn-default" data-toggle="modal"
 							data-target="#myModal">Add Image</button>
 							<input type="submit" />
