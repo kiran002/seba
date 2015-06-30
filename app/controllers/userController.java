@@ -49,14 +49,7 @@ public class userController extends Controller {
 						user.save(); // TODO @Kiran AuthCode can be null either
 										// change in db or models
 						Logger.info(this.toString() + " in: User saved");
-						result.put("user", user.Email);
-						result.put("status", "OK");
-						result.put(
-								"data",
-								"Welcome "
-										+ user.Email
-										+ ".You are almost done. Please check your email "
-										+ "for the code to activate your account. ");
+						
 						return ok(views.html.login.render(user, 200));
 						// return ok(result);
 					} else

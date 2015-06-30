@@ -31,14 +31,13 @@ public class ListingController extends Controller {
 	@play.db.jpa.Transactional
 	public static List<Listings> getTopOffers() {
 		return models.Listings.findAll("O");
-	}	
-	
+	}
+
 	@play.db.jpa.Transactional
 	public static List<Listings> getTopRequests() {
 		return models.Listings.findAll("R");
-	}	
-	
-	
+	}
+
 	@play.db.jpa.Transactional
 	public Result createListing() {
 
@@ -100,15 +99,18 @@ public class ListingController extends Controller {
 					result.put("data", "Your listing: " + name
 							+ " was saved. Now you can upload images.");
 					return ok(result);
-				} else
+				} else {
 					return badRequest(Application
 							.defaultError("Fields are required please complete the form."));
+				}
 
-			} else
+			} else {
 				return badRequest(Application
 						.defaultError("Please login to enjoy Stumark."));
+			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return badRequest("Exception: "
 					+ Application.defaultError(e.getMessage()));
 		}
