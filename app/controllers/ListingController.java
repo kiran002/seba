@@ -1,6 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.*;
+import models.*;
 
 import models.Listings;
 import models.Pictures;
@@ -24,6 +26,7 @@ public class ListingController extends Controller {
 
 	ObjectNode result = Json.newObject();
 
+	@play.db.jpa.Transactional
 	public Result index() {
 		
 		if(session("usrid")!=null && session("usrid").length() > 0) {
@@ -41,6 +44,11 @@ public class ListingController extends Controller {
 	public static List<Listings> getTopRequests() {
 		return models.Listings.findAll("R");
 	}
+	
+	@play.db.jpa.Transactional
+	public static List<Listings> getNewListings() {
+		return models.Listings.findAll();
+	}	
 
 	@play.db.jpa.Transactional
 	public Result createListing() {
@@ -56,7 +64,6 @@ public class ListingController extends Controller {
 					.parseInt(session("usrid")));
 
 			if (currentUser != null) {
-
 				Logger.info("Listing info " + form.toString());
 				String name = (!form.get("name").equals("") ? form.get("name")
 						: "");
