@@ -85,14 +85,16 @@ public class Listings {
 
 	public static List<Listings> findAll() {
 		TypedQuery<Listings> query = JPA.em().createQuery(
-				"SELECT l FROM listings l", Listings.class);
+				"SELECT l FROM Listings l order by CreationDate", Listings.class);
+		query.setMaxResults(10);
 		return query.getResultList();
 	}
 
 	public static List<Listings> findAll(String type) {
 		TypedQuery<Listings> query = JPA.em().createQuery(
-				"SELECT l FROM listings l where l.ListingType = :ListingType order by CreationDate limit 10",
+				"SELECT l FROM Listings l where l.ListingType = :ListingType order by CreationDate",
 				Listings.class);
+		query.setMaxResults(10);
 		return query.setParameter("ListingType", type).getResultList();
 	}
 
