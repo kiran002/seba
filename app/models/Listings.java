@@ -91,7 +91,7 @@ public class Listings {
 
 	public static List<Listings> findAll(String type) {
 		TypedQuery<Listings> query = JPA.em().createQuery(
-				"SELECT l FROM listings l where l.ListingType = :ListingType",
+				"SELECT l FROM listings l where l.ListingType = :ListingType order by CreationDate limit 10",
 				Listings.class);
 		return query.setParameter("ListingType", type).getResultList();
 	}
