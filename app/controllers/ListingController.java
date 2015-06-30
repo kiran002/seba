@@ -39,7 +39,7 @@ public class ListingController extends Controller {
 	public static Map<Listings, String> getTopOffers() {
 		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
 		for (Listings listing : models.Listings.findAll("O")) {
-			pairs.put(listing, Pictures.findById(listing.ListingId).path);
+			pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
 		}
 		return pairs;
 	}
@@ -48,7 +48,7 @@ public class ListingController extends Controller {
 	public static Map<Listings, String> getTopRequests() {
 		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
 		for (Listings listing : models.Listings.findAll("R")) {
-			pairs.put(listing, Pictures.findById(listing.ListingId).path);
+			pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
 		}
 		return pairs;
 	}
@@ -57,15 +57,11 @@ public class ListingController extends Controller {
 	public static Map<Listings, String> getNewListings() {
 		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
 		for (Listings listing : models.Listings.findAll()) {
-			pairs.put(listing, Pictures.findById(listing.ListingId).path);
+			Logger.info(listing.Name);
+			pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
 		}
 		return pairs;
 	}
-	
-	@play.db.jpa.Transactional
-	public static List<Listings> getNewListings() {
-		return models.Listings.findAll();
-	}	
 
 	@play.db.jpa.Transactional
 	public Result createListing() {

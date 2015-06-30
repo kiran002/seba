@@ -11,7 +11,7 @@ public class login extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result index() {
-		List<Listings> allLists= ListingController.getNewListings();
+		Map<Listings, String> allLists= ListingController.getNewListings();
 		if (session("usrid") != null && session("usrid").length() > 0) {
 			Logger.info(session("usrid") + " something is wrong");
 			return ok(views.html.Home.render(true, allLists));

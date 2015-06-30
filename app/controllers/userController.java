@@ -147,7 +147,7 @@ public class userController extends Controller {
 													// already activate his
 													// account
 						session("usrid", "" + user.UserId);
-						List<Listings> allLists= ListingController.getNewListings();
+						Map<Listings, String> allLists= ListingController.getNewListings();
 						return ok(views.html.Home.render(true, allLists));
 						
 					} else {
