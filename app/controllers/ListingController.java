@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import models.Listings;
 import models.Pictures;
 import models.Users;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class ListingController extends Controller {
 
@@ -27,8 +29,13 @@ public class ListingController extends Controller {
 	}
 
 	@play.db.jpa.Transactional
-	public static Result createListing() {
-
+	public static List<Listings> getTopOffers() {
+		return models.Listings.findAll("O");
+	}	
+	
+	@play.db.jpa.Transactional
+	public static List<Listings> getTopRequests() {
+		return models.Listings.findAll("R");
 	}	
 	
 	
