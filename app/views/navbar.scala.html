@@ -1,4 +1,4 @@
-@(users: models.Users, status:Integer)
+@(hasLoggedIn: Boolean)
 <div>
 	<nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
 		<div class="container">
@@ -8,7 +8,7 @@
 				</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
-				@if(status == 200) {
+				@if(hasLoggedIn) {
 				<ul class="nav navbar-nav">
 					<li><a href="/">Offers</a></li>
 					<li><a href="/requests">Requests</a></li>
@@ -25,12 +25,12 @@
 							<li><a href="/">Logout</a></li>
 						</ul></li>
 				</ul>
-				} @if(status == 201) {
+				} @if(!hasLoggedIn) {
 				<div class="navbar-form navbar-right">
 					<a class="btn btn-default" href="/login">Login</a> <a
 						class="btn btn-success" href="/register">Register</a>
 				</div>
-				} @if(status == 200) {
+				} @if(hasLoggedIn) {
 				<div class="navbar-form navbar-right">
 					<a class="btn btn-default" href="/logout">Logout</a> <a
 						class="btn btn-default" href="/add_listing"> <span
@@ -43,11 +43,11 @@
 		</div>
 	</nav>
 
-	@if(status == 201) {
+	@if(!hasLoggedIn) {
 	<div class="alert alert-dismissible">You are not logged in ,
 		please log in to continue</div>
-	} @if(status == 200){
-	<div class="alert alert-dismissible">@users.FirstName</div>
+	} @if(hasLoggedIn){
+	<div class="alert alert-dismissible">FirstName</div>
 	}
 
 </div>

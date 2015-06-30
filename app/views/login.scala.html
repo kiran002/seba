@@ -14,8 +14,8 @@
 <body>
 
 <div class="container">
-  @navbar(users,status)
-  <div class="row">
+		@if(status == 200) { @navbar(true) } else { @navbar(false) }
+<div class="row">
     <h3>Login</h3>
     <hr/>
 	<!-- TODO: Add form post action to submit details to this page -->

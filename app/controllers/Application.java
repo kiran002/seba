@@ -10,7 +10,10 @@ import views.html.*;
 public class Application extends Controller {
 
     public Result index() {
-        return ok(views.html.Home.render());
+    	if(session("usrid")!=null && session("usrid").length() > 0) {
+    		return ok(views.html.Home.render(true));
+    	}
+        return ok(views.html.Home.render(false));
     }
 
  
