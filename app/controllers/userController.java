@@ -190,11 +190,11 @@ public class userController extends Controller {
 		}
 		return pass;
 	}
-	
+
 	@play.db.jpa.Transactional
-	public static Users getUser(int id){
+	public static Users getUser(int id) {
 		return Users.findById(id);
 	}
-	
 
+	
 }
