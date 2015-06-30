@@ -9,7 +9,8 @@ public class login extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result index() {
-		if (session("usrid") != null) {
+		if (session("usrid") != null && session("usrid").length() > 0) {
+			Logger.info(session("usrid") + " something is wrong");
 			return ok(views.html.login.render(
 					userController.getUser(Integer.parseInt(session("usrid"))),
 					200));
@@ -20,7 +21,7 @@ public class login extends Controller {
 	public Result logout() {
 		try {
 			if (session("usrid") != null) {
-				
+				session().clear();
 				return ok(views.html.login.render(null, 201));
 			}
 		} catch (Exception e) {
