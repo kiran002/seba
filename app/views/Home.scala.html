@@ -108,7 +108,7 @@
   </div>
   <div class="form-group">
     <label>Availability</label>
-    <div class="input-group">
+    <div class="input-group" id="from">
       <div class="input-group-addon">Start</div>
       <input type="text" class="form-control" placeholder="25.03.2014">
       <div class="input-group-addon">
@@ -116,7 +116,7 @@
       </div>
     </div>
     <br/>
-    <div class="input-group">
+    <div class="input-group" id="to">
       <div class="input-group-addon">End</div>
       <input type="text" class="form-control" placeholder="25.03.2014">
       <div class="input-group-addon">
@@ -162,6 +162,27 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $(function(){
+    $('#from').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
+    $('#to').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
+    $('#expire').datetimepicker({minDate: moment(), format: 'DD.MM.YYYY'});
+
+    $("#from").on("dp.change", function (e) {
+      $('#from').val(e.date.format('DD.MM.YYYY'));
+      $('#to').data("DateTimePicker").minDate(e.date);
+    });
+    $("#to").on("dp.change", function (e) {
+      $('#to').val(e.date.format('DD.MM.YYYY'));
+      $('#from').data("DateTimePicker").maxDate(e.date);
+      $('#expire').data("DateTimePicker").minDate(e.date);
+    });
+    $("#expire").on("dp.change", function (e) {
+      $('#expire').val(e.date.format('DD.MM.YYYY'));
+    });
+  });
+</script>
 
 
 </body>

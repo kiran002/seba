@@ -1,0 +1,12 @@
+body {
+    padding-top: 70px;
+    padding-bottom: 40px;
+}
+
+.pad-top-25 {
+    padding-top: 25px;
+}
+
+.pad-bottom-35 {
+    padding-bottom: 25px;
+}
