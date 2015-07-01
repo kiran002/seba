@@ -1,5 +1,6 @@
 package models;
 
+import java.io.Console;
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.TypedQuery;
+
+import com.sun.media.jfxmedia.logging.Logger;
 
 import play.data.validation.Constraints;
 import play.db.jpa.JPA;
@@ -103,10 +106,14 @@ public class Listings {
 	}
 
 	public static List<Listings> search(String query_string) {
-		TypedQuery<Listings> query = JPA.em().createQuery(query_string,
-				Listings.class);
-		query.setMaxResults(10);
-		return query.getResultList();
+		try {
+			TypedQuery<Listings> query = JPA.em().createQuery(query_string,
+					Listings.class);
+			query.setMaxResults(10);
+			return query.getResultList();
+		} catch (Exception ex) {			
+			return findAll();
+		}
 	}
 
 	public static Listings findById(Integer id) {

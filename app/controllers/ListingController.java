@@ -195,42 +195,20 @@ public class ListingController extends Controller {
 		return cal.getTime();
 	}
 
-	private static boolean isNull(String str) {
-		return str.equals("");
-	}
-
 	@play.db.jpa.Transactional
-	public List<Listings> searchListings() {
-		if (session("usrId") != null && session("usrId").length() > 0) {
-			Users usr = Users.findById(Integer.parseInt(session("usrId")));
-			DynamicForm form = Form.form().bindFromRequest();
-			String query = "SELECT l FROM Listings l where ";
-			if (!isNull(form.get("keywords"))) {
-				query += " description like '%" + form.get("keywords") + "%' ";
+	public static HashMap<Listings, String> searchListings(String query) {
+		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
+		//Logger.info(query);
+		for (Listings listing : Listings.search(query)) {
+			//Logger.info(listing.Name);
+			if (listing.ListingType == 'R') {
+				pairs.put(listing, "");
+			} else {
+				pairs.put(listing,
+						Pictures.findByListingId(listing.ListingId).path);
 			}
-			if (!isNull(form.get("categoryId"))) {
-				query += " categoryId =" + form.get("categoryId") + " ";
-			}
-			if (!isNull(form.get("ltype"))) {
-				query += " listingtype ='" + form.get("ltype") + "' ";
-			}
-
-			if (!isNull(form.get("price"))) {
-				query += " Price <=" + form.get("price") + " ";
-			}
-
-			if (!isNull(form.get("pnegotiable"))) {
-				query += " PriceNegotiable = True ";
-			}
-
-			if (!isNull(form.get("price"))) {
-				query += " Price <=" + form.get("price") + " ";
-			}
-			if (!isNull(form.get("afrom"))) {
-				query += "  TransactionStart >= " + form.get("afrom");
-			}
-			return Listings.search(query);
 		}
-		return null;
+
+		return pairs;
 	}
 }
