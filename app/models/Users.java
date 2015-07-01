@@ -42,10 +42,8 @@ public class Users {
 
 	@Constraints.Required
 	public String password;
-
 	
-	public String AuthCode;
-	
+	public String AuthCode;	
 	
 	public Users() {
 	}

@@ -52,7 +52,7 @@ public class userController extends Controller {
 						user.save(); // TODO @Kiran AuthCode can be null either
 										// change in db or models
 						Logger.info(this.toString() + " in: User saved");
-						
+
 						return ok(views.html.login.render(true, user));
 						// return ok(result);
 					} else
@@ -75,37 +75,23 @@ public class userController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result activate() {
-
 		Logger.info(this.toString() + " in: Activate User request");
-		result.removeAll();
-
 		try {
 
 			DynamicForm form = Form.form().bindFromRequest();
 			String email = form.get("email");
 			String activationCode = form.get("activationCode");
 			models.Users user = models.Users.findUser(email);
-
 			if (!user.equals(null)) {
-
-				Logger.info(this.toString() + " in: User found");
 				if (user.ActivationCode.equals(activationCode)) {
 					user.isActivated = true;
 					user.update();
 					Logger.info(this.toString()
 							+ " in: User activated and updated");
-					result.put("user", user.Email);
-					result.put("status", "OK");
-					result.put(
-							"data",
-							"Welcome "
-									+ user.Email
-									+ ".You are now part of Stumark. You can now post offers or requests.");
-					return ok(result);
+					return ok(); // return to activated page
 				} else
 					return badRequest(Application
 							.defaultError("Invalid activation code. Please check your entry and try again."));
-
 			} else
 				return badRequest(Application
 						.defaultError("Sorry, we cannot find the user : "
@@ -123,22 +109,15 @@ public class userController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result login() {
-
 		Logger.info(this.toString() + " in: Login User request");
-		result.removeAll();
-
 		try {
-
 			DynamicForm form = Form.form().bindFromRequest();
 			String email = form.get("email");
 			String password = form.get("password");
 			models.Users user = models.Users.findUser(email);
 			Logger.info(this.toString() + " in: User found");
-
 			if (!user.equals(null)) {
-
 				if (user.password.equals(password)) {
-
 					session("userId", "" + user.UserId); // TODO @All check and
 															// try through the
 															// session
@@ -147,19 +126,10 @@ public class userController extends Controller {
 													// already activate his
 													// account
 						session("usrid", "" + user.UserId);
-						Map<Listings, String> allLists= ListingController.getNewListings();
+						Map<Listings, String> allLists = ListingController
+								.getNewListings();
 						return ok(views.html.Home.render(true, allLists));
-						
-					} else {
-						result.put("user", toJson(user)); // TODO @Efe analize
-															// how to manage
-															// this state when
-															// account is not
-															// yet activated
-						result.put("status", "OK");
-						result.put(
-								"data",
-								"Welcome to Stumark. Please activate your account so you can use our services. ");
+					} else {						
 						return ok(views.html.login.render(false, user));
 					}
 
@@ -194,5 +164,43 @@ public class userController extends Controller {
 		return Users.findById(id);
 	}
 
-	
+	@play.db.jpa.Transactional
+	public Result updateUser() {
+		DynamicForm form = Form.form().bindFromRequest();
+		String firstname = form.get("fname");
+		Logger.info(this.toString() + firstname);
+		String lastname = form.get("lname");
+		String pass = form.get("password");
+		String pass2 = form.get("password2");
+		if (pass.equals(pass2)) {
+			if (session("usrId") != null && session("usrId").length() > 0) {
+				Users usr = Users.findById(Integer.parseInt(session("usrId")));
+				usr.FirstName = firstname;
+				usr.LastName = lastname;
+				usr.password = pass;
+				usr.update();
+				return ok(); // successful now you can redirect to the account
+								// page
+			}
+		}
+		// something has gone wrong make the validations
+		return ok();
+
+	}
+
+	@play.db.jpa.Transactional
+	public Result deleteUser() {
+		if (session("usrId") != null && session("usrId").length() > 0) {
+			Users usr = Users.findById(Integer.parseInt(session("usrId")));
+			DynamicForm form = Form.form().bindFromRequest();
+			;
+			String pass = form.get("password");
+			if (usr.password.equals(pass)) {
+				usr.delete();
+				return ok(); // was succesful return to home page
+			}
+		}
+		return ok(); // something has gone wrong TODO: add validations
+	}
+
 }
