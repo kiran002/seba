@@ -1,9 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.*;
-import models.*;
 
+import java.util.*;
+
+import models.*;
 import play.*;
 import play.libs.Json;
 import play.mvc.*;
@@ -29,7 +30,7 @@ public class Application extends Controller {
 	
 	@play.db.jpa.Transactional
     public Result showRequests() {
-		Map<Listings, String> requestsLists= ListingController.getTopRequests();
+		List<Listings> requestsLists= ListingController.getTopRequests();
 		return ok(views.html.requests.render(true, requestsLists));
     }
 	

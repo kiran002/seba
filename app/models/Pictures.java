@@ -51,7 +51,12 @@ public class Pictures {
 		TypedQuery<Pictures> query = JPA.em().createQuery(
 				"SELECT p FROM Pictures p where p.ListingId = :id",
 				Pictures.class);
-		return query.setParameter("id", id).getSingleResult();
+		try {
+			return query.setParameter("id", id).getSingleResult();
+		} catch (Exception ex) {
+
+		}
+		return null;
 	}
 
 	public void delete() {

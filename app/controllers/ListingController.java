@@ -45,12 +45,8 @@ public class ListingController extends Controller {
 	}
 
 	@play.db.jpa.Transactional
-	public static Map<Listings, String> getTopRequests() {
-		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
-		for (Listings listing : models.Listings.findAll("R")) {
-			pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
-		}
-		return pairs;
+	public static List<Listings> getTopRequests() {
+		return Listings.findAll("R");
 	}
 
 	@play.db.jpa.Transactional
@@ -121,7 +117,9 @@ public class ListingController extends Controller {
 					listing.TransactionEnd = transactionEnd;
 					listing.ExpiryDate = transactionExpire;
 					listing.save();
-					this.uploadImage(picture, listing.ListingId);
+					if (listing.ListingType == 'O') {
+						this.uploadImage(picture, listing.ListingId);
+					}
 					result.put("listingId", listing.ListingId);
 					result.put("status", "OK");
 					result.put("data", "Your listing: " + name
