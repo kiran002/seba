@@ -1,65 +1,49 @@
-$(function(){
-  document.cookie.split('; ').forEach(function(cookieString) {
-    var cookie;
-    cookie = cookieString.split("=");
-    if ((cookie.length === 2) && (cookie[0] === "stumarkAuthToken")) {
-      return window.stumarkAuthToken = cookie[1];
-    }
-  });
+$(document).on('change', '.btn-file :file', function() {
+    var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.trigger('fileselect', [numFiles, label]);
 });
 
-var app = angular.module('stumark', [
-  'ngRoute',
-  'stumarkControllers',
-  'stumarkServices'
-]);
-
-app.config(['$routeProvider', '$locationProvider',
-  function($routeProvider, $locationProvider) {
-    $routeProvider.
-      when('/', {
-        redirectTo: '/offers'
-      }).
-      when('/login', {
-        templateUrl: '/assets/templates/login.html',
-        controller: 'authController'
-      }).
-      when('/logout', {
-        templateUrl: '/assets/templates/login.html',
-        controller: 'authController'
-      }).
-      when('/register', {
-        templateUrl: '/assets/templates/register.html',
-        controller: 'registerController'
-      }).
-      when('/profile', {
-        templateUrl: '/assets/templates/profile.html',
-        controller: 'profileController'
-      }).
-      when('/offers', {
-        templateUrl: '/assets/templates/offers.html',
-        controller: 'listingController'
-      }).
-      when('/add_listing', {
-        templateUrl: '/assets/templates/add_listing.html',
-        controller: 'addListingController'
-      }).
-      when('/add_listing_img', {
-        templateUrl: '/assets/templates/add_listing_img.html',
-        controller: 'addListingImgController'
-      }).
-      when('/messages', {
-          templateUrl: '/assets/templates/messages.html',
-          controller: 'messagesController'
-      }).
-      otherwise({
-        redirectTo: '/offers'
-      });
-
-      if(window.history && window.history.pushState){
-        $locationProvider.html5Mode({
-          enabled: true,
-          requireBase: false
-        });
-      }
-  }]);
+$(document).ready( function() {
+    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+        $("#picture_field").val(label);
+    });
+    
+    $('#listingTypeInfo').change( function() {
+    	var selectedValue = $("#listingTypeInfo option:selected").val();
+    	
+    	if(selectedValue == "R") {
+    		$("#pictureId").hide();
+    		$("#transactionType")
+	    		.find('option')
+			    .remove()
+			    .end()
+	    		.append('<option value="R">Rent</option>')
+	    		.append('<option value="B">Buy</option>');
+    	} else {
+    		$("#pictureId").show();
+    		$("#transactionType")
+	    		.find('option')
+			    .remove()
+			    .end()
+	    		.append('<option value="R">Rent</option>')
+	    		.append('<option value="S">Sell</option>');
+    	}
+	 });
+    
+    $('#transactionType').change( function() {
+    	var selectedValue = $("#transactionType option:selected").val();
+    	
+    	if(selectedValue == "R") {
+    		$("#pricePeriod").attr("disabled", false);
+    		$("#transactionStart").attr("disabled", false);
+    		$("#transactionEnd").attr("disabled", false);    		
+    	} else {
+    		$("#pricePeriod").attr("disabled", true);
+    		$("#transactionStart").attr("disabled", true);
+    		$("#transactionEnd").attr("disabled", true);    		
+    	}
+	 });
+   
+});

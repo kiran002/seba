@@ -9,6 +9,7 @@
 <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/app.css")">
 <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
 <script src="@routes.Assets.versioned("javascripts/jquery.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/app.js")" type="text/javascript"></script>
 <script src="@routes.Assets.versioned("javascripts/moment-with-locales.js")" type="text/javascript"></script>
 <script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
 </head>
@@ -27,7 +28,7 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">Post type</label>
 							<div class="col-md-8">
-								<select class="form-control" name="listingType" required>
+								<select class="form-control" name="listingType" id="listingTypeInfo" tabindex="1" required>
 									<option value="O">Offer</option>
 									<option value="R">Request</option>
 								</select>
@@ -37,13 +38,13 @@
 							<label class="col-md-4 control-label">Post title</label>
 							<div class="col-md-8">
 								<input type="text" class="form-control" name="name"
-									placeholder="Item name" required>
+									placeholder="Item name" tabindex="2" required>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-md-4 control-label">Category</label>
 							<div class="col-md-8">
-								<select class="form-control" name="categoryId" required>
+								<select class="form-control" tabindex="3" name="categoryId" required>
 									<option value="3">Others</option>
 									<option value="1">Motors</option>
 									<option value="2">Home</option>
@@ -53,8 +54,21 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">Description</label>
 							<div class="col-md-8">
-								<textarea class="form-control" name="description" rows="4" required></textarea>
+								<textarea class="form-control" tabindex="4" name="description" rows="4" required></textarea>
 							</div>
+						</div>
+						<div class="form-group" id="pictureId">
+							<label class="col-md-4 control-label">Add Picture</label>
+							<div class="col-md-8">
+								<div class="input-group">
+					                <span class="input-group-btn">
+					                    <span class="btn btn-primary btn-file">
+					                        Browse… <input type="file" tabindex="5" name="picture">
+					                    </span>
+					                </span>
+					                <input type="text" id="picture_field" class="form-control" readonly>
+					            </div>
+				            </div>
 						</div>
 
 					</div>
@@ -65,10 +79,9 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">Transaction type</label>
 							<div class="col-md-8">
-								<select class="form-control" name="transactionType" required>
-								<option value="B">Buy</option>
-								<option value="R">Rent</option>
-								<option value="S">Sell</option>
+								<select id="transactionType" tabindex="6" class="form-control" name="transactionType" required>
+									<option value="R">Rent</option>
+									<option value="S">Sell</option>
 								</select>
 							</div>
 						</div>
@@ -78,17 +91,17 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="input-group">
-											<input type="text" name="price" class="form-control" placeholder="Price"
-												required>
+											<input type="text" name="price" tabindex="7" class="form-control" placeholder="Price"
+												required onkeypress='return event.charCode >= 48 && event.charCode <=57'>
 											<div class="input-group-addon">EUR</div>
 										</div>
 									</div>
 									<div class="col-md-6">
-										<select class="form-control" name="pricePeriod" required>
-										<option value="D">Daily</option>
-										<option value="W">Weekly</option>
-										<option value="M">Monthly</option>
-										<option value="A">Annually</option>
+										<select id="pricePeriod" class="form-control" name="pricePeriod" required>
+											<option value="D">Daily</option>
+											<option value="W">Weekly</option>
+											<option value="M">Monthly</option>
+											<option value="A">Annually</option>
 										</select>
 									</div>
 								</div>
@@ -99,7 +112,7 @@
 							<div class="col-md-8">
 								<div class="input-group" id="from">
 									<div class="input-group-addon">From</div>
-									<input type="text" name="transactionStart" class="form-control">
+									<input id="transactionStart" type="text" name="transactionStart" class="form-control">
 									<div class="input-group-addon">
 										<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
 									</div>
@@ -107,7 +120,7 @@
 								<br />
 								<div class="input-group" id="to">
 									<div class="input-group-addon">Until</div>
-									<input name="transactionEnd" type="text" class="form-control">
+									<input id="transactionEnd" name="transactionEnd" type="text" class="form-control">
 									<div class="input-group-addon">
 										<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
 									</div>
@@ -118,17 +131,35 @@
 							<label class="col-md-4 control-label">Post expires on</label>
 							<div class="col-md-8">
 								<div class="input-group" id="expire">
-									<input type="text" name="transactionExpire" class="form-control">
+									<input type="text" tabindex="8" name="transactionExpire" class="form-control">
 									<div class="input-group-addon">
 										<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
 									</div>
 								</div>
 							</div>
 						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label">Price negotiable</label>
+							<div class="col-md-8">
+								<div class="checkbox">
+									<label> <input tabindex="9" type="checkbox"> Negotiable price
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-4 col-md-8">
+								<button type="submit" tabindex="10" class="btn btn-success btn-lg">
+									Submit your post
+								</button>
+							</div>
+						</div>
+						
 					</div>
 				</div>
 
-				<!-- TODO: Many changed are required here -->
+				
+				<!-- TODO: Many changed are required here 
 				<div class="row">
 					<div>
 					
@@ -140,20 +171,6 @@
 						<a href="/add_listing" class="btn btn-success">Finish</a>
 					</div>
 
-					<!-- 
-					<div class="col-md-3">
-						<div class="thumbnail">
-							<img src="{{image.path}}" width="200" height="200">
-							<div class="caption">
-								<p>
-									<a href="#" class="btn btn-danger btn-sm btn-block"
-										role="button">Remove</a>
-								</p>
-							</div>
-						</div>
-					</div>
-					 -->
-
 				</div>
 				<div class="form-group">
 					<div class="col-md-offset-4 col-md-4">
@@ -161,6 +178,7 @@
 						</button>
 					</div>
 				</div>
+				-->
 			</form>
 
 
@@ -196,6 +214,8 @@
 				$('#expire').val(e.date.format('DD.MM.YYYY'));
 			});
 		});
+		
+		
 	</script>
 
 
