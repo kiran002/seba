@@ -14,10 +14,11 @@ public class Application extends Controller {
 	@play.db.jpa.Transactional
     public Result index() {
 		Map<Listings, String> allLists= ListingController.getNewListings();
+		List<Category> categoryList= utilController.getCategories();
     	if(session("usrid")!=null && session("usrid").length() > 0) {
-    		return ok(views.html.Home.render(true, allLists));
+    		return ok(views.html.Home.render(true, allLists, categoryList, null, null));
     	}
-        return ok(views.html.Home.render(false, allLists));
+        return ok(views.html.Home.render(false, allLists, categoryList, null, null));
     }
 	
 	@play.db.jpa.Transactional
@@ -42,7 +43,8 @@ public class Application extends Controller {
 	@play.db.jpa.Transactional
     public Result catchAll(String path) {
 		Map<Listings, String> allLists= ListingController.getNewListings();
-    	return ok(views.html.Home.render(false, allLists));
+		List<Category> categoryList= utilController.getCategories();
+    	return ok(views.html.Home.render(false, allLists, categoryList, null, null));
     }
     
  
