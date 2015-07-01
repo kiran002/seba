@@ -22,13 +22,13 @@ public class Application extends Controller {
 	
 	@play.db.jpa.Transactional
     public Result showOffers() {
-		Map<Listings, String> offersLists= ListingController.getNewListings();
+		Map<Listings, String> offersLists= ListingController.getTopOffers();
 		return ok(views.html.offers.render(true, offersLists));
     }
 	
 	@play.db.jpa.Transactional
     public Result showRequests() {
-		Map<Listings, String> requestsLists= ListingController.getNewListings();
+		Map<Listings, String> requestsLists= ListingController.getTopRequests();
 		return ok(views.html.requests.render(true, requestsLists));
     }
 	

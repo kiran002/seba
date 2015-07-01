@@ -95,7 +95,7 @@ public class Listings {
 				"SELECT l FROM Listings l where l.ListingType = :ListingType order by CreationDate",
 				Listings.class);
 		query.setMaxResults(10);
-		return query.setParameter("ListingType", type).getResultList();
+		return query.setParameter("ListingType", type.charAt(0)).getResultList();
 	}
 
 	public static Listings findById(Integer id) {
