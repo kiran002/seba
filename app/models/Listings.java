@@ -19,11 +19,11 @@ public class Listings {
 	public int ListingId;
 
 	public int SponsoredId;
-	
+
 	@Constraints.Required
 	public int UserId;
 
-	@Constraints.Required 
+	@Constraints.Required
 	public String Name; // this is the listing title
 
 	@Constraints.Required
@@ -85,17 +85,28 @@ public class Listings {
 
 	public static List<Listings> findAll() {
 		TypedQuery<Listings> query = JPA.em().createQuery(
-				"SELECT l FROM Listings l order by CreationDate", Listings.class);
+				"SELECT l FROM Listings l order by CreationDate",
+				Listings.class);
 		query.setMaxResults(10);
 		return query.getResultList();
 	}
 
 	public static List<Listings> findAll(String type) {
-		TypedQuery<Listings> query = JPA.em().createQuery(
-				"SELECT l FROM Listings l where l.ListingType = :ListingType order by CreationDate",
+		TypedQuery<Listings> query = JPA
+				.em()
+				.createQuery(
+						"SELECT l FROM Listings l where l.ListingType = :ListingType order by CreationDate",
+						Listings.class);
+		query.setMaxResults(10);
+		return query.setParameter("ListingType", type.charAt(0))
+				.getResultList();
+	}
+
+	public static List<Listings> search(String query_string) {
+		TypedQuery<Listings> query = JPA.em().createQuery(query_string,
 				Listings.class);
 		query.setMaxResults(10);
-		return query.setParameter("ListingType", type.charAt(0)).getResultList();
+		return query.getResultList();
 	}
 
 	public static Listings findById(Integer id) {

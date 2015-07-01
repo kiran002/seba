@@ -1,7 +1,9 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.util.*;
+
 import models.*;
 
 import java.util.*;
@@ -54,11 +56,12 @@ public class ListingController extends Controller {
 		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
 		for (Listings listing : models.Listings.findAll()) {
 			Logger.info(listing.Name);
-			if(listing.ListingType == 'R') {
+			if (listing.ListingType == 'R') {
 				pairs.put(listing, "");
 			} else {
-				pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
-			}			
+				pairs.put(listing,
+						Pictures.findByListingId(listing.ListingId).path);
+			}
 		}
 		return pairs;
 	}
@@ -190,5 +193,44 @@ public class ListingController extends Controller {
 		cal.setTime(date);
 		cal.add(Calendar.DATE, days); // minus number would decrement the days
 		return cal.getTime();
+	}
+
+	private static boolean isNull(String str) {
+		return str.equals("");
+	}
+
+	@play.db.jpa.Transactional
+	public List<Listings> searchListings() {
+		if (session("usrId") != null && session("usrId").length() > 0) {
+			Users usr = Users.findById(Integer.parseInt(session("usrId")));
+			DynamicForm form = Form.form().bindFromRequest();
+			String query = "SELECT l FROM Listings l where ";
+			if (!isNull(form.get("keywords"))) {
+				query += " description like '%" + form.get("keywords") + "%' ";
+			}
+			if (!isNull(form.get("categoryId"))) {
+				query += " categoryId =" + form.get("categoryId") + " ";
+			}
+			if (!isNull(form.get("ltype"))) {
+				query += " listingtype ='" + form.get("ltype") + "' ";
+			}
+
+			if (!isNull(form.get("price"))) {
+				query += " Price <=" + form.get("price") + " ";
+			}
+
+			if (!isNull(form.get("pnegotiable"))) {
+				query += " PriceNegotiable = True ";
+			}
+
+			if (!isNull(form.get("price"))) {
+				query += " Price <=" + form.get("price") + " ";
+			}
+			if (!isNull(form.get("afrom"))) {
+				query += "  TransactionStart >= " + form.get("afrom");
+			}
+			return Listings.search(query);
+		}
+		return null;
 	}
 }

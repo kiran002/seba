@@ -128,9 +128,11 @@ public class userController extends Controller {
 						session("usrid", "" + user.UserId);
 						Map<Listings, String> allLists = ListingController
 								.getNewListings();
-						List<Category> categoryList= utilController.getCategories();
-						return ok(views.html.Home.render(true, allLists, categoryList, null, null));
-					} else {						
+						List<Category> categoryList = utilController
+								.getCategories();
+						return ok(views.html.Home.render(true, allLists,
+								categoryList, null, null));
+					} else {
 						return ok(views.html.login.render(false, user));
 					}
 
@@ -194,7 +196,6 @@ public class userController extends Controller {
 		if (session("usrId") != null && session("usrId").length() > 0) {
 			Users usr = Users.findById(Integer.parseInt(session("usrId")));
 			DynamicForm form = Form.form().bindFromRequest();
-			;
 			String pass = form.get("password");
 			if (usr.password.equals(pass)) {
 				usr.delete();

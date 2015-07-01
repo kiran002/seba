@@ -9,6 +9,5 @@ public class utilController {
 	@play.db.jpa.Transactional
 	public static List<Category> getCategories(){
 		return Category.findAll();
-	}
-	
+	}	
 }
