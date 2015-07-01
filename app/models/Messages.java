@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 
 import play.data.validation.Constraints;
 import play.db.jpa.JPA;
@@ -8,6 +9,7 @@ import play.db.jpa.JPA;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.TypedQuery;
 
 @Entity
 public class Messages {
@@ -42,5 +44,12 @@ public class Messages {
 
 	public void delete() {
 		JPA.em().remove(this);
+	}
+	
+	public static List<Messages> findAll(int userId) {
+		TypedQuery<Messages> query = JPA.em().createQuery(
+				"SELECT l FROM Messages l order by CreationDate",
+				Messages.class);
+		return query.setParameter(1, userId).getResultList();
 	}
 }
