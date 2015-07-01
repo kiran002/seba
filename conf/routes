@@ -19,6 +19,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET     /offers                     controllers.Application.showOffers()
 GET     /requests                   controllers.Application.showRequests()
+GET     /messages                   controllers.Application.showMessages()
 
 #Catch All
 GET     /*path                      controllers.Application.catchAll(path)
