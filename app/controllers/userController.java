@@ -128,7 +128,8 @@ public class userController extends Controller {
 						session("usrid", "" + user.UserId);
 						Map<Listings, String> allLists = ListingController
 								.getNewListings();
-						return ok(views.html.Home.render(true, allLists));
+						List<Category> categoryList= utilController.getCategories();
+						return ok(views.html.Home.render(true, allLists, categoryList, null, null));
 					} else {						
 						return ok(views.html.login.render(false, user));
 					}
