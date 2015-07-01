@@ -54,7 +54,11 @@ public class ListingController extends Controller {
 		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
 		for (Listings listing : models.Listings.findAll()) {
 			Logger.info(listing.Name);
-			pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
+			if(listing.ListingType == 'R') {
+				pairs.put(listing, "");
+			} else {
+				pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
+			}			
 		}
 		return pairs;
 	}
