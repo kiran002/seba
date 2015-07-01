@@ -1,7 +1,7 @@
 @(hasLoggedIn: Boolean)
-<div>
-	<nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
-		<div class="container">
+<div >
+	<nav class="navbar navbar-inverse navbar-default navbar-fixed-top" >
+		<div class="container" style="width:80%">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="/"> <img alt="Stumark logo"
 					src="/assets/images/stumark_alt.png">
@@ -10,19 +10,21 @@
 			<div id="navbar" class="navbar-collapse collapse">
 				@if(hasLoggedIn) {
 				<ul class="nav navbar-nav">
-					<li><a href="/">Offers</a></li>
+					<li><a href="/offers">Offers</a></li>
 					<li><a href="/requests">Requests</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/messages">Messages <span class="badge">(0)</span></a></li>
-					<li class="dropdown"><a href="#!" class="dropdown-toggle"
-						data-toggle="dropdown" role="button" aria-expanded="false">
-							UserName <span class="caret"></span>
-					</a>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle"
+							data-toggle="dropdown">
+								UserName <span class="caret"></span>
+						</a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="/profile">Profile</a></li>
-							<li><a href="/">Logout</a></li>
-						</ul></li>
+							<li><a href="/logout">Logout</a></li>
+						</ul>
+					</li>					
 				</ul>
 				} @if(!hasLoggedIn) {
 				<div class="navbar-form navbar-right">
@@ -31,10 +33,9 @@
 				</div>
 				} @if(hasLoggedIn) {
 				<div class="navbar-form navbar-right">
-					<a class="btn btn-default" href="/logout">Logout</a> <a
-						class="btn btn-default" href="/add_listing"> <span
-						class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
-						Listing
+					<a class="btn btn-default" href="/add_listing"> <span
+						class="glyphicon glyphicon-plus" aria-hidden="true"></span> 
+						Add Posts
 					</a>
 				</div>
 				}
@@ -42,11 +43,12 @@
 		</div>
 	</nav>
 
+<!-- 
 	@if(!hasLoggedIn) {
 	<div class="alert alert-danger hideMe">You are not logged in ,
 		please log in to continue</div>
 	} @if(hasLoggedIn){
 	<div class="alert alert-success hideMe">Successfully registered</div>
 	}
-
+ -->
 </div>

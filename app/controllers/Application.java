@@ -19,6 +19,19 @@ public class Application extends Controller {
     	}
         return ok(views.html.Home.render(false, allLists));
     }
+	
+	@play.db.jpa.Transactional
+    public Result showOffers() {
+		Map<Listings, String> offersLists= ListingController.getNewListings();
+		return ok(views.html.offers.render(true, offersLists));
+    }
+	
+	@play.db.jpa.Transactional
+    public Result showRequests() {
+		Map<Listings, String> requestsLists= ListingController.getNewListings();
+		return ok(views.html.requests.render(true, requestsLists));
+    }
+	
     
 	@play.db.jpa.Transactional
     public Result catchAll(String path) {
