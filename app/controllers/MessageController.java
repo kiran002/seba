@@ -1,7 +1,9 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import models.Messages;
-import models.Users;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -26,8 +28,11 @@ public class MessageController extends Controller {
 	}
 	
 	@play.db.jpa.Transactional
-	public Result allMessages() {
-		
-		return ok();
+	public static List<Messages> getAllMessages() {
+		List<Messages> msgs = null;
+		if (session("usrId") != null && session("usrId").length() > 0) {			
+			msgs = Messages.findAll(Integer.parseInt(session("usrId")));
+		}
+		return msgs;
 	}
 }
