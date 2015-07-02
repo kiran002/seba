@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ListingController extends Controller {
 
@@ -119,10 +120,6 @@ public class ListingController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result createListing() {
-
-		Logger.info("CreateListing request");
-		result.removeAll();
-
 		try {
 			play.mvc.Http.MultipartFormData body = request().body()
 					.asMultipartFormData();
@@ -132,9 +129,7 @@ public class ListingController extends Controller {
 			// Validate Login
 			Users currentUser = userController.getUser(Integer
 					.parseInt(session("usrid")));
-
 			if (currentUser != null) {
-				Logger.info("Listing info " + form.toString());
 				String name = form.get("name");
 				String description = form.get("description");
 				String pricePeriod = form.get("pricePeriod");
@@ -148,17 +143,6 @@ public class ListingController extends Controller {
 						.get("transactionType").charAt(0) : ' ');
 				SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
 				// If no StartDate by default CurrentDate
-				Date transactionStart = (!form.get("transactionStart").equals(
-						"") ? format.parse(form.get("transactionStart"))
-						: new Date());
-				// If no EndDate by default CurrentDate + 60 days
-				Date transactionEnd = (!form.get("transactionEnd").equals("") ? format
-						.parse(form.get("transactionEnd")) : addDays(
-						new Date(), 60));
-				// If no ExpireDate by default CurrentDate + 15 days
-				Date transactionExpire = (!form.get("transactionExpire")
-						.equals("") ? format.parse(form
-						.get("transactionExpire")) : addDays(new Date(), 15));
 
 				if (!name.equals("") && !description.equals("")
 						&& !pricePeriod.equals("") && categoryId > 0
@@ -168,18 +152,40 @@ public class ListingController extends Controller {
 					Listings listing = new Listings(currentUser.UserId, name,
 							categoryId, description, listingType, price,
 							pricePeriod, transactionType);
-					listing.TransactionStart = transactionStart;
-					listing.TransactionEnd = transactionEnd;
-					listing.ExpiryDate = transactionExpire;
-					listing.save();
-					if (listing.ListingType == 'O') {
-						this.uploadImage(picture, listing.ListingId);
+					if (form.get("transactionStart") != null) {
+						Date transactionStart = (!form.get("transactionStart")
+								.equals("") ? format.parse(form
+								.get("transactionStart")) : new Date());
+						// If no EndDate by default CurrentDate + 60 days
+						Date transactionEnd = (!form.get("transactionEnd")
+								.equals("") ? format.parse(form
+								.get("transactionEnd")) : addDays(new Date(),
+								60));
+						// If no ExpireDate by default CurrentDate + 15 days
+						Date transactionExpire = (!form
+								.get("transactionExpire").equals("") ? format
+								.parse(form.get("transactionExpire"))
+								: addDays(new Date(), 15));
+						listing.TransactionStart = transactionStart;
+						listing.TransactionEnd = transactionEnd;
+						listing.ExpiryDate = transactionExpire;
+
 					}
-					result.put("listingId", listing.ListingId);
-					result.put("status", "OK");
-					result.put("data", "Your listing: " + name
-							+ " was saved. Now you can upload images.");
-					return ok(result);
+					listing.save();
+					if (listing.ListingType == 'O' && picture != null
+							&& picture.getFile().length() > 0) {
+						this.uploadImage(picture, listing.ListingId);
+						Map<Listings, String> offersLists = ListingController
+								.getTopOffers(Integer
+										.parseInt(session("usrid")));
+						return ok(views.html.offers.render(true, offersLists,
+								202, "Listing successfully created"));
+					}
+					List<Listings> requestsLists = ListingController
+							.getTopRequests(Integer.parseInt(session("usrid")));
+					return ok(views.html.requests.render(true, requestsLists,
+							202, "Listing successfully created"));
+
 				} else {
 					return badRequest(Application
 							.defaultError("Fields are required please complete the form."));

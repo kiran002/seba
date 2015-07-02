@@ -1,4 +1,4 @@
-@(hasLoggedIn: Boolean, lists: Map[models.Listings, String])
+@(hasLoggedIn: Boolean, lists: Map[models.Listings, String], status:Integer, msg:String)
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,6 +21,14 @@
 		
 		<!-- Search criteria area -->
 		<div class="row">
+		
+			@if(status == 202) { 
+			<div class="alert alert-success" role="alert">
+				<span class="glyphicon glyphicon-exclamation-sign"
+					aria-hidden="true"></span> <span class="sr-only">Success:</span> @msg
+			</div>
+			}
+			
 			<div class="col-md-2" style="text-align:center">
 				<h3>Search</h3>
 			</div>

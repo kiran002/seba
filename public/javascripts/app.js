@@ -42,7 +42,7 @@ $(document).ready( function() {
     	}
     	$("#postTitle").text($("#"+id+" #listingTitle").text());
     	$("#postCategory").text($("#"+id+" #listingCategory").text());
-    	$("#postPrice").text($("#"+id+" #listingPrice").text() + " Euro");  
+    	$("#postPrice").text($("#"+id+" #listingPrice").text() + " €");  
     	if($("#"+id+" #listingNegotiable").text()) {
     		$("#postNegotiable").text("Yes");   		
     	} else {

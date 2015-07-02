@@ -96,19 +96,19 @@ public class Application extends Controller {
 		if (session("usrid") != null && session("usrid").length() > 0) {
 			Map<Listings, String> offersLists = ListingController
 					.getTopOffers(Integer.parseInt(session("usrid")));
-			return ok(views.html.offers.render(true, offersLists));
+			return ok(views.html.offers.render(true, offersLists,200,""));
 		}
 		return ok(views.html.offers.render(true,
-				new HashMap<Listings, String>()));
+				new HashMap<Listings, String>(),200,""));
 	}
 
 	@play.db.jpa.Transactional
 	public Result showRequests() {
 		if (session("usrid") != null && session("usrid").length() > 0) {
 			List<Listings> requestsLists = ListingController.getTopRequests(Integer.parseInt(session("usrid")));
-			return ok(views.html.requests.render(true, requestsLists));
+			return ok(views.html.requests.render(true, requestsLists,200,""));
 		}
-		return ok(views.html.requests.render(true, new ArrayList<Listings>()));
+		return ok(views.html.requests.render(true, new ArrayList<Listings>(),200,""));
 	}
 
 	
