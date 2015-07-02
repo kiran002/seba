@@ -119,5 +119,16 @@ public class Application extends Controller {
 		result.put("data", message);
 		return result;
 	}
+	
+	@play.db.jpa.Transactional
+	public Result showProfile() {
+		Map<Listings, String> allLists= ListingController.getNewListings();
+		List<Category> categoryList= utilController.getCategories();
+		if (session("usrid") != null && session("usrid").length() > 0) {
+			Users usr = userController.getUser(Integer.parseInt(session("usrid")));
+			return ok(views.html.profile.render(true,usr));
+		}
+		return ok(views.html.Home.render(false, allLists, categoryList, null,null));
+	}
 
 }

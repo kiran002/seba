@@ -182,8 +182,12 @@ public class userController extends Controller {
 				usr.LastName = lastname;
 				usr.password = pass;
 				usr.update();
-				return ok(); // successful now you can redirect to the account
-								// page
+				Map<Listings, String> allLists = ListingController
+						.getNewListings();
+				List<Category> categoryList = utilController
+						.getCategories();
+				return ok(views.html.Home.render(true, allLists,
+						categoryList, null, null));
 			}
 		}
 		// something has gone wrong make the validations
