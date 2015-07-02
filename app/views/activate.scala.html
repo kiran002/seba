@@ -21,6 +21,12 @@
 					aria-hidden="true"></span> <span class="sr-only">Success:</span>@msg
 			</div>
 			}
+			@if(status == 201) {
+			<div class="alert alert-danger" role="alert">
+				<span class="glyphicon glyphicon-exclamation-sign"
+					aria-hidden="true"></span> <span class="sr-only">Error:</span> @msg
+			</div>
+			}
 			<h3>Activate your account</h3>
 			<hr />
 			<!-- Add form submit with post functionality at below code -->

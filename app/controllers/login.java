@@ -13,8 +13,7 @@ public class login extends Controller {
 	public Result index() {
 		Map<Listings, String> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
-		if (session("usrid") != null && session("usrid").length() > 0) {
-			// Logger.info(session("usrid") + " something is wrong");
+		if (session("usrid") != null && session("usrid").length() > 0) {			
 			return ok(views.html.Home.render(true, allLists, categoryList,
 					null, null));
 		}
@@ -25,7 +24,7 @@ public class login extends Controller {
 		try {
 			if (session("usrid") != null) {
 				session().clear();
-				return ok(views.html.login.render(false, null,201,"Please login to continue"));
+				return ok(views.html.login.render(false, null,202,"Logout successful! See you soon!!"));
 			}
 		} catch (Exception e) {
 			return ok(views.html.login.render(false, null,201,"Please login to continue"));

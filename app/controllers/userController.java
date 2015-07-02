@@ -48,7 +48,7 @@ public class userController extends Controller {
 								.render(user.Email,
 										202,
 										"Your account has been created, "
-												+ "please login and activate your account"));
+												+ "please activate your account " + user.ActivationCode));
 
 					} else {
 						return ok(views.html.register.render(201,
@@ -107,13 +107,12 @@ public class userController extends Controller {
 			DynamicForm form = Form.form().bindFromRequest();
 			String email = form.get("email");
 			String password = form.get("password");
-			models.Users user = models.Users.findUser(email);
-			Logger.info(this.toString() + " in: User found");
+			models.Users user = models.Users.findUser(email);			
 			if (!user.equals(null)) {
 				if (user.password.equals(password)) {
 					session("userId", "" + user.UserId);
 					user.AuthCode = generateAuthCode();
-					if (user.isActivated == true) { // TODO: change this
+					if (user.isActivated == true) { 
 						session("usrid", "" + user.UserId);
 						Map<Listings, String> allLists = ListingController
 								.getNewListings();
@@ -136,8 +135,6 @@ public class userController extends Controller {
 								"Invalid user please enter a valid user name and password"));
 			}
 		} catch (Exception e) {
-			Logger.info(this.toString() + " in: Caught exception");
-			Logger.error(e.getMessage());
 			return ok(views.html.login.render(false, null, 201,
 					"Invalid user please enter a valid user name and password"));
 		}
