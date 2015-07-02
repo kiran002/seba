@@ -12,6 +12,7 @@ categoryList: List[models.Category], dummy: String, dummy2: String)
 	href="@routes.Assets.versioned("images/favicon.png")">
 <script src="@routes.Assets.versioned("javascripts/jquery.min.js")" type="text/javascript"></script>
 <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/app.js")" type="text/javascript"></script>
 <script src="@routes.Assets.versioned("javascripts/moment-with-locales.js")" type="text/javascript"></script>
 <script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
 </head>
@@ -43,8 +44,8 @@ categoryList: List[models.Category], dummy: String, dummy2: String)
 					<div class="form-group">
 						<label>Category</label> <select class="form-control"
 							name="categoryId">
-							<option value="0">select</option> @for(index <- 0 to
-							(categoryList.size-1)) {
+							<option value="0">select</option> 
+							@for(index <- 0 to (categoryList.size-1)) {
 							<option value="@categoryList(index).CategoryId">@categoryList(index).CategoryName</option>
 							}
 						</select>
@@ -86,31 +87,42 @@ categoryList: List[models.Category], dummy: String, dummy2: String)
 			<div class="col-md-8" style="overflow: auto; max-height: 600px">
 				<!-- Add for loop to add values here based on search result  TODO-->
 				@for((list,path) <- lists) {
-				<div class="media btn">
-					@if(path!="") {
-					<div class="media-left">
-						<a href="#"> <img width="100" height="100"
-							class="media-object" src="assets/uploaded/@path" alt="Image">
-						</a>
-					</div>
-					} else {
-						<div class="media-left">
-								<a href="#"> <img width="100" height="100"
-								class="media-object" src="assets/images/request.png" alt="Image">
-							</a>
-					</div>
-			
-					}
-					<div class="media-body">
-						<div class="pull-left">
-							<a href=""><h4 class="media-heading">@list.Name</h4></a>
+				<div data-toggle="modal" class="showTooltip" title="Click to View details" data-target="#response_message" data-backdrop="false">
+					<div class="media">
+						@if(path!="") {
+							<div class="media-left">
+								<img width="100" height="100" class="media-object"
+									src="assets/uploaded/@path" alt="Image">
+							</div>
+						} else {
+							<div class="media-left">
+								<img width="100" height="100" class="media-object"
+									src="assets/images/request.png" alt="Image">
+							</div>
+						}
+						<div class="media-body">
+							<div class="pull-left">
+								<h4 class="media-heading"><b>@list.Name</b></h4>
+							</div>
+							<div class="pull-right">
+								<span class="label label-warning">Sponsored</span>
+							</div>		
+							<div class="clearfix"></div>						
+							@if(list.PricePeriod == "D") {
+								<p><b>Period:</b> Daily</p>
+							}
+							@if(list.PricePeriod == "W") {
+								<p><b>Period:</b> Weekly</p>
+							} 
+							@if(list.PricePeriod == "M") {
+								<p><b>Period:</b> Monthly</p>
+							} 
+							@if(list.PricePeriod == "Y") {
+								<p><b>Period:</b> Yearly</p>
+							}					
+							<h5><b>Price:</b> @list.Price</h5>
+							<h5><b>Description:</b> @list.Description</h5>							
 						</div>
-						<div class="pull-right">
-							<span class="label label-warning">Sponsored</span>
-						</div>
-						<div class="clearfix"></div>
-						<p>@list.Description</p>
-						<b>@list.Price</b> <b> @list.PricePeriod</b>
 					</div>
 				</div>
 				}
@@ -130,6 +142,33 @@ categoryList: List[models.Category], dummy: String, dummy2: String)
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="response_message" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog standard-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h2 style="text-align: center">Respond to the offer</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                        	<textarea class="col-sm-12" style="min-height: 250px;" id="user_text" placeholder="Enter response message"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <button class="btn btn-default pull-left">
+                                    Close
+                                </button>
+                                <button class="btn btn-primary pull-right">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 	<script type="text/javascript">
 		$(function() {

@@ -6,8 +6,19 @@ $(document).on('change', '.btn-file :file', function() {
 });
 
 $(document).ready( function() {
+		
     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
         $("#picture_field").val(label);
+    });
+    
+    
+    $(function(){
+        $('.showTooltip').tooltip({
+			animated : 'fade',
+			placement : 'top',
+			container: 'body',
+			delay: {show:500, hide:0}
+        });
     });
     
     $('#listingTypeInfo').change( function() {
