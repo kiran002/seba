@@ -20,21 +20,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class userController extends Controller {
 
 	public Result index() {
-		return ok(views.html.register.render());
+		return ok(views.html.register.render(200, ""));
 	}
 
 	ObjectNode result = Json.newObject();
 
 	@play.db.jpa.Transactional
 	public Result createUser() {
-
 		Logger.info(this.toString() + " in: Register User request");
 		result.removeAll();
-
 		try {
 			DynamicForm form = Form.form().bindFromRequest();
 			String firstname = form.get("fname");
-			Logger.info(this.toString() + firstname);
 			String lastname = form.get("lname");
 			String pass = form.get("password");
 			String pass2 = form.get("password2");
@@ -43,51 +40,48 @@ public class userController extends Controller {
 			if (!firstname.equals("") && !lastname.equals("")
 					&& !email.equals("") && !pass.equals("")
 					&& !pass2.equals("")) {
-				Logger.info(this.toString() + " in: Required fields Ok");
 				if (email.contains("tum.de")) {
-					Logger.info(this.toString() + " in: TUM Email account");
 					if (pass.equals(pass2)) {
-						Logger.info(this.toString() + " in: Passwords Match");
 						Users user = new Users(firstname, lastname, email, pass);
 						user.save();
-						Logger.info(this.toString() + " in: User saved");
+						return ok(views.html.activate
+								.render(user.Email,
+										202,
+										"Your account has been created, "
+												+ "please login and activate your account"));
 
-						return ok(views.html.login.render(true, user));
-
-					} else
-						return badRequest(Application
-								.defaultError("Password does not match with confirmation password"));
-				} else
-					return badRequest(Application
-							.defaultError("You must provide your TUM email. This is a Student Markt."));
-			} else
-				return badRequest(Application
-						.defaultError("First name, last name, email and password are required fields"));
-
+					} else {
+						return ok(views.html.register.render(201,
+								"Please make sure that the passwords match"));
+					}
+				} else {
+					return ok(views.html.register
+							.render(201,
+									"Sorry! You need to have a valid university mail address to register"));
+				}
+			} else {
+				return ok(views.html.register.render(201,
+						"Please enter all required fields"));
+			}
 		} catch (Exception e) {
-			Logger.info(this.toString() + " in: Caught exception");
-			Logger.error(e.getMessage());
-			return badRequest("Exception: "
-					+ Application.defaultError(e.getMessage()));
+			return ok(views.html.register.render(201,
+					"Please enter all required fields"));
 		}
 	}
 
 	@play.db.jpa.Transactional
-	public Result activate() {
-		Logger.info(this.toString() + " in: Activate User request");
+	public Result activate() {		
 		try {
-
 			DynamicForm form = Form.form().bindFromRequest();
 			String email = form.get("email");
-			String activationCode = form.get("activationCode");
+			String activationCode = form.get("acode");
 			models.Users user = models.Users.findUser(email);
 			if (!user.equals(null)) {
 				if (user.ActivationCode.equals(activationCode)) {
 					user.isActivated = true;
-					user.update();
-					Logger.info(this.toString()
-							+ " in: User activated and updated");
-					return ok();
+					user.update();					
+					return ok(views.html.login.render(false, user, 202,
+							"Activation successfull please login to start using stumark"));
 				} else
 					return badRequest(Application
 							.defaultError("Invalid activation code. Please check your entry and try again."));
@@ -119,7 +113,7 @@ public class userController extends Controller {
 				if (user.password.equals(password)) {
 					session("userId", "" + user.UserId);
 					user.AuthCode = generateAuthCode();
-					if (user.isActivated = true) { // TODO: change this
+					if (user.isActivated == true) { // TODO: change this
 						session("usrid", "" + user.UserId);
 						Map<Listings, String> allLists = ListingController
 								.getNewListings();
@@ -128,22 +122,24 @@ public class userController extends Controller {
 						return ok(views.html.Home.render(true, allLists,
 								categoryList, null, null));
 					} else {
-						return ok(views.html.login.render(false, user));
+						return ok(views.html.activate.render(user.Email, 202, "please activate your account using " + user.ActivationCode));
 					}
 
-				} else
-					return badRequest(Application
-							.defaultError("Login information is not valid."));
-
-			} else
-				return badRequest(Application
-						.defaultError("Login information is not valid."));
-
+				} else {
+					return ok(views.html.login
+							.render(false, null, 201,
+									"Invalid user please enter a valid user name and password"));
+				}
+			} else {
+				return ok(views.html.login
+						.render(false, null, 201,
+								"Invalid user please enter a valid user name and password"));
+			}
 		} catch (Exception e) {
 			Logger.info(this.toString() + " in: Caught exception");
 			Logger.error(e.getMessage());
-			return badRequest("Exception: "
-					+ Application.defaultError(e.getMessage()));
+			return ok(views.html.login.render(false, null, 201,
+					"Invalid user please enter a valid user name and password"));
 		}
 
 	}
@@ -190,7 +186,5 @@ public class userController extends Controller {
 				null));
 
 	}
-
-	
 
 }

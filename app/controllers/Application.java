@@ -26,6 +26,13 @@ public class Application extends Controller {
 				null));
 	}
 
+	
+	public Result activate() {		
+		return ok(views.html.activate.render("",200,""));
+	}
+	
+	
+	
 	private static boolean isNull(String str) {
 		return str == null || str.equals("");
 	}

@@ -19,6 +19,7 @@ import play.mvc.Result;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,15 +40,59 @@ public class ListingController extends Controller {
 	@play.db.jpa.Transactional
 	public static Map<Listings, String> getTopOffers(int userId) {
 		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
-		for (Listings listing : models.Listings.findAll("O",userId)) {
+		for (Listings listing : models.Listings.findAll("O", userId)) {
 			pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
 		}
 		return pairs;
 	}
 
 	@play.db.jpa.Transactional
+	public Result updateListing() {
+		if (session("usrid") != null && session("usrid").length() > 0) {
+			DynamicForm form = Form.form().bindFromRequest();
+			int usrId = Integer.parseInt(session("usrid"));
+			int listingId = Integer.parseInt(form.get("lid"));
+			Listings listing = Listings.findById(listingId);
+			if (listing.UserId == usrId) {
+				// the listing was posted by this user and can update whatever
+				// he wants to, except for
+				// Listing id and listing type
+				SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
+				listing.Name = form.get("name");
+				listing.Description = form.get("description");
+				listing.CategoryId = Integer.parseInt(form.get("cid"));
+				listing.TransactionType = form.get("ttype").charAt(0);
+				listing.Price = Double.parseDouble(form.get("price"));
+				listing.PricePeriod = form.get("pperiod");
+				if (form.get("pnegotiable") != null) {
+					listing.PriceNegotiable = true;
+				}
+				try {
+					if (form.get("afrom") != null) {
+						listing.TransactionStart = format.parse(form
+								.get("afrom"));
+					}
+					if (form.get("ato") != null) {
+						listing.TransactionEnd = format
+								.parse(form.get("afrom"));
+					}
+					if (form.get("edate") != null) {
+						listing.ExpiryDate = format.parse(form.get("afrom"));
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				listing.save();
+				return ok();
+			}
+		}
+		return ok();
+	}
+
+	@play.db.jpa.Transactional
 	public static List<Listings> getTopRequests(int userId) {
-		return Listings.findAll("R",userId);
+		return Listings.findAll("R", userId);
 	}
 
 	@play.db.jpa.Transactional
@@ -64,8 +109,7 @@ public class ListingController extends Controller {
 		}
 		return pairs;
 	}
-	
-	
+
 	@play.db.jpa.Transactional
 	public Listings getListing() {
 		DynamicForm form = Form.form().bindFromRequest();
@@ -91,12 +135,9 @@ public class ListingController extends Controller {
 
 			if (currentUser != null) {
 				Logger.info("Listing info " + form.toString());
-				String name = (!form.get("name").equals("") ? form.get("name")
-						: "");
-				String description = (!form.get("description").equals("") ? form
-						.get("description") : "");
-				String pricePeriod = (!form.get("pricePeriod").equals("") ? form
-						.get("pricePeriod") : "");
+				String name = form.get("name");
+				String description = form.get("description");
+				String pricePeriod = form.get("pricePeriod");
 				int categoryId = (!form.get("categoryId").equals("") ? Integer
 						.parseInt(form.get("categoryId")) : 0);
 				char listingType = (!form.get("listingType").equals("") ? form
@@ -205,9 +246,9 @@ public class ListingController extends Controller {
 	@play.db.jpa.Transactional
 	public static HashMap<Listings, String> searchListings(String query) {
 		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
-		//Logger.info(query);
+		// Logger.info(query);
 		for (Listings listing : Listings.search(query)) {
-			//Logger.info(listing.Name);
+			// Logger.info(listing.Name);
 			if (listing.ListingType == 'R') {
 				pairs.put(listing, "");
 			} else {

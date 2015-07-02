@@ -27,6 +27,7 @@ GET		/profile					controllers.Application.showProfile()
 POST 	/profileUpdate				controllers.userController.updateUser()
 
 
-
+GET     /activate                   controllers.Application.activate()
+POST    /activate                 	controllers.userController.activate()
 #Catch All
 GET     /*path                      controllers.Application.catchAll(path)
