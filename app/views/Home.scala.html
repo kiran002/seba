@@ -87,7 +87,7 @@ categoryList: List[models.Category], dummy: String, dummy2: String)
 			<div class="col-md-8" style="overflow: auto; max-height: 600px">
 				<!-- Add for loop to add values here based on search result  TODO-->
 				@for((list,path) <- lists) {
-				<div data-toggle="modal" class="showTooltip" title="Click to View details" data-target="#response_message" data-backdrop="false">
+				<div data-toggle="modal" class="showTooltip listDetails" id="list@list.ListingId" title="Click to view Post details" data-target="#response_message" data-backdrop="false">
 					<div class="media">
 						@if(path!="") {
 							<div class="media-left">
@@ -121,10 +121,25 @@ categoryList: List[models.Category], dummy: String, dummy2: String)
 								<p><b>Period:</b> Yearly</p>
 							}					
 							<h5><b>Price:</b> @list.Price</h5>
-							<h5><b>Description:</b> @list.Description</h5>							
+							<h5><b>Description:</b> @list.Description</h5>
+							
+							<div class="hide" id="listingId">@list.ListingId</div>
+							<div class="hide" id="listingTitle">@list.Name</div>
+							<div class="hide" id="listingType">@list.ListingType</div>
+							<div class="hide" id="listingTransactionType">@list.TransactionType</div>
+							<div class="hide" id="listingCategory">@categoryList(list.CategoryId-1).CategoryName</div>
+							<div class="hide" id="listingPrice">@list.Price</div>
+							<div class="hide" id="listingPeriod">@list.PricePeriod</div>
+							<div class="hide" id="listingFrom">@list.TransactionStart</div>
+							<div class="hide" id="listingTill">@list.TransactionEnd</div>
+							<div class="hide" id="listingNegotiable">@list.PriceNegotiable</div>
+							<div class="hide" id="listingDescription">@list.Description</div>
+							<div class="hide" id="listingUserId">@list.UserId</div>
+							<div class="hide" id="listingImgPath">@path</div>
 						</div>
 					</div>
 				</div>
+				<br>
 				}
 			</div>
 
@@ -142,33 +157,115 @@ categoryList: List[models.Category], dummy: String, dummy2: String)
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="response_message" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog standard-modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h2 style="text-align: center">Respond to the offer</h2>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                        	<textarea class="col-sm-12" style="min-height: 250px;" id="user_text" placeholder="Enter response message"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <button class="btn btn-default pull-left">
-                                    Close
-                                </button>
-                                <button class="btn btn-primary pull-right">
-                                    Send
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<div class="modal fade" id="response_message" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
+		<div class="modal-dialog standard-modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h2 style="text-align: center">Post Details</h2>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<table class="pull-left col-md-8 ">
+							<tbody>
+								<tr>
+									<td class="h4"><strong>Type</strong></td>
+									<td></td>
+									<td class="h4" id="postType">Offer</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Wants to</strong></td>
+									<td></td>
+									<td class="h4" id="postTransactionType">Rent</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Title</strong></td>
+									<td></td>
+									<td class="h4" id="postTitle">Mountain Bike</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Category</strong></td>
+									<td></td>
+									<td class="h4" id="postCategory">Motor</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Price</strong></td>
+									<td></td>
+									<td class="h4" id="postPrice">30 Euro</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Period</strong></td>
+									<td></td>
+									<td class="h4" id="postPeriod">Weekly</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Available From</strong></td>
+									<td></td>
+									<td class="h4" id="postFrom">09.03.2015</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Available Till</strong></td>
+									<td></td>
+									<td class="h4" id="postTill">09.05.2015</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Negotiable</strong></td>
+									<td></td>
+									<td class="h4" id="postNegotiable">Yes</td>
+								</tr>
+								<tr>
+									<td class="h4"><strong>Description</strong></td>
+									<td></td>
+									<td class="h4" id="postDescription">Renting a mountain bike</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="col-md-4">
+							<img src="" alt="Img" id="postImg"
+								class="img-thumbnail">
+						</div>
+						<textarea id="postResponse" class="col-md-12"
+							style="min-height: 80px;margin-top: 10px" placeholder="Enter your response message"></textarea>
+
+						<div class="clearfix"></div>
+						<div class="hide" id="postListingId"></div>
+						<div class="hide" id="postUserId"></div>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-2">
+								<button class="btn btn-default pull-left">Close</button>
+							</div>
+							@if(hasLoggedIn) {
+							<div class="col-md-8"></div>
+							<div class="col-md-2">
+								<button class="btn btn-primary pull-right">Respond to
+									post</button>
+							</div>
+							} else {
+							<div class="col-md-8">
+								<p
+									style="text-align: left; padding-top: 5px; padding-left: 25px; color: red">Please
+									login to respond to this post</p>
+							</div>
+							<div class="col-md-2">
+								<button class="btn btn-primary pull-right" disabled>
+									Respond to post</button>
+							</div>
+						</div>
+						}
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<script type="text/javascript">
 		$(function() {

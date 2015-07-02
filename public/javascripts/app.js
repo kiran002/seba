@@ -11,6 +11,52 @@ $(document).ready( function() {
         $("#picture_field").val(label);
     });
     
+    $('.listDetails').on('click', function() {
+    	var id = this.id;
+    	    	    
+		$("#postUserId").text($("#"+id+" #listingUserId").text());
+    	$("#postListingId").text($("#"+id+" #listingId").text());
+    	if($("#"+id+" #listingTransactionType").text() == "R"){
+    		$("#postTransactionType").text("Rent");   
+    		if($("#"+id+" #listingPeriod").text() == "D") {
+    			$("#postPeriod").text("Daily");    			
+    		} else if($("#"+id+" #listingPeriod").text() == "W") {
+    			$("#postPeriod").text("Weekly");    			
+    		} else if($("#"+id+" #listingPeriod").text() == "M") {
+    			$("#postPeriod").text("Monthly");    			
+    		} else if($("#"+id+" #listingPeriod").text() == "Y") {
+    			$("#postPeriod").text("Yearly");    			
+    		}
+        	$("#postFrom").text($("#"+id+" #listingFrom").text().split(" ")[0]);
+        	$("#postTill").text($("#"+id+" #listingTill").text().split(" ")[0]);
+    	} else if($("#"+id+" #listingTransactionType").text() == "S"){
+    		$("#postTransactionType").text("Sell"); 
+    		$("#postPeriod").text("N/A"); 
+    		$("#postFrom").text("N/A");
+        	$("#postTill").text("N/A");
+    	} else if($("#"+id+" #listingTransactionType").text() == "B"){
+    		$("#postTransactionType").text("Buy");    		
+    		$("#postPeriod").text("N/A"); 
+    		$("#postFrom").text("N/A");
+        	$("#postTill").text("N/A");
+    	}
+    	$("#postTitle").text($("#"+id+" #listingTitle").text());
+    	$("#postCategory").text($("#"+id+" #listingCategory").text());
+    	$("#postPrice").text($("#"+id+" #listingPrice").text() + " Euro");  
+    	if($("#"+id+" #listingNegotiable").text()) {
+    		$("#postNegotiable").text("Yes");   		
+    	} else {
+    		$("#postNegotiable").text("No"); 
+    	}
+    	$("#postDescription").text($("#"+id+" #listingDescription").text());
+    	
+    	if($("#"+id+" #listingImgPath").text()!="") {
+    		$("#postImg").attr("src","assets/uploaded/"+ $("#"+id+" #listingImgPath").text());    		
+    	} else {
+    		$("#postImg").attr("src","assets/images/request.png");
+    	}
+    	
+    });
     
     $(function(){
         $('.showTooltip').tooltip({
