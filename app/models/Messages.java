@@ -36,6 +36,11 @@ public class Messages {
 	public void save() {
 		JPA.em().persist(this);
 	}
+	
+	public Messages() { 
+		this.CreationDate = new java.util.Date();
+		
+	}
 
 	public Messages update() {
 		return JPA.em().merge(this);

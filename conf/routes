@@ -29,5 +29,8 @@ POST 	/profileUpdate				controllers.userController.updateUser()
 
 GET     /activate                   controllers.Application.activate()
 POST    /activate                 	controllers.userController.activate()
+
+POST    /post_message              	controllers.MessageController.sendMessage()
+
 #Catch All
 GET     /*path                      controllers.Application.catchAll(path)

@@ -227,28 +227,41 @@ categoryList: List[models.Category], dummy: String, dummy2: String)
 							<img src="" alt="Img" id="postImg"
 								class="img-thumbnail">
 						</div>
-						<textarea id="postResponse" class="col-md-12"
-							style="min-height: 80px;margin-top: 10px" placeholder="Enter your response message"></textarea>
-
+						
+						
+						
 						<div class="clearfix"></div>
-						<div class="hide" id="postListingId"></div>
-						<div class="hide" id="postUserId"></div>
 
 					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="container-fluid">
 						<div class="row">
-							<div class="col-md-2">
-								<button class="btn btn-default pull-left">Close</button>
-							</div>
+							
 							@if(hasLoggedIn) {
-							<div class="col-md-8"></div>
-							<div class="col-md-2">
-								<button class="btn btn-primary pull-right">Respond to
-									post</button>
-							</div>
+							<form method="post" action="/post_message">
+								<input type="hidden" id="postListingId" name="listingId" class="form-control"/>
+								<input type="hidden" id="postUserId" name="sendTo" class="form-control"/>
+								<div class="col-md-12">
+									<textarea id="postResponse" name="msg" class="form-control"
+										style="min-height: 80px;margin-bottom: 10px; width:100%" placeholder="Enter your response message"></textarea>
+								</div>
+								<div class="col-md-2">
+									<button class="btn btn-default pull-left">Close</button>
+								</div>
+								<div class="col-md-8"></div>
+								<div class="col-md-2">
+									<button type="submit" class="btn btn-primary pull-right">Respond to
+										post</button>
+								</div>
+							</form>
 							} else {
+							<div class="col-md-2">
+								<button class="btn btn-default pull-left" class="close" data-dismiss="modal"
+										aria-hidden="true">
+										Close
+								</button>
+							</div>
 							<div class="col-md-8">
 								<p
 									style="text-align: left; padding-top: 5px; padding-left: 25px; color: red">Please

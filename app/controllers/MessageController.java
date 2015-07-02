@@ -3,11 +3,14 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.Messages;
+import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import java.util.*;
+import play.mvc.*;
+import views.html.*;
 
 public class MessageController extends Controller {
 	// send message
@@ -23,7 +26,12 @@ public class MessageController extends Controller {
 			msg.ListingId = Integer.parseInt(form.get("listingId"));
 			msg.Message = form.get("msg");
 			msg.save();
-			return ok(); // successful have to forward
+			Map<Listings, String> allLists = ListingController.getNewListings();
+			List<Category> categoryList = utilController.getCategories();
+			if (session("usrid") != null && session("usrid").length() > 0) {
+				return ok(views.html.Home.render(true, allLists, categoryList,
+						null, null));
+			} // successful have to forward
 		}
 		return ok(); // unsuccessful need to validate and other stuff
 	}

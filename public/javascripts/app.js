@@ -14,8 +14,8 @@ $(document).ready( function() {
     $('.listDetails').on('click', function() {
     	var id = this.id;
     	    	    
-		$("#postUserId").text($("#"+id+" #listingUserId").text());
-    	$("#postListingId").text($("#"+id+" #listingId").text());
+		$("#postUserId").val($("#"+id+" #listingUserId").text());
+    	$("#postListingId").val($("#"+id+" #listingId").text());
     	if($("#"+id+" #listingTransactionType").text() == "R"){
     		$("#postTransactionType").text("Rent");   
     		if($("#"+id+" #listingPeriod").text() == "D") {
