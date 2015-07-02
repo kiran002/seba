@@ -1,4 +1,4 @@
-@(hasLoggedIn: Boolean, lists: Map[models.Listings, String])
+@(hasLoggedIn: Boolean, msgs: List[utils.MessageList])
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +7,8 @@
 <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
 <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap-datetimepicker.css")">
 <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/app.css")">
-<link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+<link rel="shortcut icon" type="image/png"
+	href="@routes.Assets.versioned("images/favicon.png")">
 <script src="@routes.Assets.versioned("javascripts/jquery.min.js")" type="text/javascript"></script>
 <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")" type="text/javascript"></script>
 <script src="@routes.Assets.versioned("javascripts/moment-with-locales.js")" type="text/javascript"></script>
@@ -16,22 +17,22 @@
 
 <body>
 
-<div class="container" style="width:80%">
-	<!-- Navigation bar code -->
-	@navbar(hasLoggedIn)
+	<div class="container" style="width: 80%">
+		<!-- Navigation bar code -->
+		@navbar(hasLoggedIn)
 
-    <div class="row">
-        <div class="pull-left">
-            <h3>Messages</h3>
-        </div>
-        <div class="pull-right pad-top-25">
-	      <!-- <b>{{messages.length}} message(s) </b> -->
-	      <b>@lists.size message(s) </b>
-	    </div>
-        <div class="clearfix"></div>
-        <hr/>
+		<div class="row">
+			<div class="pull-left">
+				<h3>Messages</h3>
+			</div>
+			<div class="pull-right pad-top-25">
+				<!-- <b>{{messages.length}} message(s) </b> -->
+				<b>@msgs.size message(s) </b>
+			</div>
+			<div class="clearfix"></div>
+			<hr />
 
-<!-- 
+			<!-- 
         <div class="col-md-3 well">
             <div class="form-group">
                 <input type="text" id="filter" placeholder="Filter" class="form-control">                
@@ -39,45 +40,36 @@
         </div>
  -->
 			<div class="col-md-9">
-			<div class="form-group">
-                <input type="text" id="filter" placeholder="Filter" class="form-control">                
-            </div>
+				<div class="form-group">
+					<input type="text" id="filter" placeholder="Filter"
+						class="form-control">
+				</div>
 				<table class="table">
 					<thead class="searchable">
 						<tr>
-							<th>Post title</th>
-							<th>Category Type</th>
-							<th>Post details</th>
+							<th>Sent/Received</th>
+							<th>Person</th>
+							<th>Listing Name</th>
+							<th>Message</th>
 							<th>Respond</th>
 						</tr>
 					<thead>
 					<tbody class="searchable">
+						@for(index <- 0 to (msgs.size-1)) {
 						<tr>
-							<td>Kiran</td>
-							<td>Motor Cycle</td>
-							<td>
-								<button class="btn btn-primary" data-toggle="modal"
-									data-target="#view_offer_details" data-backdrop="false">
-									View Offer Details</button>
-							</td>
-							<td>
+							<input type="hidden" name="from_id"
+								value="@msgs(index).ToUserId" />
+							<td>@msgs(index).msgtype</td>
+							<td>@msgs(index).usrname</td>
+							<td>@msgs(index).Listing_name</td>
+							<td>@msgs(index).Message</td>
+							<td>@if(msgs(index).respond_disabled) {
 								<button class="btn btn-primary" data-toggle="modal"
 									data-target="#response_message" data-backdrop="false">Respond</button>
+								}
 							</td>
 						</tr>
-						<tr>
-							<td>Fabi</td>
-							<td>2 Bedroom flat</td>
-							<td>
-								<button class="btn btn-primary" data-toggle="modal"
-									data-target="#view_offer_details" data-backdrop="false">
-									View Offer Details</button>
-							</td>
-							<td>
-								<button class="btn btn-primary" data-toggle="modal"
-									data-target="#response_message" data-backdrop="false">Respond</button>
-							</td>
-						</tr>
+						}
 					</tbody>
 				</table>
 			</div>
@@ -95,86 +87,86 @@
 				</div>
 			</div>
 
-			<div class="modal fade" id="view_offer_details" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog standard-modal">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h2 style="text-align: center">Offer Details</h2>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <table class="table">
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Material</th>
-                                        <th>Renting type</th>
-                                        <th>Valid Until</th>
-                                        <th>Price</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Kevin</td>
-                                        <td>Motor Boat</td>
-                                        <td>Daily Rent</td>
-                                        <td>14/July/2015</td>
-                                        <td>5 Euro</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div class="modal fade" id="view_offer_details" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
+				<div class="modal-dialog standard-modal">
+					<div class="modal-content">
+						<div class="modal-body">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true">&times;</button>
+							<h2 style="text-align: center">Offer Details</h2>
+							<div class="container-fluid">
+								<div class="row">
+									<table class="table">
+										<tr>
+											<th>Name</th>
+											<th>Material</th>
+											<th>Renting type</th>
+											<th>Valid Until</th>
+											<th>Price</th>
+										</tr>
+										<tr>
+											<td>Kevin</td>
+											<td>Motor Boat</td>
+											<td>Daily Rent</td>
+											<td>14/July/2015</td>
+											<td>5 Euro</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        <div class="modal fade" id="response_message" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog standard-modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h2 style="text-align: center">Respond to the offer</h2>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                        	<textarea class="col-sm-12" style="min-height: 250px;" id="user_text" placeholder="Enter response message"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <button class="btn btn-default pull-left">
-                                    Close
-                                </button>
-                                <button class="btn btn-primary pull-right">
-                                    Send
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
+			<div class="modal fade" id="response_message" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
+				<div class="modal-dialog standard-modal">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true">&times;</button>
+							<h2 style="text-align: center">Respond to the offer</h2>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<textarea class="col-sm-12" style="min-height: 250px;"
+									id="user_text" placeholder="Enter response message"></textarea>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<div class="container-fluid">
+								<div class="row">
+									<button class="btn btn-default pull-left">Close</button>
+									<button class="btn btn-primary pull-right">Send</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function() {
 
-    $(document).ready(function () {
+			(function($) {
 
-        (function ($) {
+				$('#filter').keyup(function() {
 
-            $('#filter').keyup(function () {
+					var rex = new RegExp($(this).val(), 'i');
+					$('.searchable tr').hide();
+					$('.searchable tr').filter(function() {
+						return rex.test($(this).text());
+					}).show();
 
-                var rex = new RegExp($(this).val(), 'i');
-                $('.searchable tr').hide();
-                $('.searchable tr').filter(function () {
-                    return rex.test($(this).text());
-                }).show();
+				})
 
-            })
+			}(jQuery));
 
-        }(jQuery));
-
-    });
-</script>
+		});
+	</script>
 
 
 </body>

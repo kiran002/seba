@@ -111,12 +111,7 @@ public class Application extends Controller {
 		return ok(views.html.requests.render(true, new ArrayList<Listings>()));
 	}
 
-	@play.db.jpa.Transactional
-	public Result showMessages() {
-		Map<Listings, String> messagesLists = ListingController
-				.getNewListings();
-		return ok(views.html.messages.render(true, messagesLists));
-	}
+	
 
 	@play.db.jpa.Transactional
 	public Result catchAll(String path) {

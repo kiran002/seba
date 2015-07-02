@@ -2,7 +2,7 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import utils.MessageList;
 import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -36,6 +36,36 @@ public class MessageController extends Controller {
 		return ok(); // unsuccessful need to validate and other stuff
 	}
 	
+	
+	@play.db.jpa.Transactional
+	public Result showMessages() {
+		List<utils.MessageList> msglist = new ArrayList<MessageList>();
+		if (session("usrid") != null && session("usrid").length() > 0) {
+			List<models.Messages> msgs = Messages.findAll(Integer
+					.parseInt(session("usrid")));
+			
+			for (Messages msg : msgs) {
+				MessageList msglistItem = new MessageList();
+				msglistItem.ListingId = msg.ListingId;
+				msglistItem.Listing_name = Listings.findById(msg.ListingId).Name;
+				msglistItem.Message = msg.Message;
+				if (msg.FromUserId == Integer.parseInt(session("usrid"))) {
+					msglistItem.msgtype = "Sent";
+					msglistItem.respond_disabled = false;
+					msglistItem.usrname = ""+ Users.findById(msg.ToUserId).FirstName; 
+				} else {
+					msglistItem.respond_disabled = true;
+					msglistItem.ToUserId = msg.FromUserId;
+					msglistItem.msgtype = "Recieved";					
+					msglistItem.usrname = ""+ Users.findById(msg.FromUserId).FirstName; 
+				}
+				msglist.add(msglistItem);
+			}
+			return ok(views.html.messages.render(true, msglist));
+		}
+		return ok(views.html.messages.render(false, msglist));
+	}
+
 	@play.db.jpa.Transactional
 	public static List<Messages> getAllMessages() {
 		List<Messages> msgs = null;

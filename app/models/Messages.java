@@ -53,8 +53,8 @@ public class Messages {
 	
 	public static List<Messages> findAll(int userId) {
 		TypedQuery<Messages> query = JPA.em().createQuery(
-				"SELECT l FROM Messages l order by CreationDate",
+				"SELECT l FROM Messages l where l.FromUserId =:frm_uid or l.ToUserId = :to_uids order by CreationDate ",
 				Messages.class);
-		return query.setParameter(1, userId).getResultList();
+		return query.setParameter("frm_uid", userId).setParameter("to_uids", userId).getResultList();
 	}
 }
