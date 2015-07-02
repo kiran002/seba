@@ -49,12 +49,11 @@ public class userController extends Controller {
 					if (pass.equals(pass2)) {
 						Logger.info(this.toString() + " in: Passwords Match");
 						Users user = new Users(firstname, lastname, email, pass);
-						user.save(); // TODO @Kiran AuthCode can be null either
-										// change in db or models
+						user.save();
 						Logger.info(this.toString() + " in: User saved");
 
 						return ok(views.html.login.render(true, user));
-						// return ok(result);
+
 					} else
 						return badRequest(Application
 								.defaultError("Password does not match with confirmation password"));
@@ -88,7 +87,7 @@ public class userController extends Controller {
 					user.update();
 					Logger.info(this.toString()
 							+ " in: User activated and updated");
-					return ok(); // return to activated page
+					return ok();
 				} else
 					return badRequest(Application
 							.defaultError("Invalid activation code. Please check your entry and try again."));
@@ -118,13 +117,9 @@ public class userController extends Controller {
 			Logger.info(this.toString() + " in: User found");
 			if (!user.equals(null)) {
 				if (user.password.equals(password)) {
-					session("userId", "" + user.UserId); // TODO @All check and
-															// try through the
-															// session
+					session("userId", "" + user.UserId);
 					user.AuthCode = generateAuthCode();
-					if (user.isActivated = true) { // Note: When user has
-													// already activate his
-													// account
+					if (user.isActivated = true) { // TODO: change this
 						session("usrid", "" + user.UserId);
 						Map<Listings, String> allLists = ListingController
 								.getNewListings();
@@ -182,7 +177,7 @@ public class userController extends Controller {
 				Users usr = Users.findById(Integer.parseInt(session("usrid")));
 				usr.FirstName = firstname;
 				usr.LastName = lastname;
-				if(pass != null && pass.length() >= 1) {
+				if (pass != null && pass.length() >= 1) {
 					usr.password = pass;
 				}
 				usr.update();
@@ -196,18 +191,6 @@ public class userController extends Controller {
 
 	}
 
-	@play.db.jpa.Transactional
-	public Result deleteUser() {
-		if (session("usrId") != null && session("usrId").length() > 0) {
-			Users usr = Users.findById(Integer.parseInt(session("usrId")));
-			DynamicForm form = Form.form().bindFromRequest();
-			String pass = form.get("password");
-			if (usr.password.equals(pass)) {
-				usr.delete();
-				return ok(); // was succesful return to home page
-			}
-		}
-		return ok(); // something has gone wrong TODO: add validations
-	}
+	
 
 }

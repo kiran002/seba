@@ -30,7 +30,6 @@ public class ListingController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result index() {
-
 		if (session("usrid") != null && session("usrid").length() > 0) {
 			return ok(views.html.addListing.render(true));
 		}
@@ -38,17 +37,17 @@ public class ListingController extends Controller {
 	}
 
 	@play.db.jpa.Transactional
-	public static Map<Listings, String> getTopOffers() {
+	public static Map<Listings, String> getTopOffers(int userId) {
 		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
-		for (Listings listing : models.Listings.findAll("O")) {
+		for (Listings listing : models.Listings.findAll("O",userId)) {
 			pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
 		}
 		return pairs;
 	}
 
 	@play.db.jpa.Transactional
-	public static List<Listings> getTopRequests() {
-		return Listings.findAll("R");
+	public static List<Listings> getTopRequests(int userId) {
+		return Listings.findAll("R",userId);
 	}
 
 	@play.db.jpa.Transactional

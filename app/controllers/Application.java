@@ -86,14 +86,22 @@ public class Application extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result showOffers() {
-		Map<Listings, String> offersLists = ListingController.getTopOffers();
-		return ok(views.html.offers.render(true, offersLists));
+		if (session("usrid") != null && session("usrid").length() > 0) {
+			Map<Listings, String> offersLists = ListingController
+					.getTopOffers(Integer.parseInt(session("usrid")));
+			return ok(views.html.offers.render(true, offersLists));
+		}
+		return ok(views.html.offers.render(true,
+				new HashMap<Listings, String>()));
 	}
 
 	@play.db.jpa.Transactional
 	public Result showRequests() {
-		List<Listings> requestsLists = ListingController.getTopRequests();
-		return ok(views.html.requests.render(true, requestsLists));
+		if (session("usrid") != null && session("usrid").length() > 0) {
+			List<Listings> requestsLists = ListingController.getTopRequests(Integer.parseInt(session("usrid")));
+			return ok(views.html.requests.render(true, requestsLists));
+		}
+		return ok(views.html.requests.render(true, new ArrayList<Listings>()));
 	}
 
 	@play.db.jpa.Transactional
@@ -119,16 +127,18 @@ public class Application extends Controller {
 		result.put("data", message);
 		return result;
 	}
-	
+
 	@play.db.jpa.Transactional
 	public Result showProfile() {
-		Map<Listings, String> allLists= ListingController.getNewListings();
-		List<Category> categoryList= utilController.getCategories();
+		Map<Listings, String> allLists = ListingController.getNewListings();
+		List<Category> categoryList = utilController.getCategories();
 		if (session("usrid") != null && session("usrid").length() > 0) {
-			Users usr = userController.getUser(Integer.parseInt(session("usrid")));
-			return ok(views.html.profile.render(true,usr));
+			Users usr = userController.getUser(Integer
+					.parseInt(session("usrid")));
+			return ok(views.html.profile.render(true, usr));
 		}
-		return ok(views.html.Home.render(false, allLists, categoryList, null,null));
+		return ok(views.html.Home.render(false, allLists, categoryList, null,
+				null));
 	}
 
 }

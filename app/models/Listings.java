@@ -105,6 +105,18 @@ public class Listings {
 				.getResultList();
 	}
 
+	
+	public static List<Listings> findAll(String type,int uid) {
+		TypedQuery<Listings> query = JPA
+				.em()
+				.createQuery(
+						"SELECT l FROM Listings l where l.ListingType = :ListingType and l.UserId = :UserId order by CreationDate",
+						Listings.class);
+		query.setMaxResults(10);
+		return query.setParameter("ListingType", type.charAt(0)).setParameter("UserId", uid)
+				.getResultList();
+	}
+
 	public static List<Listings> search(String query_string) {
 		try {
 			TypedQuery<Listings> query = JPA.em().createQuery(query_string,

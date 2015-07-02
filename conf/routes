@@ -24,7 +24,6 @@ GET     /requests                   controllers.Application.showRequests()
 GET     /messages                   controllers.Application.showMessages()
 
 GET		/profile					controllers.Application.showProfile()
-POST 	/profileDelete				controllers.userController.deleteUser()
 POST 	/profileUpdate				controllers.userController.updateUser()
 
 
