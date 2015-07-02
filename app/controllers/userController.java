@@ -169,29 +169,30 @@ public class userController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result updateUser() {
+		Map<Listings, String> allLists = ListingController.getNewListings();
+		List<Category> categoryList = utilController.getCategories();
 		DynamicForm form = Form.form().bindFromRequest();
 		String firstname = form.get("fname");
 		Logger.info(this.toString() + firstname);
 		String lastname = form.get("lname");
 		String pass = form.get("password");
 		String pass2 = form.get("password2");
-		if (pass.equals(pass2)) {
-			if (session("usrId") != null && session("usrId").length() > 0) {
-				Users usr = Users.findById(Integer.parseInt(session("usrId")));
+		if (pass == null || pass.equals(pass2)) {
+			if (session("usrid") != null && session("usrid").length() > 0) {
+				Users usr = Users.findById(Integer.parseInt(session("usrid")));
 				usr.FirstName = firstname;
 				usr.LastName = lastname;
-				usr.password = pass;
+				if(pass != null && pass.length() >= 1) {
+					usr.password = pass;
+				}
 				usr.update();
-				Map<Listings, String> allLists = ListingController
-						.getNewListings();
-				List<Category> categoryList = utilController
-						.getCategories();
-				return ok(views.html.Home.render(true, allLists,
-						categoryList, null, null));
+				return ok(views.html.Home.render(true, allLists, categoryList,
+						null, null));
 			}
 		}
 		// something has gone wrong make the validations
-		return ok();
+		return ok(views.html.Home.render(true, allLists, categoryList, null,
+				null));
 
 	}
 

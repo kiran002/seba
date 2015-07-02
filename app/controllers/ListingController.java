@@ -65,6 +65,14 @@ public class ListingController extends Controller {
 		}
 		return pairs;
 	}
+	
+	
+	@play.db.jpa.Transactional
+	public Listings getListing() {
+		DynamicForm form = Form.form().bindFromRequest();
+		int id = Integer.parseInt(form.get("lid"));
+		return Listings.findById(id);
+	}
 
 	@play.db.jpa.Transactional
 	public Result createListing() {
