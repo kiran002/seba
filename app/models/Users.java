@@ -28,13 +28,11 @@ public class Users {
 	@Constraints.Required
 	public String LastName;
 
-	@Constraints.Required
 	public String ActivationCode;
 
-	@Constraints.Required
 	public boolean isActivated;
 
-	@Constraints.Required
+	
 	public Date CreationDate;
 
 	@Constraints.Required
@@ -49,13 +47,8 @@ public class Users {
 	}
 
 	public Users(String firstName2, String lastName2, String email2,
-			String password2) {
-		Random r = new Random();
-		String pass="";
-		for(int i=0;i<5;i++){
-			pass = pass + r.nextInt(10);
-		}
-		this.ActivationCode = pass;
+			String password2) {		
+		
 		this.FirstName = firstName2;
 		this.CreationDate = new Date();
 		this.isActivated = false;
@@ -86,6 +79,70 @@ public class Users {
 
 	public static Users findById(Integer id) {
 		return JPA.em().find(Users.class, id);
+	}
+
+	public String getFirstName() {
+		return FirstName;
+	}
+
+	public void setFirstName(String firstName) {
+		FirstName = firstName;
+	}
+
+	public String getLastName() {
+		return LastName;
+	}
+
+	public void setLastName(String lastName) {
+		LastName = lastName;
+	}
+
+	public String getActivationCode() {
+		return ActivationCode;
+	}
+
+	public void setActivationCode(String activationCode) {
+		ActivationCode = activationCode;
+	}
+
+	public boolean isActivated() {
+		return isActivated;
+	}
+
+	public void setActivated(boolean isActivated) {
+		this.isActivated = isActivated;
+	}
+
+	public Date getCreationDate() {
+		return CreationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		CreationDate = creationDate;
+	}
+
+	public String getEmail() {
+		return Email;
+	}
+
+	public void setEmail(String email) {
+		Email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getAuthCode() {
+		return AuthCode;
+	}
+
+	public void setAuthCode(String authCode) {
+		AuthCode = authCode;
 	}
 
 }

@@ -1,4 +1,6 @@
 package controllers;
+import static controllers.login.isLoggedIn;
+import static controllers.login.getUserId;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -32,7 +34,7 @@ public class ListingController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result index() {
-		if (session("usrid") != null && session("usrid").length() > 0) {
+		if (isLoggedIn()) {
 			return ok(views.html.addListing.render(true));
 		}
 		return ok(views.html.addListing.render(false));
@@ -49,7 +51,7 @@ public class ListingController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result updateListing() {
-		if (session("usrid") != null && session("usrid").length() > 0) {
+		if (isLoggedIn()) {
 			DynamicForm form = Form.form().bindFromRequest();
 			int usrId = Integer.parseInt(session("usrid"));
 			int listingId = Integer.parseInt(form.get("lid"));

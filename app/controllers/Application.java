@@ -1,16 +1,26 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import static controllers.login.isLoggedIn;
+import static controllers.login.getUserId;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import models.*;
-import play.*;
+import models.Category;
+import models.Listings;
+import models.Users;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
-import play.mvc.*;
-import views.html.*;
+import play.mvc.Controller;
+import play.mvc.Result;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+;
 
 public class Application extends Controller {
 
@@ -18,7 +28,7 @@ public class Application extends Controller {
 	public Result index() {
 		Map<Listings, String> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
-		if (session("usrid") != null && session("usrid").length() > 0) {
+		if (isLoggedIn()) {
 			return ok(views.html.Home.render(true, allLists, categoryList,
 					null, null));
 		}
@@ -26,27 +36,20 @@ public class Application extends Controller {
 				null));
 	}
 
-	
-	public Result activate() {		
-		return ok(views.html.activate.render("",200,""));
+	public Result activate() {
+		return ok(views.html.activate.render("", 200, ""));
 	}
-	
-	
-	
+
 	private static boolean isNull(String str) {
 		return str == null || str.equals("");
 	}
 
 	@play.db.jpa.Transactional
 	public Result searchListing() {
-		Logger.info("search request");
 		String query = "SELECT l FROM Listings l where ";
 		String scnd_query = "";
 		DynamicForm form = Form.form().bindFromRequest();
-
-		if (session("usrid") != null && session("usrid").length() > 0) {
-			Logger.info("HELLLOOOO");
-			// Users usr = Users.findById(Integer.parseInt(session("usrId")));
+		if (isLoggedIn()) {
 			if (!isNull(form.get("keywords"))) {
 				query += " description like '%" + form.get("keywords")
 						+ "%' and";
@@ -77,13 +80,11 @@ public class Application extends Controller {
 			}
 
 		}
-		Logger.info(query);
-
 		Map<Listings, String> allLists = ListingController
 				.searchListings(query);
 		List<Category> categoryList = utilController.getCategories();
 
-		if (session("usrid") != null && session("usrid").length() > 0) {
+		if (isLoggedIn()) {
 			return ok(views.html.Home.render(true, allLists, categoryList,
 					null, null));
 		}
@@ -93,25 +94,24 @@ public class Application extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result showOffers() {
-		if (session("usrid") != null && session("usrid").length() > 0) {
-			Map<Listings, String> offersLists = ListingController
-					.getTopOffers(Integer.parseInt(session("usrid")));
-			return ok(views.html.offers.render(true, offersLists,200,""));
+		if (isLoggedIn()) {
+			Map<Listings, String> offersLists = ListingController.getTopOffers(getUserId());
+			return ok(views.html.offers.render(true, offersLists, 200, ""));
 		}
 		return ok(views.html.offers.render(true,
-				new HashMap<Listings, String>(),200,""));
+				new HashMap<Listings, String>(), 200, ""));
 	}
 
 	@play.db.jpa.Transactional
 	public Result showRequests() {
-		if (session("usrid") != null && session("usrid").length() > 0) {
-			List<Listings> requestsLists = ListingController.getTopRequests(Integer.parseInt(session("usrid")));
-			return ok(views.html.requests.render(true, requestsLists,200,""));
+		if (isLoggedIn()) {
+			List<Listings> requestsLists = ListingController
+					.getTopRequests(getUserId());
+			return ok(views.html.requests.render(true, requestsLists, 200, ""));
 		}
-		return ok(views.html.requests.render(true, new ArrayList<Listings>(),200,""));
+		return ok(views.html.requests.render(true, new ArrayList<Listings>(),
+				200, ""));
 	}
-
-	
 
 	@play.db.jpa.Transactional
 	public Result catchAll(String path) {
@@ -134,9 +134,8 @@ public class Application extends Controller {
 	public Result showProfile() {
 		Map<Listings, String> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
-		if (session("usrid") != null && session("usrid").length() > 0) {
-			Users usr = userController.getUser(Integer
-					.parseInt(session("usrid")));
+		if (isLoggedIn()) {
+			Users usr = userController.getUser(getUserId());
 			return ok(views.html.profile.render(true, usr));
 		}
 		return ok(views.html.Home.render(false, allLists, categoryList, null,

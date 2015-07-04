@@ -15,18 +15,7 @@
 <div class="container">
 		@navbar(false)
 		<div class="row">
-		@if(status == 202) { 
-			<div class="alert alert-success" role="alert">
-				<span class="glyphicon glyphicon-exclamation-sign"
-					aria-hidden="true"></span> <span class="sr-only">Success:</span>@msg
-			</div>
-			}
-			@if(status == 201) {
-			<div class="alert alert-danger" role="alert">
-				<span class="glyphicon glyphicon-exclamation-sign"
-					aria-hidden="true"></span> <span class="sr-only">Error:</span> @msg
-			</div>
-			}
+		@include_status(status,msg)
 			<h3>Activate your account</h3>
 			<hr />
 			<!-- Add form submit with post functionality at below code -->

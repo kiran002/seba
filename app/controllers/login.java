@@ -13,7 +13,7 @@ public class login extends Controller {
 	public Result index() {
 		Map<Listings, String> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
-		if (session("usrid") != null && session("usrid").length() > 0) {			
+		if (isLoggedIn()) {			
 			return ok(views.html.Home.render(true, allLists, categoryList,
 					null, null));
 		}
@@ -22,7 +22,7 @@ public class login extends Controller {
 
 	public Result logout() {
 		try {
-			if (session("usrid") != null) {
+			if (isLoggedIn()) {
 				session().clear();
 				return ok(views.html.login.render(false, null,202,"Logout successful! See you soon!!"));
 			}
@@ -31,6 +31,17 @@ public class login extends Controller {
 		}
 		return ok(views.html.login.render(false, null,201,"Please login to continue"));
 
+	}
+	
+	public static int getUserId() {
+		if (session("usrid") != null && session("usrid").length() > 0) {	
+			return Integer.parseInt(session("usrid"));
+		}
+		return 0;
+	}
+	
+	public static boolean isLoggedIn(){
+		return getUserId() > 0;
 	}
 
 }

@@ -1,10 +1,16 @@
 package controllers;
 
-import static play.libs.Json.toJson;
-
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import models.Category;
+import models.Listings;
 import models.Users;
+
+import org.hibernate.exception.ConstraintViolationException;
+
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -12,9 +18,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import java.util.*;
-import models.*;
-
+import static utils.Library.getActivationCode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class userController extends Controller {
@@ -27,75 +31,61 @@ public class userController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result createUser() {
-		Logger.info(this.toString() + " in: Register User request");
-		result.removeAll();
+		DynamicForm form = Form.form().bindFromRequest();
+		Users user = Form.form(Users.class).bindFromRequest().get();
+		String pass2 = form.get("password2");
+		Logger.info(pass2 + " in: Register User request");
 		try {
-			DynamicForm form = Form.form().bindFromRequest();
-			String firstname = form.get("fname");
-			String lastname = form.get("lname");
-			String pass = form.get("password");
-			String pass2 = form.get("password2");
-			String email = form.get("email");
-
-			if (!firstname.equals("") && !lastname.equals("")
-					&& !email.equals("") && !pass.equals("")
-					&& !pass2.equals("")) {
-				if (email.contains("tum.de")) {
-					if (pass.equals(pass2)) {
-						Users user = new Users(firstname, lastname, email, pass);
-						user.save();
-						return ok(views.html.activate
-								.render(user.Email,
-										202,
-										"Your account has been created, "
-												+ "please activate your account " + user.ActivationCode));
-
-					} else {
-						return ok(views.html.register.render(201,
-								"Please make sure that the passwords match"));
-					}
+			if (user.Email.contains("tum.de")) {
+				if (user.password.equals(pass2)) {
+					user.CreationDate = new Date();
+					user.isActivated = false;
+					user.ActivationCode = getActivationCode();
+					user.save();
+					return ok(views.html.activate.render(user.Email, 202,
+							"Your account has been created, "
+									+ "please activate your account "
+									+ user.ActivationCode));
 				} else {
-					return ok(views.html.register
-							.render(201,
-									"Sorry! You need to have a valid university mail address to register"));
+					return ok(views.html.register.render(201,
+							"Please make sure that the passwords match"));
 				}
 			} else {
-				return ok(views.html.register.render(201,
-						"Please enter all required fields"));
+				return ok(views.html.register
+						.render(201,
+								"Sorry! You need to have a valid university mail address to register"));
 			}
-		} catch (Exception e) {
+		} catch (ConstraintViolationException ex) {
 			return ok(views.html.register.render(201,
 					"Please enter all required fields"));
 		}
 	}
 
 	@play.db.jpa.Transactional
-	public Result activate() {		
+	public Result activate() {
+		DynamicForm form = Form.form().bindFromRequest();
+		String email = form.get("email");
+		String activationCode = form.get("acode");
 		try {
-			DynamicForm form = Form.form().bindFromRequest();
-			String email = form.get("email");
-			String activationCode = form.get("acode");
 			models.Users user = models.Users.findUser(email);
-			if (!user.equals(null)) {
+			if (!(user==null)) {
 				if (user.ActivationCode.equals(activationCode)) {
 					user.isActivated = true;
-					user.update();					
-					return ok(views.html.login.render(false, user, 202,
-							"Activation successfull please login to start using stumark"));
+					user.update();
+					return ok(views.html.login
+							.render(false, user, 202,
+									"Activation successfull please login to start using stumark"));
 				} else
-					return badRequest(Application
-							.defaultError("Invalid activation code. Please check your entry and try again."));
+					return ok(views.html.activate.render(user.Email, 201,
+							"Invalid activation code. Please check your entry and try again."
+									+ user.ActivationCode));
 			} else
-				return badRequest(Application
-						.defaultError("Sorry, we cannot find the user : "
-								+ email
-								+ ". Please check spelling and try again."));
+				return ok(views.html.activate.render(user.Email, 201,
+						"Sorry, we cannot find the user."));
 
 		} catch (Exception e) {
-			Logger.info(this.toString() + " in: Caught exception");
-			Logger.error(e.getMessage());
-			return badRequest("Exception: "
-					+ Application.defaultError(e.getMessage()));
+			return ok(views.html.activate.render(email, 201,
+					"Sorry, we cannot find the user."));
 		}
 
 	}
@@ -107,12 +97,12 @@ public class userController extends Controller {
 			DynamicForm form = Form.form().bindFromRequest();
 			String email = form.get("email");
 			String password = form.get("password");
-			models.Users user = models.Users.findUser(email);			
+			models.Users user = models.Users.findUser(email);
 			if (!user.equals(null)) {
 				if (user.password.equals(password)) {
 					session("userId", "" + user.UserId);
 					user.AuthCode = generateAuthCode();
-					if (user.isActivated == true) { 
+					if (user.isActivated == true) {
 						session("usrid", "" + user.UserId);
 						Map<Listings, String> allLists = ListingController
 								.getNewListings();
@@ -121,7 +111,9 @@ public class userController extends Controller {
 						return ok(views.html.Home.render(true, allLists,
 								categoryList, null, null));
 					} else {
-						return ok(views.html.activate.render(user.Email, 202, "please activate your account using " + user.ActivationCode));
+						return ok(views.html.activate.render(user.Email, 202,
+								"please activate your account using "
+										+ user.ActivationCode));
 					}
 
 				} else {
