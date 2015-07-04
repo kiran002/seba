@@ -1,11 +1,90 @@
-@(hasLoggedIn:Boolean,Listing:models.Listings)
+@(hasLoggedIn:Boolean,Listing:utils.Listing)
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<head>@head(Listing.listing.Name + " -- Listing details")
 </head>
 <body>
-@Listing.Name
+	@navbar(hasLoggedIn)
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-11 col-md-offset-1">
+				@if(Listing.listing.ListingType=='O') {
+				<h3>Showing Offer details for @Listing.listing.Name</h3>
+				} else {
+				<h3>Showing Request details for @Listing.listing.Name</h3>
+				}
+			</div>
+			<hr />
+		</div>
+		<div class="row">
+			<div class="col-md-10 col-md-offset-2">
+				<div class="row">
+					<div class="col-md-1">
+						@if(Listing.path!="") {
+						<div class="media-left">
+							<img width="300" height="200" class="media-object thumbnail"
+								src="assets/uploaded/@Listing.path" alt="Image">
+						</div>
+						} else {
+						<div class="media-left">
+							<img width="300" height="400" class="media-object thumbnail"
+								src="assets/images/request.png" alt="Image">
+						</div>
+						}
+					</div>
+					<div class="col-md-9 col-md-offset-2">
+						<div class="row">
+							<div class="col-md-12">
+								@if(Listing.isOwner) { <a
+									href="/edit_listing?lid=@Listing.listing.ListingId">Edit </a> <a
+									href="/delete_listing?lid=@Listing.listing.ListingId"
+									onclick="return confirm('Are you sure??')">Delete</a> }
+								<p>Article name: @Listing.listing.Name</p>
+								<p>Category: @Listing.categoryName</p>
+								@if(Listing.listing.ListingType=='R') {
+								<p>Willing to pay</p>
+								} @if(Listing.listing.TransactionType=='B') {
+								<p>Looking to Buy for</p>
+								<p>Price: @Listing.listing.Price</p>
+								} @if(Listing.listing.TransactionType=='R'){
+								<p>Looking to Rent for</p>
+								<p>Price: @Listing.listing.Price /
+									@Listing.listing.PricePeriod</p>
+								} @if(Listing.listing.TransactionType=='S') {
+								<p>Looking to sell for</p>
+								<p>Price: @Listing.listing.Price</p>
+								} @if(Listing.listing.PriceNegotiable) {
+								<p>Price is negotiable</p>
+								</p>
+								}
+								<p>Description:</p>
+								<p>@Listing.listing.Description</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-11 col-md-offset-1">
+				<h3>Messages</h3>
+				@if(Listing.isOwner) {
+				<p>You have not received any new messages</p>
+				} @if(!Listing.isOwner) {
+				<p>You have not responded to this</p>
+				<form action="/post_message" method="post">
+					<input type="hidden" name="ListingId"
+						value="@Listing.listing.ListingId" /> <input type="hidden"
+						name="ToUserId" value="@Listing.listing.UserId" />
+					<textarea rows="10" cols="10" name="Message"></textarea>
+					<input type="submit" value="Send message" />
+				</form>
+				}
+
+			</div>
+			<hr />
+		</div>
+
+	</div>
 </body>
 </html>

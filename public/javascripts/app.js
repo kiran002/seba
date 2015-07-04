@@ -90,15 +90,14 @@ $(document).ready( function() {
 	 });
     
     $('#transactionType').change( function() {
-    	var selectedValue = $("#transactionType option:selected").val();
-    	
+    	var selectedValue = $("#transactionType option:selected").val();    	
     	if(selectedValue == "R") {
     		$("#pricePeriod").attr("disabled", false);
     		$("#transactionStart").attr("disabled", false);
     		$("#transactionEnd").attr("disabled", false);    		
     	} else {
-    		$("#pricePeriod").attr("disabled", true);
-    		$("#transactionStart").attr("disabled", true);
+    		$("#pricePeriod").attr("disabled", false);
+    		$("#transactionStart").attr("disabled", false);
     		$("#transactionEnd").attr("disabled", true);    		
     	}
 	 });
@@ -107,11 +106,11 @@ $(document).ready( function() {
     	var fullDate = new Date();    
         var twoDigitDate = fullDate.getDate()+"";if(twoDigitDate.length==1) twoDigitDate="0" +twoDigitDate;
         var twoDigitMonth = fullDate.getMonth()+"";if(twoDigitMonth.length==1)  twoDigitMonth="0" +twoDigitMonth;
-        var currentDate = twoDigitDate + "." + twoDigitMonth + "." + fullDate.getFullYear();
+        var currentDate = fullDate.getFullYear()+ "/" + twoDigitMonth  + "/" + twoDigitDate ;
     	$("#transactionStart").val(currentDate);
     	
     	var twoDigitMonth = ((fullDate.getMonth()+1)%12)+"";if(twoDigitMonth.length==1)  twoDigitMonth="0" +twoDigitMonth;
-        var currentDate = twoDigitDate + "." + twoDigitMonth + "." + fullDate.getFullYear();
+    	var currentDate = fullDate.getFullYear()+ "/" + twoDigitMonth  + "/" + twoDigitDate ;
         
         $("#transactionEnd").val(currentDate);
         $("#transactionExpire").val(currentDate);

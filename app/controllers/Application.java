@@ -81,8 +81,7 @@ public class Application extends Controller {
 			}
 
 		}
-		List<Listing> allLists = ListingController
-				.searchListings(query);
+		List<Listing> allLists = ListingController.searchListings(query);
 		List<Category> categoryList = utilController.getCategories();
 
 		if (isLoggedIn()) {
@@ -96,22 +95,25 @@ public class Application extends Controller {
 	@play.db.jpa.Transactional
 	public Result showOffers() {
 		if (isLoggedIn()) {
-			List<Listing> offersLists = ListingController.getTopOffers(getUserId());
-			return ok(views.html.offers.render(true, offersLists, 200, "",utilController.getCategories()));
+			List<Listing> offersLists = ListingController
+					.getTopOffers(getUserId());
+			return ok(views.html.offers.render(true, offersLists, 200, "",
+					utilController.getCategories()));
 		}
-		return ok(views.html.offers.render(true,
-				new ArrayList<Listing>(), 200, "",utilController.getCategories()));
+		return ok(views.html.offers.render(false, new ArrayList<Listing>(),
+				200, "", utilController.getCategories()));
 	}
 
 	@play.db.jpa.Transactional
 	public Result showRequests() {
 		if (isLoggedIn()) {
-			List<Listings> requestsLists = ListingController
+			List<utils.Listing> requestsLists = ListingController
 					.getTopRequests(getUserId());
-			return ok(views.html.requests.render(true, requestsLists, 200, ""));
+			return ok(views.html.offers.render(true, requestsLists, 200, "",
+					utilController.getCategories()));
 		}
-		return ok(views.html.requests.render(true, new ArrayList<Listings>(),
-				200, ""));
+		return ok(views.html.offers.render(false, new ArrayList<Listing>(),
+				200, "", utilController.getCategories()));
 	}
 
 	@play.db.jpa.Transactional

@@ -4,12 +4,12 @@
 	<div class="media">
 		@if(lists(index).path!="") {
 		<div class="media-left">
-			<img width="100" height="100" class="media-object"
+			<img width="100" height="100" class="media-object thumbnail"
 				src="assets/uploaded/@lists(index).path" alt="Image">
 		</div>
 		} else {
 		<div class="media-left">
-			<img width="100" height="100" class="media-object"
+			<img width="100"  height="100" class="media-object thumbnail"
 				src="assets/images/request.png" alt="Image">
 		</div>
 		}
@@ -19,6 +19,18 @@
 					<b><a href="/show_listing?lid=@lists(index).listing.ListingId">@lists(index).listing.Name</a></b>
 				</h4>
 			</div>
+			@if(lists(index).isOwner) {
+			<div class="row">
+				<a href="/edit_listing?lid=@lists(index).listing.ListingId">Edit
+					</a>
+					<a href="/delete_listing?lid=@lists(index).listing.ListingId"
+					onclick="return confirm('Are you sure??')">Delete</a>
+			</div>
+			<div class="row">
+				
+			</div>
+			}
+
 			<!-- 							<div class="pull-right"> -->
 			<!-- 								<span class="label label-warning">Sponsored</span> -->
 			<!-- 							</div>		 -->

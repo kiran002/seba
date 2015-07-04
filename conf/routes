@@ -35,7 +35,8 @@ POST    /activate                 	controllers.userController.activate()
 
 POST    /post_message              	controllers.MessageController.sendMessage()
 
-GET     /show_listing                   controllers.ListingController.show_listing()
+GET     /show_listing               controllers.ListingController.show_listing()
+GET     /delete_listing             controllers.ListingController.deleteListing()
 
 
 

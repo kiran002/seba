@@ -3,16 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>StuMark Home</title>
-<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
-<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap-datetimepicker.css")">
-<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/app.css")">
-<link rel="shortcut icon" type="image/png"
-	href="@routes.Assets.versioned("images/favicon.png")">
-<script src="@routes.Assets.versioned("javascripts/jquery.min.js")" type="text/javascript"></script>
-<script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")" type="text/javascript"></script>
-<script src="@routes.Assets.versioned("javascripts/moment-with-locales.js")" type="text/javascript"></script>
-<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
+<title>StuMark Home</title> @head("Your Messages")
 </head>
 
 <body>
@@ -39,39 +30,60 @@
             </div>            
         </div>
  -->
+
+
+
+
 			<div class="col-md-9">
-				<div class="form-group">
-					<input type="text" id="filter" placeholder="Filter"
-						class="form-control">
-				</div>
-				<table class="table">
-					<thead class="searchable">
-						<tr>
-							<th>Sent/Received</th>
-							<th>Person</th>
-							<th>Listing Name</th>
-							<th>Message</th>
-							<th>Respond</th>
-						</tr>
-					<thead>
-					<tbody class="searchable">
-						@for(index <- 0 to (msgs.size-1)) {
-						<tr>
-							<input type="hidden" name="from_id"
-								value="@msgs(index).ToUserId" />
-							<td>@msgs(index).msgtype</td>
-							<td>@msgs(index).usrname</td>
-							<td>@msgs(index).Listing_name</td>
-							<td>@msgs(index).Message</td>
-							<td>@if(msgs(index).respond_disabled) {
-								<button class="btn btn-primary" data-toggle="modal"
-									data-target="#response_message" data-backdrop="false">Respond</button>
+
+
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#sent"
+						aria-controls="sent" role="tab" data-toggle="tab">Sent</a></li>
+					<li role="presentation"><a href="#recieved"
+						aria-controls="recieved" role="tab" data-toggle="tab">Recieved</a></li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="sent">
+						<div class="form-group">
+							<input type="text" id="filter" placeholder="Filter"
+								class="form-control">
+						</div>
+						<table class="table">
+							<thead class="searchable">
+								<tr>
+									<th>Sent/Received</th>
+									<th>Person</th>
+									<th>Listing Name</th>
+									<th>Message</th>
+									<th>Respond</th>
+								</tr>
+							<thead>
+							<tbody class="searchable">
+								@for(index <- 0 to (msgs.size-1)) {
+								<tr>
+									<input type="hidden" name="from_id"
+										value="@msgs(index).ToUserId" />
+									<td>@msgs(index).msgtype</td>
+									<td>@msgs(index).usrname</td>
+									<td>@msgs(index).Listing_name</td>
+									<td>@msgs(index).Message</td>
+									<td>@if(msgs(index).respond_disabled) {
+										<button class="btn btn-primary" data-toggle="modal"
+											data-target="#response_message" data-backdrop="false">Respond</button>
+										}
+									</td>
+								</tr>
 								}
-							</td>
-						</tr>
-						}
-					</tbody>
-				</table>
+							</tbody>
+						</table>
+
+					</div>
+					<div role="tabpanel" class="tab-pane" id="recieved">...</div>
+				</div>
 			</div>
 
 			<div class="col-md-3">

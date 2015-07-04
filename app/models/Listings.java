@@ -1,6 +1,5 @@
 package models;
 
-import java.io.Console;
 import java.util.Date;
 import java.util.List;
 
@@ -9,66 +8,52 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.TypedQuery;
 
-import com.sun.media.jfxmedia.logging.Logger;
-
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.jpa.JPA;
 
 @Entity
-public class Listings {
-
-	
+public class Listings {	
+		
+	public interface createListing{};
 	
 	@Id
 	@GeneratedValue
 	public int ListingId;
-
 	public int SponsoredId;
-
-	@Constraints.Required
+	@Constraints.Required()
 	public int UserId;
-
-	@Constraints.Required
-	public String Name; // this is the listing title
-
-	@Constraints.Required
+	@Constraints.Required(groups=createListing.class)
+	public String Name;
+	@Constraints.Required(groups=createListing.class)
 	public int CategoryId;
-
-	@Constraints.Required
+	@Constraints.Required(groups=createListing.class)
 	public String Description;
-
-	@Constraints.Required
+	@Constraints.Required(groups=createListing.class)
 	public char ListingType;
-
-	@Constraints.Required
+	@Constraints.Required(groups=createListing.class)
 	public double Price;
-
 	public boolean PriceNegotiable;
-
-	@Constraints.Required
+	@Constraints.Required(groups=createListing.class)
 	public String PricePeriod;
-
-	@Constraints.Required
+	@Constraints.Required(groups=createListing.class)
 	public char TransactionType;
-
+	@Formats.DateTime(pattern="yyyy/MM/dd")
 	public Date TransactionStart;
-
+	@Formats.DateTime(pattern="yyyy/MM/dd")
 	public Date TransactionEnd;
-
-	@Constraints.Required
+	@Constraints.Required()
 	public Date CreationDate;
-
+	@Formats.DateTime(pattern="yyyy/MM/dd")
 	public Date ExpiryDate;
-
 	public boolean isExpired;
-
+	
 	public void save() {
 		JPA.em().persist(this);
 	}
 
 	public Listings update() {
 		return JPA.em().merge(this);
-
 	}
 
 	public Listings() {
@@ -131,8 +116,6 @@ public class Listings {
 		query.setMaxResults(10);
 		return query.setParameter("ListingType", type.charAt(0)).getResultList();
 	}
-
-
 	
 	public static List<Listings> search(String query_string) {
 		try {
@@ -151,5 +134,117 @@ public class Listings {
 
 	public void delete() {
 		JPA.em().remove(this);
+	}
+
+	public int getSponsoredId() {
+		return SponsoredId;
+	}
+
+	public void setSponsoredId(int sponsoredId) {
+		SponsoredId = sponsoredId;
+	}
+
+	public String getName() {
+		return Name;
+	}
+
+	public void setName(String name) {
+		Name = name;
+	}
+
+	public int getCategoryId() {
+		return CategoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		CategoryId = categoryId;
+	}
+
+	public String getDescription() {
+		return Description;
+	}
+
+	public void setDescription(String description) {
+		Description = description;
+	}
+
+	public char getListingType() {
+		return ListingType;
+	}
+
+	public void setListingType(char listingType) {
+		ListingType = listingType;
+	}
+
+	public double getPrice() {
+		return Price;
+	}
+
+	public void setPrice(double price) {
+		Price = price;
+	}
+
+	public boolean isPriceNegotiable() {
+		return PriceNegotiable;
+	}
+
+	public void setPriceNegotiable(boolean priceNegotiable) {
+		PriceNegotiable = priceNegotiable;
+	}
+
+	public String getPricePeriod() {
+		return PricePeriod;
+	}
+
+	public void setPricePeriod(String pricePeriod) {
+		PricePeriod = pricePeriod;
+	}
+
+	public char getTransactionType() {
+		return TransactionType;
+	}
+
+	public void setTransactionType(char transactionType) {
+		TransactionType = transactionType;
+	}
+
+	public Date getTransactionStart() {
+		return TransactionStart;
+	}
+
+	public void setTransactionStart(Date transactionStart) {
+		TransactionStart = transactionStart;
+	}
+
+	public Date getTransactionEnd() {
+		return TransactionEnd;
+	}
+
+	public void setTransactionEnd(Date transactionEnd) {
+		TransactionEnd = transactionEnd;
+	}
+
+	public Date getCreationDate() {
+		return CreationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		CreationDate = creationDate;
+	}
+
+	public Date getExpiryDate() {
+		return ExpiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		ExpiryDate = expiryDate;
+	}
+
+	public boolean isExpired() {
+		return isExpired;
+	}
+
+	public void setExpired(boolean isExpired) {
+		this.isExpired = isExpired;
 	}
 }

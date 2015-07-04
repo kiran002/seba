@@ -32,6 +32,11 @@ public class Category {
 	public void delete() {
 		JPA.em().remove(this);
 	}
+	
+	public static Category findById(Integer id) {
+		return JPA.em().find(Category.class, id);
+	}
+
 
 	public static List<Category> findAll() {
 		TypedQuery<Category> query = JPA.em().createQuery(
