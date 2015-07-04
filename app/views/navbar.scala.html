@@ -1,7 +1,7 @@
 @(hasLoggedIn: Boolean)
-<div >
-	<nav class="navbar navbar-inverse navbar-default navbar-fixed-top" >
-		<div class="container" style="width:80%">
+<div>
+	<nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
+		<div class="container" style="width: 80%">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="/"> <img alt="Stumark logo"
 					src="/assets/images/stumark_alt.png">
@@ -10,21 +10,20 @@
 			<div id="navbar" class="navbar-collapse collapse">
 				@if(hasLoggedIn) {
 				<ul class="nav navbar-nav">
-					<li><a href="/offers">My Offers</a></li>
-					<li><a href="/requests">My Requests</a></li>
+					<li><a href="/all_offers">All Offers</a></li>
+					<li><a href="/all_requests">All Requests</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/messages">Messages </a></li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle"
-							data-toggle="dropdown">
-								Maddy<span class="caret"></span>
-						</a>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown"> Maddy<span class="caret"></span>
+					</a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="/profile">Profile</a></li>
+							<li><a href="/offers">My Offers</a></li>
+							<li><a href="/requests">My Requests</a></li>
 							<li><a href="/logout">Logout</a></li>
-						</ul>
-					</li>					
+						</ul></li>
 				</ul>
 				} @if(!hasLoggedIn) {
 				<div class="navbar-form navbar-right">
@@ -34,8 +33,8 @@
 				} @if(hasLoggedIn) {
 				<div class="navbar-form navbar-right">
 					<a class="btn btn-default" href="/add_listing"> <span
-						class="glyphicon glyphicon-plus" aria-hidden="true"></span> 
-						Add Posts
+						class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+						Posts
 					</a>
 				</div>
 				}
@@ -43,7 +42,7 @@
 		</div>
 	</nav>
 
-<!-- 
+	<!-- 
 	@if(!hasLoggedIn) {
 	<div class="alert alert-danger hideMe">You are not logged in ,
 		please log in to continue</div>

@@ -1,17 +1,20 @@
 package controllers;
 
 import play.*;
+
 import java.util.*;
+
 import models.*;
 import play.api.mvc.Session;
 import play.mvc.*;
+import utils.Listing;
 import views.html.*;
 
 public class login extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result index() {
-		Map<Listings, String> allLists = ListingController.getNewListings();
+		List<Listing> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
 		if (isLoggedIn()) {			
 			return ok(views.html.Home.render(true, allLists, categoryList,

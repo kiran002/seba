@@ -1,0 +1,49 @@
+@(categoryList: List[models.Category])
+<div class="col-md-3 well">	
+	<form method="post" action="/search">
+		<div class="form-group">
+			<label>Keywords</label> <input type="text" name="keywords"
+				class="form-control" placeholder="e.g. flat, bike">
+		</div>
+		<div class="form-group">
+			<label>Category</label> <select class="form-control"
+				name="categoryId">
+				<option value="0">select</option> @for(index <- 0 to
+				(categoryList.size-1)) {
+				<option value="@categoryList(index).CategoryId">@categoryList(index).CategoryName</option>
+				}
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Post type</label> <select name='ltype' class="form-control">
+				<option value="0">select</option>
+				<option value="O">Offer</option>
+				<option value="R">Request</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Price (EUR)</label> <input name='price' type="text"
+				class="form-control" placeholder="Maximum">
+			<div class="checkbox">
+				<label> <input type="checkbox"> Negotiable price
+				</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Availability</label>
+			<div class="input-group" id="from">
+				<div class="input-group-addon">From</div>
+				<input type="text" name='afrom' class="form-control"
+					placeholder="25.03.2014">
+				<div class="input-group-addon">
+					<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+				</div>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-success btn-block">
+			<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+			Search
+		</button>
+	</form>
+
+</div>

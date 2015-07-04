@@ -14,22 +14,24 @@ import javax.persistence.TypedQuery;
 @Entity
 public class Messages {
 
+	public interface sendMessage {}
+	
 	@Id
 	@GeneratedValue
 	public int MessageId;
 
-	@Constraints.Required
+	@Constraints.Required(groups = sendMessage.class)
 	public int ListingId;
 
 	@Constraints.Required
 	public int FromUserId;
 
-	@Constraints.Required
+	@Constraints.Required(groups = sendMessage.class)
 	public int ToUserId;
 
-	@Constraints.Required
+	@Constraints.Required(groups = sendMessage.class)
 	public String Message;
-
+	
 	@Constraints.Required
 	public Date CreationDate;
 
@@ -37,8 +39,7 @@ public class Messages {
 		JPA.em().persist(this);
 	}
 	
-	public Messages() { 
-		this.CreationDate = new java.util.Date();
+	public Messages() {	
 		
 	}
 
@@ -56,5 +57,45 @@ public class Messages {
 				"SELECT l FROM Messages l where l.FromUserId =:frm_uid or l.ToUserId = :to_uids order by CreationDate ",
 				Messages.class);
 		return query.setParameter("frm_uid", userId).setParameter("to_uids", userId).getResultList();
+	}
+
+	public int getListingId() {
+		return ListingId;
+	}
+
+	public void setListingId(int listingId) {
+		ListingId = listingId;
+	}
+
+	public int getFromUserId() {
+		return FromUserId;
+	}
+
+	public void setFromUserId(int fromUserId) {
+		FromUserId = fromUserId;
+	}
+
+	public int getToUserId() {
+		return ToUserId;
+	}
+
+	public void setToUserId(int toUserId) {
+		ToUserId = toUserId;
+	}
+
+	public String getMessage() {
+		return Message;
+	}
+
+	public void setMessage(String message) {
+		Message = message;
+	}
+
+	public Date getCreationDate() {
+		return CreationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		CreationDate = creationDate;
 	}
 }

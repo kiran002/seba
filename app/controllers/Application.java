@@ -1,7 +1,7 @@
 package controllers;
 
-import static controllers.login.isLoggedIn;
 import static controllers.login.getUserId;
+import static controllers.login.isLoggedIn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +17,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.Listing;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -26,7 +27,7 @@ public class Application extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result index() {
-		Map<Listings, String> allLists = ListingController.getNewListings();
+		List<Listing> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
 		if (isLoggedIn()) {
 			return ok(views.html.Home.render(true, allLists, categoryList,
@@ -80,7 +81,7 @@ public class Application extends Controller {
 			}
 
 		}
-		Map<Listings, String> allLists = ListingController
+		List<Listing> allLists = ListingController
 				.searchListings(query);
 		List<Category> categoryList = utilController.getCategories();
 
@@ -95,11 +96,11 @@ public class Application extends Controller {
 	@play.db.jpa.Transactional
 	public Result showOffers() {
 		if (isLoggedIn()) {
-			Map<Listings, String> offersLists = ListingController.getTopOffers(getUserId());
-			return ok(views.html.offers.render(true, offersLists, 200, ""));
+			List<Listing> offersLists = ListingController.getTopOffers(getUserId());
+			return ok(views.html.offers.render(true, offersLists, 200, "",utilController.getCategories()));
 		}
 		return ok(views.html.offers.render(true,
-				new HashMap<Listings, String>(), 200, ""));
+				new ArrayList<Listing>(), 200, "",utilController.getCategories()));
 	}
 
 	@play.db.jpa.Transactional
@@ -115,7 +116,7 @@ public class Application extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result catchAll(String path) {
-		Map<Listings, String> allLists = ListingController.getNewListings();
+		List<Listing> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
 		return ok(views.html.Home.render(false, allLists, categoryList, null,
 				null));
@@ -132,7 +133,7 @@ public class Application extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result showProfile() {
-		Map<Listings, String> allLists = ListingController.getNewListings();
+		List<Listing> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
 		if (isLoggedIn()) {
 			Users usr = userController.getUser(getUserId());

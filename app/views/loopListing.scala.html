@@ -1,0 +1,53 @@
+@(lists:List[utils.Listing]) @for(index <- 0 to (lists.size-1)) {
+<div data-toggle="modal" class="listDetails"
+	data-target="#response_message" data-backdrop="false">
+	<div class="media">
+		@if(lists(index).path!="") {
+		<div class="media-left">
+			<img width="100" height="100" class="media-object"
+				src="assets/uploaded/@lists(index).path" alt="Image">
+		</div>
+		} else {
+		<div class="media-left">
+			<img width="100" height="100" class="media-object"
+				src="assets/images/request.png" alt="Image">
+		</div>
+		}
+		<div class="media-body">
+			<div class="pull-left">
+				<h4 class="media-heading">
+					<b><a href="/show_listing?lid=@lists(index).listing.ListingId">@lists(index).listing.Name</a></b>
+				</h4>
+			</div>
+			<!-- 							<div class="pull-right"> -->
+			<!-- 								<span class="label label-warning">Sponsored</span> -->
+			<!-- 							</div>		 -->
+			<div class="clearfix"></div>
+			@if(lists(index).listing.PricePeriod == "D") {
+			<p>
+				<b>Period:</b> Daily
+			</p>
+			} @if(lists(index).listing.PricePeriod == "W") {
+			<p>
+				<b>Period:</b> Weekly
+			</p>
+			} @if(lists(index).listing.PricePeriod == "M") {
+			<p>
+				<b>Period:</b> Monthly
+			</p>
+			} @if(lists(index).listing.PricePeriod == "Y") {
+			<p>
+				<b>Period:</b> Yearly
+			</p>
+			}
+			<h5>
+				<b>Price:</b> @lists(index).listing.Price
+			</h5>
+			<h5>
+				<b>Description:</b> @lists(index).listing.Description
+			</h5>
+		</div>
+	</div>
+</div>
+<br>
+}

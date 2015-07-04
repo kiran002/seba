@@ -1,11 +1,15 @@
-@(status:Integer, msg:String) @if(status == 201) {
-<div class="alert alert-danger" role="alert">
-	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-	<span class="sr-only">Error:</span> @msg
+@(status:Integer, msg:String)
+
+<div class="row col-md-11 .col-md-offset-1">
+	@if(status == 201) {
+	<div class="alert alert-danger" role="alert">
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<span class="sr-only">Error:</span> @msg
+	</div>
+	} @if(status == 202) {
+	<div class="alert alert-success" role="alert">
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<span class="sr-only">Success:</span> @msg
+	</div>
+	}
 </div>
-} @if(status == 202) {
-<div class="alert alert-success" role="alert">
-	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-	<span class="sr-only">Success:</span> @msg
-</div>
-}

@@ -1,32 +1,32 @@
 package controllers;
+
 import static controllers.login.isLoggedIn;
-import static controllers.login.getUserId;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.util.*;
-
-import models.*;
-
-import java.util.*;
-
-import models.*;
-import play.Logger;
-import play.data.DynamicForm;
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import models.Listings;
+import models.Pictures;
+import models.Users;
+import play.Logger;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
+import utils.Library;
+import utils.Listing;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ListingController extends Controller {
 
@@ -41,12 +41,51 @@ public class ListingController extends Controller {
 	}
 
 	@play.db.jpa.Transactional
-	public static Map<Listings, String> getTopOffers(int userId) {
-		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
-		for (Listings listing : models.Listings.findAll("O", userId)) {
-			pairs.put(listing, Pictures.findByListingId(listing.ListingId).path);
+	public static List<utils.Listing> getTopOffers(int userId) {
+		List<utils.Listing> list = new ArrayList<Listing>();
+		for (Listings listing : models.Listings.findAllUserListings("O",
+				userId, 0)) {
+			Listing item = new Listing(listing,
+					Pictures.findByListingId(listing.ListingId).path);
+			list.add(item);
 		}
-		return pairs;
+		return list;
+	}
+
+	@play.db.jpa.Transactional
+	public Result showAllOffers() {
+		List<utils.Listing> list = new ArrayList<Listing>();
+		DynamicForm form = Form.form().bindFromRequest();
+		int index = Library.getInt(form.get("index"));
+		for (Listings listing : models.Listings.findAll("O", index)) {
+			Listing item = new Listing(listing,
+					Pictures.findByListingId(listing.ListingId).path);
+			list.add(item);
+		}
+		return ok(views.html.offers.render(true, list, 200, "",utilController.getCategories()));
+	}
+	
+	@play.db.jpa.Transactional
+	public Result showAllRequests() {
+		List<utils.Listing> list = new ArrayList<Listing>();
+		DynamicForm form = Form.form().bindFromRequest();
+		int index = Library.getInt(form.get("index"));
+		for (Listings listing : models.Listings.findAll("R", index)) {
+			Listing item = new Listing(listing,"");
+			list.add(item);
+		}
+		return ok(views.html.offers.render(true, list, 200, "",utilController.getCategories()));
+	}
+
+	@play.db.jpa.Transactional
+	public Result show_listing() {
+		if (isLoggedIn()) {
+			DynamicForm form = Form.form().bindFromRequest();
+			int listing_id = utils.Library.getInt(form.get("lid"));
+			Listings listing = Listings.findById(listing_id);
+			return ok(views.html.showlisting.render(true, listing));
+		}
+		return ok(views.html.showlisting.render(false, null));
 	}
 
 	@play.db.jpa.Transactional
@@ -95,19 +134,23 @@ public class ListingController extends Controller {
 
 	@play.db.jpa.Transactional
 	public static List<Listings> getTopRequests(int userId) {
-		return Listings.findAll("R", userId);
+		return Listings.findAllUserListings("R", userId, 0);
 	}
+	
+	
 
 	@play.db.jpa.Transactional
-	public static Map<Listings, String> getNewListings() {
-		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
+	public static List<Listing> getNewListings() {
+		List<Listing> pairs = new ArrayList<Listing>();
 		for (Listings listing : models.Listings.findAll()) {
 			Logger.info(listing.Name);
 			if (listing.ListingType == 'R') {
-				pairs.put(listing, "");
+				Listing item = new Listing(listing, "");
+				pairs.add(item);
 			} else {
-				pairs.put(listing,
+				Listing item = new Listing(listing,
 						Pictures.findByListingId(listing.ListingId).path);
+				pairs.add(item);
 			}
 		}
 		return pairs;
@@ -177,11 +220,12 @@ public class ListingController extends Controller {
 					if (listing.ListingType == 'O' && picture != null
 							&& picture.getFile().length() > 0) {
 						this.uploadImage(picture, listing.ListingId);
-						Map<Listings, String> offersLists = ListingController
+						List<Listing> offersLists = ListingController
 								.getTopOffers(Integer
 										.parseInt(session("usrid")));
 						return ok(views.html.offers.render(true, offersLists,
-								202, "Listing successfully created"));
+								202, "Listing successfully created",
+								utilController.getCategories()));
 					}
 					List<Listings> requestsLists = ListingController
 							.getTopRequests(Integer.parseInt(session("usrid")));
@@ -252,17 +296,18 @@ public class ListingController extends Controller {
 	}
 
 	@play.db.jpa.Transactional
-	public static HashMap<Listings, String> searchListings(String query) {
-		HashMap<Listings, String> pairs = new HashMap<Listings, String>();
-		// Logger.info(query);
+	public static List<Listing> searchListings(String query) {
+		List<Listing> pairs = new ArrayList<Listing>();	
 		for (Listings listing : Listings.search(query)) {
-			// Logger.info(listing.Name);
 			if (listing.ListingType == 'R') {
-				pairs.put(listing, "");
+				Listing item = new Listing(listing, "");
+				pairs.add(item);
 			} else {
-				pairs.put(listing,
+				Listing item = new Listing(listing,
 						Pictures.findByListingId(listing.ListingId).path);
+				pairs.add(item);
 			}
+
 		}
 
 		return pairs;

@@ -15,50 +15,42 @@ import java.util.Random;
 @Entity
 public class Users {
 
+	public interface createUser {	}
+
 	@Id
 	@GeneratedValue
 	public int UserId;
 
 	@Constraints.MaxLength(value = 40)
-	@Constraints.Required
+	@Constraints.Required(groups=createUser.class)
 	public String FirstName;
 
-	
 	@Constraints.MaxLength(value = 40)
-	@Constraints.Required
+	@Constraints.Required(groups=createUser.class)
 	public String LastName;
 
+	@Constraints.Required
 	public String ActivationCode;
 
+	@Constraints.Required
 	public boolean isActivated;
 
-	
+	@Constraints.Required
 	public Date CreationDate;
 
-	@Constraints.Required
+	@Constraints.Required(groups=createUser.class)
 	public String Email;
 
-	@Constraints.Required
+	@Constraints.Required(groups=createUser.class)
 	public String password;
-	
-	public String AuthCode;	
-	
+
+	public String AuthCode;
+
 	public Users() {
 	}
 
-	public Users(String firstName2, String lastName2, String email2,
-			String password2) {		
-		
-		this.FirstName = firstName2;
-		this.CreationDate = new Date();
-		this.isActivated = false;
-		this.LastName = lastName2;
-		this.Email = email2;
-		this.password = password2;
-	}
+	
 
-	
-	
 	public void save() {
 		JPA.em().persist(this);
 	}

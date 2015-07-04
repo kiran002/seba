@@ -22,6 +22,9 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /offers                     controllers.Application.showOffers()
 GET     /requests                   controllers.Application.showRequests()
 GET     /messages                   controllers.MessageController.showMessages()
+GET     /all_offers                 controllers.ListingController.showAllOffers()
+GET     /all_requests                 controllers.ListingController.showAllRequests()
+
 
 GET		/profile					controllers.Application.showProfile()
 POST 	/profileUpdate				controllers.userController.updateUser()
@@ -31,6 +34,10 @@ GET     /activate                   controllers.Application.activate()
 POST    /activate                 	controllers.userController.activate()
 
 POST    /post_message              	controllers.MessageController.sendMessage()
+
+GET     /show_listing                   controllers.ListingController.show_listing()
+
+
 
 #Catch All
 GET     /*path                      controllers.Application.catchAll(path)

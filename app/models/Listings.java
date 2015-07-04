@@ -17,6 +17,8 @@ import play.db.jpa.JPA;
 @Entity
 public class Listings {
 
+	
+	
 	@Id
 	@GeneratedValue
 	public int ListingId;
@@ -106,17 +108,32 @@ public class Listings {
 	}
 
 	
-	public static List<Listings> findAll(String type,int uid) {
+	public static List<Listings> findAllUserListings(String type,int userId,int index) {
 		TypedQuery<Listings> query = JPA
 				.em()
 				.createQuery(
 						"SELECT l FROM Listings l where l.ListingType = :ListingType and l.UserId = :UserId order by CreationDate",
 						Listings.class);
+		query.setFirstResult(index);
 		query.setMaxResults(10);
-		return query.setParameter("ListingType", type.charAt(0)).setParameter("UserId", uid)
+		return query.setParameter("ListingType", type.charAt(0)).setParameter("UserId", userId)
 				.getResultList();
 	}
 
+	
+	public static List<Listings> findAll(String type,int index) {
+		TypedQuery<Listings> query = JPA
+				.em()
+				.createQuery(
+						"SELECT l FROM Listings l where l.ListingType = :ListingType order by CreationDate",
+						Listings.class);
+		query.setFirstResult(index);
+		query.setMaxResults(10);
+		return query.setParameter("ListingType", type.charAt(0)).getResultList();
+	}
+
+
+	
 	public static List<Listings> search(String query_string) {
 		try {
 			TypedQuery<Listings> query = JPA.em().createQuery(query_string,

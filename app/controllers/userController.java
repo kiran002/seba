@@ -17,8 +17,9 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-
+import utils.Listing;
 import static utils.Library.getActivationCode;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class userController extends Controller {
@@ -32,7 +33,8 @@ public class userController extends Controller {
 	@play.db.jpa.Transactional
 	public Result createUser() {
 		DynamicForm form = Form.form().bindFromRequest();
-		Users user = Form.form(Users.class).bindFromRequest().get();
+		Users user = Form.form(Users.class, Users.createUser.class)
+				.bindFromRequest().get();
 		String pass2 = form.get("password2");
 		Logger.info(pass2 + " in: Register User request");
 		try {
@@ -68,7 +70,7 @@ public class userController extends Controller {
 		String activationCode = form.get("acode");
 		try {
 			models.Users user = models.Users.findUser(email);
-			if (!(user==null)) {
+			if (!(user == null)) {
 				if (user.ActivationCode.equals(activationCode)) {
 					user.isActivated = true;
 					user.update();
@@ -104,7 +106,7 @@ public class userController extends Controller {
 					user.AuthCode = generateAuthCode();
 					if (user.isActivated == true) {
 						session("usrid", "" + user.UserId);
-						Map<Listings, String> allLists = ListingController
+						List<Listing> allLists = ListingController
 								.getNewListings();
 						List<Category> categoryList = utilController
 								.getCategories();
@@ -149,8 +151,9 @@ public class userController extends Controller {
 
 	@play.db.jpa.Transactional
 	public Result updateUser() {
-		Map<Listings, String> allLists = ListingController.getNewListings();
+		List<Listing> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
+		
 		DynamicForm form = Form.form().bindFromRequest();
 		String firstname = form.get("fname");
 		Logger.info(this.toString() + firstname);
