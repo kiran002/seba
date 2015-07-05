@@ -1,11 +1,8 @@
-@(hasLoggedIn: Boolean, msgs: List[utils.MessageList])
+@(hasLoggedIn: Boolean, sent: List[utils.MessageList], recieved:
+List[utils.MessageList])
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>StuMark Home</title> @head("Your Messages")
-</head>
-
+@head("Your Messages")
 <body>
 
 	<div class="container" style="width: 80%">
@@ -18,22 +15,10 @@
 			</div>
 			<div class="pull-right pad-top-25">
 				<!-- <b>{{messages.length}} message(s) </b> -->
-				<b>@msgs.size message(s) </b>
+				<b>@sent.size message(s) </b>
 			</div>
 			<div class="clearfix"></div>
 			<hr />
-
-			<!-- 
-        <div class="col-md-3 well">
-            <div class="form-group">
-                <input type="text" id="filter" placeholder="Filter" class="form-control">                
-            </div>            
-        </div>
- -->
-
-
-
-
 			<div class="col-md-9">
 
 
@@ -52,37 +37,63 @@
 							<input type="text" id="filter" placeholder="Filter"
 								class="form-control">
 						</div>
-						<table class="table">
+						<table class="table table-striped">
 							<thead class="searchable">
 								<tr>
-									<th>Sent/Received</th>
-									<th>Person</th>
+									<th>To</th>
 									<th>Listing Name</th>
 									<th>Message</th>
-									<th>Respond</th>
 								</tr>
 							<thead>
 							<tbody class="searchable">
-								@for(index <- 0 to (msgs.size-1)) {
+								@for(index <- 0 to (sent.size-1)) {
 								<tr>
 									<input type="hidden" name="from_id"
-										value="@msgs(index).ToUserId" />
-									<td>@msgs(index).msgtype</td>
-									<td>@msgs(index).usrname</td>
-									<td>@msgs(index).Listing_name</td>
-									<td>@msgs(index).Message</td>
-									<td>@if(msgs(index).respond_disabled) {
-										<button class="btn btn-primary" data-toggle="modal"
-											data-target="#response_message" data-backdrop="false">Respond</button>
-										}
-									</td>
+										value="@sent(index).ToUserId" />
+									<td>@sent(index).usrname</td>
+									<td>@sent(index).Listing_name</td>
+									<td>@sent(index).Message</td>
 								</tr>
 								}
 							</tbody>
 						</table>
 
 					</div>
-					<div role="tabpanel" class="tab-pane" id="recieved">...</div>
+					<div role="tabpanel" class="tab-pane" id="recieved">
+
+						<div class="form-group">
+							<input type="text" id="filter" placeholder="Filter"
+								class="form-control">
+						</div>
+						<table class="table">
+							<thead class="searchable">
+								<tr>
+									<th>From</th>
+									<th>Listing Name</th>
+									<th>Message</th>
+									<th>Respond</th>
+								</tr>
+							<thead>
+							<tbody class="searchable">
+								@for(index <- 0 to (recieved.size-1)) {
+								<tr>
+									<input type="hidden" name="from_id"
+										value="@recieved(index).ToUserId" />
+									<td>@recieved(index).usrname</td>
+									<td>@recieved(index).Listing_name</td>
+									<td>@recieved(index).Message</td>
+									<td>
+										<button class="btn btn-primary" data-toggle="modal"
+											data-target="#response_message" data-backdrop="false">Respond</button>
+
+									</td>
+								</tr>
+								}
+							</tbody>
+						</table>
+
+
+					</div>
 				</div>
 			</div>
 

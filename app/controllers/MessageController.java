@@ -3,6 +3,7 @@ package controllers;
 import static controllers.login.isLoggedIn;
 import static controllers.login.getUserId;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,9 @@ public class MessageController extends Controller {
 	public Result sendMessage() {
 		if (isLoggedIn()) {
 			DynamicForm form = Form.form().bindFromRequest();
-			Messages msg = Form.form(Messages.class,Messages.sendMessage.class).bindFromRequest().get();
+			Messages msg = Form
+					.form(Messages.class, Messages.sendMessage.class)
+					.bindFromRequest().get();
 			msg.FromUserId = getUserId();
 			msg.CreationDate = new Date();
 			msg.save();
@@ -34,45 +37,53 @@ public class MessageController extends Controller {
 			if (isLoggedIn()) {
 				return ok(views.html.Home.render(true, allLists, categoryList,
 						202, "message sent succesfully!"));
-			} 
+			}
 		}
 		return ok(); // unsuccessful need to validate and other stuff
 	}
 
 	@play.db.jpa.Transactional
 	public Result showMessages() {
-		List<utils.MessageList> msglist = new ArrayList<MessageList>();
+		List<utils.MessageList> sent = new ArrayList<MessageList>();
+		List<utils.MessageList> recieved = new ArrayList<MessageList>();
 		if (isLoggedIn()) {
-			List<models.Messages> msgs = Messages.findAll(getUserId());
+			List<models.Messages> msgs = Messages.findAll(getUserId(), true);
+
+			SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
+			
 			for (Messages msg : msgs) {
 				MessageList msglistItem = new MessageList();
 				msglistItem.ListingId = msg.ListingId;
 				msglistItem.Listing_name = Listings.findById(msg.ListingId).Name;
 				msglistItem.Message = msg.Message;
-				if (msg.FromUserId == getUserId()) {
-					msglistItem.msgtype = "Sent";
-					msglistItem.respond_disabled = false;
-					msglistItem.usrname = ""
-							+ Users.findById(msg.ToUserId).FirstName;
-				} else {
-					msglistItem.respond_disabled = true;
-					msglistItem.ToUserId = msg.FromUserId;
-					msglistItem.msgtype = "Recieved";
-					msglistItem.usrname = ""
-							+ Users.findById(msg.FromUserId).FirstName;
-				}
-				msglist.add(msglistItem);
+				msglistItem.usrname = ""
+						+ Users.findById(msg.ToUserId).FirstName;
+				msglistItem.date = df.format(msg.CreationDate);
+				sent.add(msglistItem);
 			}
-			return ok(views.html.messages.render(true, msglist));
+
+			msgs = Messages.findAll(getUserId(), false);
+			for (Messages msg : msgs) {
+				MessageList msglistItem = new MessageList();
+				msglistItem.ListingId = msg.ListingId;
+				msglistItem.Listing_name = Listings.findById(msg.ListingId).Name;
+				msglistItem.Message = msg.Message;
+				msglistItem.ToUserId = msg.FromUserId;
+				msglistItem.usrname = ""
+						+ Users.findById(msg.FromUserId).FirstName;
+				msglistItem.date = df.format(msg.CreationDate);
+				recieved.add(msglistItem);
+			}
+			return ok(views.html.messages.render(true, sent, recieved));
 		}
-		return ok(views.html.messages.render(false, msglist));
+		return ok(views.html.messages.render(false, sent, recieved));
 	}
 
 	@play.db.jpa.Transactional
 	public static List<Messages> getAllMessages() {
 		List<Messages> msgs = null;
 		if (isLoggedIn()) {
-			msgs = Messages.findAll(getUserId());
+			msgs = Messages.findAll(getUserId(), false);
 		}
 		return msgs;
 	}

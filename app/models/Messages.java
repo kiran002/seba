@@ -54,21 +54,20 @@ public class Messages {
 		JPA.em().remove(this);
 	}
 
-	public static List<Integer> distinctUsers(int listingId) {		
+	public static List<Integer> distinctUsers(int listingId) {
 		String query_str = "Select distinct l.FromUserId from Messages l where l.ListingId=:lid";
 		TypedQuery<Integer> query = JPA.em().createQuery(query_str,
 				Integer.class);
-		return query.setParameter("lid",listingId).getResultList();
+		return query.setParameter("lid", listingId).getResultList();
 	}
 
-	public static List<Messages> findAll(int userId) {
-		TypedQuery<Messages> query = JPA
-				.em()
-				.createQuery(
-						"SELECT l FROM Messages l where l.FromUserId =:frm_uid or l.ToUserId = :to_uids order by CreationDate ",
-						Messages.class);
-		return query.setParameter("frm_uid", userId)
-				.setParameter("to_uids", userId).getResultList();
+	public static List<Messages> findAll(int userId, boolean sent) {
+		String tmp = "SELECT l FROM Messages l where l.FromUserId =:frm_uid order by CreationDate ASC";
+		if (sent) {
+			tmp = "SELECT l FROM Messages l where l.ToUserId =:frm_uid order by CreationDate ASC";
+		}
+		TypedQuery<Messages> query = JPA.em().createQuery(tmp, Messages.class);
+		return query.setParameter("frm_uid", userId).getResultList();
 	}
 
 	public static List<Messages> findAll(int userId, int listingId) {

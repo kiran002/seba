@@ -1,8 +1,7 @@
 @(hasLoggedIn:Boolean,Listing:utils.Listing)
 <!DOCTYPE html>
 <html>
-<head>@head(Listing.listing.Name + " -- Listing details")
-</head>
+@head(Listing.listing.Name + " -- Listing details")
 <body>
 	@navbar(hasLoggedIn)
 	<div class="container-fluid">
@@ -69,32 +68,43 @@
 			<div class="col-md-11 col-md-offset-1">
 				<h3>Messages</h3>
 				@if(Listing.isOwner) { @if(Listing.msg_map.size > 0) {
-				@for((key,value) <- (Listing.msg_map)) {
-				<p>@key.FirstName</p>				
-				@for(index <- 0 to (value.size-1)) {
-				<div>
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">
-								@value(index).usrname said
-								<div class="pull-right">on @value(index).date</div>
-							</h3>
+				@for((key,value) <- (Listing.msg_map)) { <a class="btn btn-primary"
+					role="button" data-toggle="collapse" href="#conv@key.FirstName"
+					aria-expanded="false" aria-controls="conv@key.FirstName"><p>From
+						user @key.FirstName</p></a>
+				<div class="collapse" id="conv@key.FirstName">
+					<br> @for(index <- 0 to (value.size-1)) {
+					<div class="row">
+						<div class="col-md-8 col-md-offset-1">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										@value(index).usrname said
+										<div class="pull-right">on @value(index).date</div>
+									</h3>
+								</div>
+								<div class="panel-body">@value(index).Message</div>
+							</div>
 						</div>
-						<div class="panel-body">@value(index).Message</div>
+					</div>
+					}
+					<div class="row">
+						<div class="col-md-8 col-md-offset-1">
+							<form action="/post_message" method="post">
+								<div class="form-group">
+									<input type="hidden" name="ListingId"
+										value="@Listing.listing.ListingId" /> <input type="hidden"
+										name="ToUserId" value="@key.UserId" /> <label>Message:</label>
+									<textarea class="form-control" rows="10" cols="10"
+										name="Message"></textarea>
+									<input type="submit" class="btn btn-default"
+										value="Send message" />
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
-				}
-				<form action="/post_message" method="post">
-					<div class="form-group">
-						<input type="hidden" name="ListingId"
-							value="@Listing.listing.ListingId" /> <input type="hidden"
-							name="ToUserId" value="@key.UserId" /> <label>Message:</label>
-						<textarea class="form-control" rows="10" cols="10" name="Message"></textarea>
-						<input type="submit" class="btn btn-default" value="Send message" />
-					</div>
-				</form>
-				
-				 } }else {
+				} }else {
 				<p>You have not received any messages</p>
 				} } @if(!Listing.isOwner) { @if(Listing.messages.size > 0) {
 				@for(index <- 0 to (Listing.messages.size-1)) {
