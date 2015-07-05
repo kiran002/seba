@@ -8,5 +8,6 @@ public class MessageList {
 	public int ToUserId;
 	public boolean respond_disabled;
 	public String msgtype;
+	public String date;
 	public String Message;
 }

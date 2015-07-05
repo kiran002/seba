@@ -70,8 +70,22 @@
 				<h3>Messages</h3>
 				@if(Listing.isOwner) {
 				<p>You have not received any new messages</p>
-				} @if(!Listing.isOwner) {
+				} @if(!Listing.isOwner) { @if(Listing.messages.size > 0) {
+				@for(index <- 0 to (Listing.messages.size-1)) {
+				<div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">
+								@Listing.messages(index).usrname said
+								<div class="pull-right">on @Listing.messages(index).date</div>
+							</h3>
+						</div>
+						<div class="panel-body">@Listing.messages(index).Message</div>
+					</div>
+				</div>
+				} } else {
 				<p>You have not responded to this</p>
+				}
 				<form action="/post_message" method="post">
 					<input type="hidden" name="ListingId"
 						value="@Listing.listing.ListingId" /> <input type="hidden"

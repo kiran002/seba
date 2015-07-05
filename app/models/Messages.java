@@ -14,8 +14,9 @@ import javax.persistence.TypedQuery;
 @Entity
 public class Messages {
 
-	public interface sendMessage {}
-	
+	public interface sendMessage {
+	}
+
 	@Id
 	@GeneratedValue
 	public int MessageId;
@@ -31,16 +32,16 @@ public class Messages {
 
 	@Constraints.Required(groups = sendMessage.class)
 	public String Message;
-	
+
 	@Constraints.Required
 	public Date CreationDate;
 
 	public void save() {
 		JPA.em().persist(this);
 	}
-	
-	public Messages() {	
-		
+
+	public Messages() {
+
 	}
 
 	public Messages update() {
@@ -51,12 +52,25 @@ public class Messages {
 	public void delete() {
 		JPA.em().remove(this);
 	}
-	
+
 	public static List<Messages> findAll(int userId) {
-		TypedQuery<Messages> query = JPA.em().createQuery(
-				"SELECT l FROM Messages l where l.FromUserId =:frm_uid or l.ToUserId = :to_uids order by CreationDate ",
-				Messages.class);
-		return query.setParameter("frm_uid", userId).setParameter("to_uids", userId).getResultList();
+		TypedQuery<Messages> query = JPA
+				.em()
+				.createQuery(
+						"SELECT l FROM Messages l where l.FromUserId =:frm_uid or l.ToUserId = :to_uids order by CreationDate ",
+						Messages.class);
+		return query.setParameter("frm_uid", userId)
+				.setParameter("to_uids", userId).getResultList();
+	}
+
+	public static List<Messages> findAll(int userId,int listingId) {
+		TypedQuery<Messages> query = JPA
+				.em()
+				.createQuery(
+						"SELECT l FROM Messages l where (l.FromUserId =:frm_uid or l.ToUserId = :to_uids) and l.ListingId = :lid  order by CreationDate ASC",
+						Messages.class);
+		return query.setParameter("frm_uid", userId)
+				.setParameter("to_uids", userId).setParameter("lid", listingId).getResultList();
 	}
 
 	public int getListingId() {
