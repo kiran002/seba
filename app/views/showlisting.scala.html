@@ -68,9 +68,35 @@
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1">
 				<h3>Messages</h3>
-				@if(Listing.isOwner) {
-				<p>You have not received any new messages</p>
-				} @if(!Listing.isOwner) { @if(Listing.messages.size > 0) {
+				@if(Listing.isOwner) { @if(Listing.msg_map.size > 0) {
+				@for((key,value) <- (Listing.msg_map)) {
+				<p>@key</p>				
+				@for(index <- 0 to (value.size-1)) {
+				<div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">
+								@value(index).usrname said
+								<div class="pull-right">on @value(index).date</div>
+							</h3>
+						</div>
+						<div class="panel-body">@value(index).Message</div>
+					</div>
+				</div>
+				}
+				<form action="/post_message" method="post">
+					<div class="form-group">
+						<input type="hidden" name="ListingId"
+							value="@Listing.listing.ListingId" /> <input type="hidden"
+							name="ToUserId" value="@key" /> <label>Message:</label>
+						<textarea class="form-control" rows="10" cols="10" name="Message"></textarea>
+						<input type="submit" class="btn btn-default" value="Send message" />
+					</div>
+				</form>
+				
+				 } }else {
+				<p>You have not received any messages</p>
+				} } @if(!Listing.isOwner) { @if(Listing.messages.size > 0) {
 				@for(index <- 0 to (Listing.messages.size-1)) {
 				<div>
 					<div class="panel panel-default">
@@ -83,15 +109,17 @@
 						<div class="panel-body">@Listing.messages(index).Message</div>
 					</div>
 				</div>
-				} } else {
+				} }else {
 				<p>You have not responded to this</p>
 				}
 				<form action="/post_message" method="post">
-					<input type="hidden" name="ListingId"
-						value="@Listing.listing.ListingId" /> <input type="hidden"
-						name="ToUserId" value="@Listing.listing.UserId" />
-					<textarea rows="10" cols="10" name="Message"></textarea>
-					<input type="submit" value="Send message" />
+					<div class="form-group">
+						<input type="hidden" name="ListingId"
+							value="@Listing.listing.ListingId" /> <input type="hidden"
+							name="ToUserId" value="@Listing.listing.UserId" /> <label>Message:</label>
+						<textarea class="form-control" rows="10" cols="10" name="Message"></textarea>
+						<input type="submit" class="btn btn-default" value="Send message" />
+					</div>
 				</form>
 				}
 

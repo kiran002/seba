@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +54,13 @@ public class Messages {
 		JPA.em().remove(this);
 	}
 
+	public static List<Integer> distinctUsers(int listingId) {		
+		String query_str = "Select distinct l.FromUserId from Messages l where l.ListingId=:lid";
+		TypedQuery<Integer> query = JPA.em().createQuery(query_str,
+				Integer.class);
+		return query.setParameter("lid",listingId).getResultList();
+	}
+
 	public static List<Messages> findAll(int userId) {
 		TypedQuery<Messages> query = JPA
 				.em()
@@ -63,14 +71,15 @@ public class Messages {
 				.setParameter("to_uids", userId).getResultList();
 	}
 
-	public static List<Messages> findAll(int userId,int listingId) {
+	public static List<Messages> findAll(int userId, int listingId) {
 		TypedQuery<Messages> query = JPA
 				.em()
 				.createQuery(
 						"SELECT l FROM Messages l where (l.FromUserId =:frm_uid or l.ToUserId = :to_uids) and l.ListingId = :lid  order by CreationDate ASC",
 						Messages.class);
 		return query.setParameter("frm_uid", userId)
-				.setParameter("to_uids", userId).setParameter("lid", listingId).getResultList();
+				.setParameter("to_uids", userId).setParameter("lid", listingId)
+				.getResultList();
 	}
 
 	public int getListingId() {
