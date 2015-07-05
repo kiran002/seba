@@ -21,7 +21,8 @@ public class Listing {
 	public String categoryName;
 	public boolean hasResponded;
 	public List<MessageList> messages;
-	public Map<String, List<MessageList>> msg_map;
+
+	public Map<models.Users, List<MessageList>> msg_map;
 
 	public Listing(Listings list, String img) {
 		this.listing = list;
@@ -50,25 +51,29 @@ public class Listing {
 				messages.add(item);
 			}
 		} else {
-			// he is the owner, first need to get all the distinct users and then all the conversations
-			msg_map = new HashMap<String, List<MessageList>>();
-			ArrayList<MessageList> messages_n ;
+			// he is the owner, first need to get all the distinct users and
+			// then all the conversations
+			msg_map = new HashMap<models.Users, List<MessageList>>();
+			ArrayList<MessageList> messages_n;
 			for (int usrId : models.Messages.distinctUsers(list.ListingId)) {
-				messages_n = new ArrayList<MessageList>();
-				for (Messages msg : findAll(usrId, list.ListingId)) {
-					MessageList item = new MessageList();
-					if (msg.FromUserId == getUserId()) {
-						item.usrname = "You";
-					} else {
-						int tmp = msg.FromUserId;
-						item.usrname = findById(tmp).FirstName;
+				if (usrId != getUserId()) {
+					messages_n = new ArrayList<MessageList>();
+					for (Messages msg : findAll(usrId, list.ListingId)) {
+						MessageList item = new MessageList();
+						if (msg.FromUserId == getUserId()) {
+							item.usrname = "You";
+						} else {
+							int tmp = msg.FromUserId;
+							item.usrname = findById(tmp).FirstName;
+						}
+						SimpleDateFormat df = new SimpleDateFormat(
+								"dd/MMM/yyyy");
+						item.date = df.format(msg.CreationDate);
+						item.Message = msg.Message;
+						messages_n.add(item);
 					}
-					SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
-					item.date = df.format(msg.CreationDate);
-					item.Message = msg.Message;
-					messages_n.add(item);
+					msg_map.put(findById(usrId), messages_n);
 				}
-				msg_map.put(usrId+"", messages_n);
 			}
 		}
 	}
