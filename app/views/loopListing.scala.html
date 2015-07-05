@@ -1,61 +1,72 @@
 @(lists:List[utils.Listing]) @for(index <- 0 to (lists.size-1)) {
-<div data-toggle="modal" class="listDetails"
-	data-target="#response_message" data-backdrop="false">
-	<div class="media">
-		@if(lists(index).path!="") {
-		<div class="media-left">
-			<a data-toggle="lightbox" href="assets/uploaded/@lists(index).path"><img
-				width="100" height="100" class="media-object thumbnail"
-				src="assets/uploaded/@lists(index).path" alt="Image"></a>
-		</div>
-		} else {
-		<div class="media-left">
-			<img width="100" height="100" class="media-object thumbnail"
-				src="assets/images/request.png" alt="Image">
-		</div>
-		}
-		<div class="media-body">
-			<div class="pull-left">
-				<h4 class="media-heading">
-					<b><a href="/show_listing?lid=@lists(index).listing.ListingId">@lists(index).listing.Name</a></b>
-				</h4>
+<div class="listDetails">
+
+	<div class="row">
+	<div class="col-md-10 col-md-offset-1">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title">
+					<a href="/show_listing?lid=@lists(index).listing.ListingId">@lists(index).listing.Name</a> <small>Posted in @lists(index).categoryName on @lists(index).date @if(lists(index).hasResponded) { &nbsp&nbsp  <span class="badge">Responded</span> }</small> 	</h2>
+								
 			</div>
-			@if(lists(index).isOwner) {
-			<div class="row">
-				<a href="/edit_listing?lid=@lists(index).listing.ListingId">Edit
-				</a> <a href="/delete_listing?lid=@lists(index).listing.ListingId"
-					onclick="return confirm('Are you sure??')">Delete</a>
+			<div class="panel-body">
+			
+				<div class="media">					
+						@if(lists(index).path!="") {
+						<div class="media-left">
+							<a data-toggle="lightbox" data-title="@lists(index).listing.Name"
+								href="assets/uploaded/@lists(index).path"><img width="100"
+								height="100" class="media-object thumbnail"
+								src="assets/uploaded/@lists(index).path" alt="Image"></a>
+						</div>
+						} else {
+						<div class="media-left">
+							<img width="100" height="100" class="media-object thumbnail"
+								src="assets/images/request.png" alt="Image">
+						</div>						
+						} 
+						<div class="media-body">
+						@if(lists(index).listing.PricePeriod == "D") {
+						<p>
+							<b>Period:</b> Daily
+						</p>
+						} @if(lists(index).listing.PricePeriod == "W") {
+						<p>
+							<b>Period:</b> Weekly
+						</p>
+						} @if(lists(index).listing.PricePeriod == "M") {
+						<p>
+							<b>Period:</b> Monthly
+						</p>
+						} @if(lists(index).listing.PricePeriod == "Y") {
+						<p>
+							<b>Period:</b> Yearly
+						</p>
+						}
+						<h5>
+							<b>Price:</b> @lists(index).listing.Price
+						</h5>
+						<h5>
+							<b>Description:</b> @lists(index).listing.Description
+						</h5>
+					</div>
+				</div>
 			</div>
-			<div class="row"></div>
-			}
+			@if(lists(index).isOwner) { <div class="panel-footer"><a
+						href="/edit_listing?lid=@lists(index).listing.ListingId"
+						class="navbar-link">Edit </a> &nbsp <a class="navbar-link"
+						href="/delete_listing?lid=@lists(index).listing.ListingId"
+						onclick="return confirm('Are you sure??')">Delete</a></div> }
+			
+</div>
+
+
 
 			<!-- 							<div class="pull-right"> -->
 			<!-- 								<span class="label label-warning">Sponsored</span> -->
 			<!-- 							</div>		 -->
 			<div class="clearfix"></div>
-			@if(lists(index).listing.PricePeriod == "D") {
-			<p>
-				<b>Period:</b> Daily
-			</p>
-			} @if(lists(index).listing.PricePeriod == "W") {
-			<p>
-				<b>Period:</b> Weekly
-			</p>
-			} @if(lists(index).listing.PricePeriod == "M") {
-			<p>
-				<b>Period:</b> Monthly
-			</p>
-			} @if(lists(index).listing.PricePeriod == "Y") {
-			<p>
-				<b>Period:</b> Yearly
-			</p>
-			}
-			<h5>
-				<b>Price:</b> @lists(index).listing.Price
-			</h5>
-			<h5>
-				<b>Description:</b> @lists(index).listing.Description
-			</h5>
+
 		</div>
 	</div>
 </div>

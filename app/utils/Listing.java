@@ -16,6 +16,7 @@ import models.Messages;
 public class Listing {
 	public Listings listing;
 	public String path;
+	public String date;
 	public boolean isOwner;
 	public boolean isSponsored;
 	public String categoryName;
@@ -34,10 +35,14 @@ public class Listing {
 		this.listing = list;
 		this.path = img;
 		this.isOwner = canEdit;
+		SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
+		this.date = df.format(list.CreationDate);
 		this.categoryName = models.Category.findById(list.CategoryId).CategoryName;
 		messages = new ArrayList<MessageList>();
+		this.hasResponded = false;
 		if (!canEdit) {
 			for (Messages msg : findAll(getUserId(), list.ListingId)) {
+				this.hasResponded = true;
 				MessageList item = new MessageList();
 				if (msg.FromUserId == getUserId()) {
 					item.usrname = "You";
@@ -45,7 +50,6 @@ public class Listing {
 					int usrId = list.UserId;
 					item.usrname = findById(usrId).FirstName;
 				}
-				SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
 				item.date = df.format(msg.CreationDate);
 				item.Message = msg.Message;
 				messages.add(item);
@@ -66,8 +70,6 @@ public class Listing {
 							int tmp = msg.FromUserId;
 							item.usrname = findById(tmp).FirstName;
 						}
-						SimpleDateFormat df = new SimpleDateFormat(
-								"dd/MMM/yyyy");
 						item.date = df.format(msg.CreationDate);
 						item.Message = msg.Message;
 						messages_n.add(item);
