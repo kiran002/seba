@@ -16,6 +16,8 @@ import play.db.jpa.JPA;
 public class Listings {	
 		
 	public interface createListing{};
+	public interface updateListing{};
+	
 	
 	@Id
 	@GeneratedValue

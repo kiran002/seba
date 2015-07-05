@@ -37,7 +37,8 @@ POST    /post_message              	controllers.MessageController.sendMessage()
 
 GET     /show_listing               controllers.ListingController.show_listing()
 GET     /delete_listing             controllers.ListingController.deleteListing()
-
+GET     /edit_listing            	controllers.ListingController.update()
+POST 	/update_listing           	controllers.ListingController.updateListing()
 
 
 #Catch All

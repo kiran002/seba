@@ -100,8 +100,7 @@ public class Application extends Controller {
 			return ok(views.html.offers.render(true, offersLists, 200, "",
 					utilController.getCategories()));
 		}
-		return ok(views.html.offers.render(false, new ArrayList<Listing>(),
-				200, "", utilController.getCategories()));
+		return ok(views.html.login.render(false, null,200,"Please login to continue"));
 	}
 
 	@play.db.jpa.Transactional
@@ -112,8 +111,7 @@ public class Application extends Controller {
 			return ok(views.html.offers.render(true, requestsLists, 200, "",
 					utilController.getCategories()));
 		}
-		return ok(views.html.offers.render(false, new ArrayList<Listing>(),
-				200, "", utilController.getCategories()));
+		return ok(views.html.login.render(false, null,200,"Please login to continue"));
 	}
 
 	@play.db.jpa.Transactional
@@ -141,8 +139,7 @@ public class Application extends Controller {
 			Users usr = userController.getUser(getUserId());
 			return ok(views.html.profile.render(true, usr));
 		}
-		return ok(views.html.Home.render(false, allLists, categoryList, null,
-				null));
+		return ok(views.html.login.render(false, null,200,"Please login to continue"));
 	}
 
 }

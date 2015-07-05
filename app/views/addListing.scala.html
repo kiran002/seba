@@ -3,8 +3,7 @@ List[models.Category],status:Integer, msg:
 String,listing:models.Listings)
 <!DOCTYPE html>
 <html>
-<head>
-@head("Create new listing, StuMark -- An online market place for university community")
+<head>@head("Create new listing, StuMark -- An online marketplace for university community")
 <body>
 
 	<div class="container" style="width: 80%">
@@ -12,28 +11,34 @@ String,listing:models.Listings)
 		<div class="row">
 			<h3>Add Posts</h3>
 			<hr>
-			<!-- Add listing details to database using post form method -->
+			@if(listing.ListingType!='O' && listing.ListingType!='R') {
 			<form name="addListing" action="/add_listing" method="post"
+				class="form-horizontal" enctype="multipart/form-data">    
+			}else {
+			<form name="updateListing" action="/update_listing" method="post"
 				class="form-horizontal" enctype="multipart/form-data">
+				<input type="hidden" name="ListingId" value="@listing.ListingId"/>
+			}			
 				<div class="col-md-6">
 					<div class="row">
 						<div class="form-group">
 							<label class="col-md-4 control-label">Post type</label>
 							<div class="col-md-8">
 								<select class="form-control" name="ListingType"
-									value="@listing.ListingType" id="listingTypeInfo" tabindex="1"
-									required>
+									id="listingTypeInfo" tabindex="1" required>
 									<option value="">select</option>
-									<option value="O">Offer</option>
-									<option value="R">Request</option>
+									<option value="O" @if(listing.ListingType==
+										'O') { selected="selected"} >Offer</option>
+									<option value="R" @if(listing.ListingType==
+										'R') { selected="selected"} >Request</option>
 								</select>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-md-4 control-label">Post title</label>
 							<div class="col-md-8">
-								<input type="text" class="form-control" name="Name"
-									placeholder="Item name" tabindex="2" required>
+								<input type="text" value="@listing.Name" class="form-control"
+									name="Name" placeholder="Item name" tabindex="2" required>
 							</div>
 						</div>
 						<div class="form-group">
@@ -43,7 +48,8 @@ String,listing:models.Listings)
 									required>
 									<option value="">select</option> @for(index <- 0 to
 									(categoryList.size-1)) {
-									<option value="@categoryList(index).CategoryId">@categoryList(index).CategoryName</option>
+									<option @if(listing.CategoryId==index+1) { selected="selected"
+										} value="@categoryList(index).CategoryId">@categoryList(index).CategoryName</option>
 									}
 								</select>
 							</div>
@@ -51,10 +57,11 @@ String,listing:models.Listings)
 						<div class="form-group">
 							<label class="col-md-4 control-label">Description</label>
 							<div class="col-md-8">
-								<textarea class="form-control" tabindex="4" name="Description"
-									rows="4" required></textarea>
+								<textarea class="form-control" value="" tabindex="4"
+									name="Description" rows="4" required>@listing.Description</textarea>
 							</div>
 						</div>
+						@if(listing.ListingType!='O' && listing.ListingType!='R') {
 						<div class="form-group" id="pictureId">
 							<label class="col-md-4 control-label">Add Picture</label>
 							<div class="col-md-8">
@@ -68,6 +75,7 @@ String,listing:models.Listings)
 								</div>
 							</div>
 						</div>
+						}
 
 					</div>
 				</div>
@@ -79,8 +87,10 @@ String,listing:models.Listings)
 							<div class="col-md-8">
 								<select id="transactionType" tabindex="6" class="form-control"
 									name="TransactionType" required>
-									<option value="R">Rent</option>
-									<option value="S">Sell</option>
+									<option @if(listing.TransactionType==
+										'R') { selected="selected" }  value="R">Rent</option>
+									<option @if(listing.TransactionType==
+										'S') { selected="selected" }  value="S">Sell</option>
 								</select>
 							</div>
 						</div>
@@ -90,8 +100,9 @@ String,listing:models.Listings)
 								<div class="row">
 									<div class="col-md-6">
 										<div class="input-group">
-											<input type="text" name="Price" tabindex="7"
-												class="form-control" placeholder="Price" required
+											<input type="text" value="@listing.Price" name="Price"
+												tabindex="7" class="form-control" placeholder="Price"
+												required
 												onkeypress='return event.charCode >= 48 && event.charCode <=57'>
 											<div class="input-group-addon">EUR</div>
 										</div>
@@ -99,15 +110,20 @@ String,listing:models.Listings)
 									<div class="col-md-6">
 										<select id="pricePeriod" class="form-control"
 											name="PricePeriod" required>
-											<option value="D">Daily</option>
-											<option value="W">Weekly</option>
-											<option value="M">Monthly</option>
-											<option value="A">Annually</option>
+											<option @if(listing.PricePeriod== 'D') { selected="selected"
+												} value="D">Daily</option>
+											<option @if(listing.PricePeriod== 'W') { selected="selected"
+												} value="W">Weekly</option>
+											<option @if(listing.PricePeriod== 'M') { selected="selected"
+												} value="M">Monthly</option>
+											<option @if(listing.PricePeriod== 'A') { selected="selected"
+												} value="A">Annually</option>
 										</select>
 									</div>
 								</div>
 							</div>
 						</div>
+						@if(listing.ListingType!='O' && listing.ListingType!='R') {        
 						<div class="form-group">
 							<label class="col-md-4 control-label">Item availability</label>
 							<div class="col-md-8">
@@ -142,11 +158,12 @@ String,listing:models.Listings)
 								</div>
 							</div>
 						</div>
+						}
 						<div class="form-group">
 							<label class="col-md-4 control-label">Price negotiable</label>
 							<div class="col-md-8">
 								<div class="checkbox">
-									<label> <input tabindex="9" name="PriceNegotiable"
+									<label> <input tabindex="9" @if(listing.PriceNegotiable) {  checked="checked"      } name="PriceNegotiable"
 										type="checkbox">
 									</label>
 								</div>
@@ -155,7 +172,7 @@ String,listing:models.Listings)
 						<div class="form-group">
 							<div class="col-md-offset-4 col-md-8">
 								<button type="submit" tabindex="10"
-									class="btn btn-success btn-lg">Submit your post</button>
+									class="btn btn-success btn-lg">@if(listing.ListingType!='O' && listing.ListingType!='R') {        Submit your post }else { Update Post }</button>
 							</div>
 						</div>
 					</div>
@@ -169,6 +186,8 @@ String,listing:models.Listings)
 
 	<script type="text/javascript">
 		$(function() {
+			
+			@if(listing.ListingType!='O' && listing.ListingType!='R') {   
 			$('#from').datetimepicker({
 				minDate : moment(),
 				format : 'YYYY/MM/DD'
@@ -193,7 +212,21 @@ String,listing:models.Listings)
 			});
 			$("#expire").on("dp.change", function(e) {
 				$('#expire').val(e.date.format('YYYY/MM/DD'));
-			});
+			});			
+			}
+			   $(window).load(function() {
+			    	var fullDate = new Date();    
+			        var twoDigitDate = fullDate.getDate()+"";if(twoDigitDate.length==1) twoDigitDate="0" +twoDigitDate;
+			        var twoDigitMonth = fullDate.getMonth()+"";if(twoDigitMonth.length==1)  twoDigitMonth="0" +twoDigitMonth;
+			        var currentDate = fullDate.getFullYear()+ "/" + twoDigitMonth  + "/" + twoDigitDate ;	        
+			        
+			        	$("#transactionStart").val(currentDate);
+			        	$("#transactionEnd").val(currentDate);
+				        $("#transactionExpire").val(currentDate);
+			        var twoDigitMonth = ((fullDate.getMonth()+1)%12)+"";if(twoDigitMonth.length==1)  twoDigitMonth="0" +twoDigitMonth;
+			    	var currentDate = fullDate.getFullYear()+ "/" + twoDigitMonth  + "/" + twoDigitDate ;	        
+			    	
+				});
 		});
 	</script>
 

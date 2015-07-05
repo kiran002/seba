@@ -43,6 +43,23 @@ public class ListingController extends Controller {
 	}
 
 	@play.db.jpa.Transactional
+	public Result update() {
+		if (isLoggedIn()) {
+			DynamicForm form = Form.form().bindFromRequest();
+			int usrId = getUserId();
+			int listingId = Library.getInt(form.get("lid"));
+			Listings listing = Listings.findById(listingId);
+			if (listing.UserId == usrId) {
+				return ok(views.html.addListing.render(true,
+						utilController.getCategories(), 200, "",
+						listing));
+			}
+		}
+		return ok(views.html.addListing.render(false,
+				utilController.getCategories(), 200, "", new models.Listings()));
+	}
+
+	@play.db.jpa.Transactional
 	public static List<utils.Listing> getTopOffers(int userId) {
 		List<utils.Listing> list = new ArrayList<Listing>();
 		for (Listings listing : models.Listings.findAllUserListings("O",
@@ -51,10 +68,10 @@ public class ListingController extends Controller {
 			Listing item;
 			if (picture != null) {
 				item = new Listing(listing,
-						Pictures.findByListingId(listing.ListingId).path);
+						Pictures.findByListingId(listing.ListingId).path,listing.UserId==getUserId());
 
 			} else {
-				item = new Listing(listing, "");
+				item = new Listing(listing, "",listing.UserId==getUserId());
 			}
 			list.add(item);
 		}
@@ -88,7 +105,7 @@ public class ListingController extends Controller {
 		DynamicForm form = Form.form().bindFromRequest();
 		int index = Library.getInt(form.get("index"));
 		for (Listings listing : models.Listings.findAll("R", index)) {
-			Listing item = new Listing(listing, "");
+			Listing item = new Listing(listing, "",listing.UserId==getUserId());
 			list.add(item);
 		}
 		return ok(views.html.offers.render(true, list, 200, "",
@@ -101,66 +118,56 @@ public class ListingController extends Controller {
 			DynamicForm form = Form.form().bindFromRequest();
 			int listing_id = utils.Library.getInt(form.get("lid"));
 			Listings listing = Listings.findById(listing_id);
-			String path ="";
+			String path = "";
 			Pictures pic = Pictures.findByListingId(listing_id);
-			if(pic!=null) {
+			if (pic != null) {
 				path = pic.path;
-			}	
-			Listing list = new Listing(listing,path,listing.UserId==getUserId());
+			}
+			Listing list = new Listing(listing, path,
+					listing.UserId == getUserId());
 			return ok(views.html.showlisting.render(true, list));
 		}
 		return ok(views.html.showlisting.render(false, null));
 	}
 
 	@play.db.jpa.Transactional
-	public Result updateListing() {
+	public Result updateListing() {		
 		if (isLoggedIn()) {
+			List<Listing> list = new ArrayList<Listing>();
 			DynamicForm form = Form.form().bindFromRequest();
 			int usrId = getUserId();
-			int listingId = Library.getInt(form.get("lid"));
+			int listingId = Library.getInt(form.get("ListingId"));
 			Listings listing = Listings.findById(listingId);
 			if (listing.UserId == usrId) {
 				// the listing was posted by this user and can update whatever
 				// he wants to, except for
-				// Listing id and listing type
-				SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
-				listing.Name = form.get("name");
-				listing.Description = form.get("description");
-				listing.CategoryId = Integer.parseInt(form.get("cid"));
-				listing.TransactionType = form.get("ttype").charAt(0);
-				listing.Price = Double.parseDouble(form.get("price"));
-				listing.PricePeriod = form.get("pperiod");
-				if (form.get("pnegotiable") != null) {
+				// Listing id and listing type				
+				listing.Name = form.get("Name");
+				listing.Description = form.get("Description");
+				listing.CategoryId = Integer.parseInt(form.get("CategoryId"));
+				listing.TransactionType = form.get("TransactionType").charAt(0);
+				listing.Price = Double.parseDouble(form.get("Price"));
+				listing.PricePeriod = form.get("PricePeriod");
+				if (form.get("PriceNegotiable") != null) {
 					listing.PriceNegotiable = true;
-				}
-				try {
-					if (form.get("afrom") != null) {
-						listing.TransactionStart = format.parse(form
-								.get("afrom"));
-					}
-					if (form.get("ato") != null) {
-						listing.TransactionEnd = format
-								.parse(form.get("afrom"));
-					}
-					if (form.get("edate") != null) {
-						listing.ExpiryDate = format.parse(form.get("afrom"));
-					}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				}				
 				listing.save();
-				return ok();
+				list = ListingController.getTopRequests(getUserId());
+				if (listing.ListingType == 'O') {
+					list = ListingController.getTopOffers((getUserId()));
+				}
+				return ok(views.html.offers.render(true, list, 202,
+						"Update successful!", utilController.getCategories()));				
 			}
 		}
-		return ok();
+		return ok(views.html.login.render(false, null,200,"Please login to continue"));
 	}
 
 	@play.db.jpa.Transactional
 	public static List<utils.Listing> getTopRequests(int userId) {
 		List<utils.Listing> list = new ArrayList<Listing>();
 		for (Listings listing : Listings.findAllUserListings("R", userId, 0)) {
-			Listing item = new Listing(listing, "");
+			Listing item = new Listing(listing, "",listing.UserId==getUserId());
 			list.add(item);
 		}
 		return list;
@@ -172,11 +179,11 @@ public class ListingController extends Controller {
 		for (Listings listing : models.Listings.findAll()) {
 			Logger.info(listing.Name);
 			if (listing.ListingType == 'R') {
-				Listing item = new Listing(listing, "");
+				Listing item = new Listing(listing, "",listing.UserId==getUserId());
 				pairs.add(item);
 			} else {
 				Listing item = new Listing(listing,
-						Pictures.findByListingId(listing.ListingId).path);
+						Pictures.findByListingId(listing.ListingId).path,listing.UserId==getUserId());
 				pairs.add(item);
 			}
 		}
@@ -191,7 +198,7 @@ public class ListingController extends Controller {
 			int usrId = getUserId();
 			int listingId = Library.getInt(form.get("lid"));
 			Listings listing = Listings.findById(listingId);
-			
+
 			char type = listing.ListingType;
 			if (listing.UserId == usrId) {
 				// the listing was posted by this user and has permission to
@@ -199,24 +206,22 @@ public class ListingController extends Controller {
 				Pictures pic = Pictures.findByListingId(listingId);
 				if (pic != null) {
 					pic.delete();
-				}				
+				}
 				listing.delete();
 				list = ListingController.getTopRequests(getUserId());
 				if (type == 'O') {
 					list = ListingController.getTopOffers((getUserId()));
-				} 
-				
+				}
+
 				return ok(views.html.offers.render(true, list, 202,
-						"Delete successful!",
-						utilController.getCategories()));
+						"Delete successful!", utilController.getCategories()));
 			} else {
 				return ok(views.html.offers.render(true, list, 201,
 						"This listing does not belong to you",
 						utilController.getCategories()));
 			}
 		}
-		return ok(views.html.offers.render(false, list, 201,
-				"Please login to continue", utilController.getCategories()));
+		return ok(views.html.login.render(false, null,200,"Please login to continue"));
 	}
 
 	@play.db.jpa.Transactional
