@@ -112,7 +112,7 @@ public class ListingController extends Controller {
 			Listing item = new Listing(listing, "",listing.UserId==getUserId());
 			list.add(item);
 		}
-		return ok(views.html.offers.render(true, list, 200, "",
+		return ok(views.html.requests.render(true, list, 200, "",
 				utilController.getCategories(), user));
 	}
 

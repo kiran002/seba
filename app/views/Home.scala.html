@@ -8,7 +8,7 @@ categoryList: List[models.Category], status:Integer, msg: String, user: models.U
 		@navbar(hasLoggedIn, user) @include_status(status,msg)
 		<div class="row">
 			<div class="col-md-10">
-				<h3>Latest Offers & Requests</h3>
+				<h3>All Offers & Requests</h3>
 			</div>
 			<div class="pull-right pad-top-25">
 				<b>@lists.size result(s) </b>
@@ -17,7 +17,7 @@ categoryList: List[models.Category], status:Integer, msg: String, user: models.U
 			<hr />
 		</div>
 		<div class="row">
-			@search(categoryList)
+			@search(categoryList, null)
 			<div class="col-md-7 mCustomScrollbar listings"
 				style="height: 500px; overflow: auto;" data-mcs-theme="dark">
 				@loopListing(lists)</div>
