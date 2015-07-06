@@ -16,23 +16,24 @@ public class login extends Controller {
 	public Result index() {
 		List<Listing> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
-		if (isLoggedIn()) {			
+		if (isLoggedIn()) {	
+			Users user = Users.findById(getUserId());
 			return ok(views.html.Home.render(true, allLists, categoryList,
-					null, null));
+					null, null, user));
 		}
-		return ok(views.html.login.render(false, null,200,"Please login to continue"));
+		return ok(views.html.login.render(false, null,200,"Please login to continue", null));
 	}
 
 	public Result logout() {
 		try {
 			if (isLoggedIn()) {
 				session().clear();
-				return ok(views.html.login.render(false, null,202,"Logout successful! See you soon!!"));
+				return ok(views.html.login.render(false, null,202,"Logout successful! See you soon!!", null));
 			}
 		} catch (Exception e) {
-			return ok(views.html.login.render(false, null,201,"Please login to continue"));
+			return ok(views.html.login.render(false, null,201,"Please login to continue", null));
 		}
-		return ok(views.html.login.render(false, null,201,"Please login to continue"));
+		return ok(views.html.login.render(false, null,201,"Please login to continue", null));
 
 	}
 	

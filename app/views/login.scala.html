@@ -1,5 +1,5 @@
 @(hasLoggedIn: Boolean, users: models.Users,status: Integer, msg:
-String)
+String, user: models.Users)
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +22,7 @@ type="text/javascript">
 <body>
 
 	<div class="container">
-		@if(hasLoggedIn) { @navbar(true) } else { @navbar(false) }
+		@if(hasLoggedIn) { @navbar(true, user) } else { @navbar(false, null) }
 		<div class="row">
 
 			@if(status == 201) { 

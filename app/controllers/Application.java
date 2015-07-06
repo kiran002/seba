@@ -28,13 +28,14 @@ public class Application extends Controller {
 	@play.db.jpa.Transactional
 	public Result index() {
 		List<Listing> allLists = ListingController.getNewListings();
-		List<Category> categoryList = utilController.getCategories();
+		List<Category> categoryList = utilController.getCategories();		
 		if (isLoggedIn()) {
+			Users user = Users.findById(getUserId());
 			return ok(views.html.Home.render(true, allLists, categoryList,
-					null, null));
+					null, null, user));
 		}
 		return ok(views.html.Home.render(false, allLists, categoryList, null,
-				null));
+				null, null));
 	}
 
 	public Result activate() {
@@ -85,11 +86,12 @@ public class Application extends Controller {
 		List<Category> categoryList = utilController.getCategories();
 
 		if (isLoggedIn()) {
+			Users user = Users.findById(getUserId());
 			return ok(views.html.Home.render(true, allLists, categoryList,
-					null, null));
+					null, null, user));
 		}
 		return ok(views.html.Home.render(false, allLists, categoryList, null,
-				null));
+				null, null));
 	}
 
 	@play.db.jpa.Transactional
@@ -97,10 +99,11 @@ public class Application extends Controller {
 		if (isLoggedIn()) {
 			List<Listing> offersLists = ListingController
 					.getTopOffers(getUserId());
+			Users user = Users.findById(getUserId());
 			return ok(views.html.offers.render(true, offersLists, 200, "",
-					utilController.getCategories()));
+					utilController.getCategories(), user));
 		}
-		return ok(views.html.login.render(false, null,200,"Please login to continue"));
+		return ok(views.html.login.render(false, null,200,"Please login to continue", null));
 	}
 
 	@play.db.jpa.Transactional
@@ -108,18 +111,20 @@ public class Application extends Controller {
 		if (isLoggedIn()) {
 			List<utils.Listing> requestsLists = ListingController
 					.getTopRequests(getUserId());
+			Users user = Users.findById(getUserId());
 			return ok(views.html.offers.render(true, requestsLists, 200, "",
-					utilController.getCategories()));
+					utilController.getCategories(), user));
 		}
-		return ok(views.html.login.render(false, null,200,"Please login to continue"));
+		return ok(views.html.login.render(false, null,200,"Please login to continue", null));
 	}
 
 	@play.db.jpa.Transactional
 	public Result catchAll(String path) {
 		List<Listing> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
+		Users user = Users.findById(getUserId());
 		return ok(views.html.Home.render(false, allLists, categoryList, null,
-				null));
+				null, user));
 	}
 
 	public static ObjectNode defaultError(String message) {
@@ -139,7 +144,7 @@ public class Application extends Controller {
 			Users usr = userController.getUser(getUserId());
 			return ok(views.html.profile.render(true, usr));
 		}
-		return ok(views.html.login.render(false, null,200,"Please login to continue"));
+		return ok(views.html.login.render(false, null,200,"Please login to continue", null));
 	}
 
 }

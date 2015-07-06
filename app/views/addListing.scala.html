@@ -1,13 +1,13 @@
 @(hasLoggedIn: Boolean,categoryList:
 List[models.Category],status:Integer, msg:
-String,listing:models.Listings)
+String,listing:models.Listings, user:models.Users)
 <!DOCTYPE html>
 <html>
 @head("Create new listing, StuMark -- An online marketplace for university community")
 <body>
 
 	<div class="container" style="width: 80%">
-		@navbar(hasLoggedIn) @include_status(status,msg)
+		@navbar(hasLoggedIn, user) @include_status(status,msg)
 		<div class="row">
 			<h3>Add Posts</h3>
 			<hr>
@@ -67,7 +67,7 @@ String,listing:models.Listings)
 							<div class="col-md-8">
 								<div class="input-group">
 									<span class="input-group-btn"> <span
-										class="btn btn-primary btn-file"> Browse… <input
+										class="btn btn-primary btn-file"> Browseï¿½ <input
 											type="file" tabindex="5" name="picture">
 									</span>
 									</span> <input type="text" id="picture_field" class="form-control"

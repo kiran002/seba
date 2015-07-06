@@ -34,16 +34,18 @@ public class ListingController extends Controller {
 	@play.db.jpa.Transactional
 	public Result index() {
 		if (isLoggedIn()) {
+			Users user = Users.findById(getUserId());
 			return ok(views.html.addListing.render(true,
 					utilController.getCategories(), 200, "",
-					new models.Listings()));
+					new models.Listings(), user));
 		}
 		return ok(views.html.addListing.render(false,
-				utilController.getCategories(), 200, "", new models.Listings()));
+				utilController.getCategories(), 200, "", new models.Listings(), null));
 	}
 
 	@play.db.jpa.Transactional
 	public Result update() {
+		Users user = Users.findById(getUserId());
 		if (isLoggedIn()) {
 			DynamicForm form = Form.form().bindFromRequest();
 			int usrId = getUserId();
@@ -52,11 +54,11 @@ public class ListingController extends Controller {
 			if (listing.UserId == usrId) {
 				return ok(views.html.addListing.render(true,
 						utilController.getCategories(), 200, "",
-						listing));
+						listing, user));
 			}
 		}
 		return ok(views.html.addListing.render(false,
-				utilController.getCategories(), 200, "", new models.Listings()));
+				utilController.getCategories(), 200, "", new models.Listings(), user));
 	}
 
 	@play.db.jpa.Transactional
@@ -81,6 +83,7 @@ public class ListingController extends Controller {
 	@play.db.jpa.Transactional
 	public Result showAllOffers() {
 		List<utils.Listing> list = new ArrayList<Listing>();
+		Users user = Users.findById(getUserId());
 		DynamicForm form = Form.form().bindFromRequest();
 		int index = Library.getInt(form.get("index"));
 		for (Listings listing : models.Listings.findAll("O", index)) {
@@ -96,12 +99,13 @@ public class ListingController extends Controller {
 			list.add(item);
 		}
 		return ok(views.html.offers.render(true, list, 200, "",
-				utilController.getCategories()));
+				utilController.getCategories(), user));
 	}
 
 	@play.db.jpa.Transactional
 	public Result showAllRequests() {
 		List<utils.Listing> list = new ArrayList<Listing>();
+		Users user = Users.findById(getUserId());
 		DynamicForm form = Form.form().bindFromRequest();
 		int index = Library.getInt(form.get("index"));
 		for (Listings listing : models.Listings.findAll("R", index)) {
@@ -109,7 +113,7 @@ public class ListingController extends Controller {
 			list.add(item);
 		}
 		return ok(views.html.offers.render(true, list, 200, "",
-				utilController.getCategories()));
+				utilController.getCategories(), user));
 	}
 
 	@play.db.jpa.Transactional
@@ -125,9 +129,10 @@ public class ListingController extends Controller {
 			}
 			Listing list = new Listing(listing, path,
 					listing.UserId == getUserId());
-			return ok(views.html.showlisting.render(true, list));
+			Users user = Users.findById(getUserId());
+			return ok(views.html.showlisting.render(true, list, user));
 		}
-		return ok(views.html.showlisting.render(false, null));
+		return ok(views.html.showlisting.render(false, null, null));
 	}
 
 	@play.db.jpa.Transactional
@@ -156,11 +161,12 @@ public class ListingController extends Controller {
 				if (listing.ListingType == 'O') {
 					list = ListingController.getTopOffers((getUserId()));
 				}
+				Users user = Users.findById(usrId);
 				return ok(views.html.offers.render(true, list, 202,
-						"Update successful!", utilController.getCategories()));				
+						"Update successful!", utilController.getCategories(), user));				
 			}
 		}
-		return ok(views.html.login.render(false, null,200,"Please login to continue"));
+		return ok(views.html.login.render(false, null,200,"Please login to continue", null));
 	}
 
 	@play.db.jpa.Transactional
@@ -198,7 +204,7 @@ public class ListingController extends Controller {
 			int usrId = getUserId();
 			int listingId = Library.getInt(form.get("lid"));
 			Listings listing = Listings.findById(listingId);
-
+			Users user = Users.findById(usrId);
 			char type = listing.ListingType;
 			if (listing.UserId == usrId) {
 				// the listing was posted by this user and has permission to
@@ -212,16 +218,15 @@ public class ListingController extends Controller {
 				if (type == 'O') {
 					list = ListingController.getTopOffers((getUserId()));
 				}
-
 				return ok(views.html.offers.render(true, list, 202,
-						"Delete successful!", utilController.getCategories()));
+						"Delete successful!", utilController.getCategories(), user));
 			} else {
 				return ok(views.html.offers.render(true, list, 201,
 						"This listing does not belong to you",
-						utilController.getCategories()));
+						utilController.getCategories(), user));
 			}
 		}
-		return ok(views.html.login.render(false, null,200,"Please login to continue"));
+		return ok(views.html.login.render(false, null,200,"Please login to continue", null));
 	}
 
 	@play.db.jpa.Transactional
@@ -248,6 +253,7 @@ public class ListingController extends Controller {
 
 				listing.CreationDate = new Date();
 				listing.UserId = currentUser.UserId;
+				Users user = Users.findById(currentUser.UserId);				
 				listing.save();
 				if (listing.ListingType == 'O' && picture != null
 						&& picture.getFile().length() > 0) {
@@ -256,19 +262,20 @@ public class ListingController extends Controller {
 							.getTopOffers(getUserId());
 					return ok(views.html.offers.render(true, offersLists, 202,
 							"Listing successfully created",
-							utilController.getCategories()));
+							utilController.getCategories(), user));
 				}
 				List<utils.Listing> requestsLists = ListingController
 						.getTopRequests(getUserId());
 				return ok(views.html.offers.render(true, requestsLists, 202,
 						"Listing successfully created",
-						utilController.getCategories()));
+						utilController.getCategories(), user));
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			Users user = Users.findById(getUserId());
 			return ok(views.html.addListing.render(true,
 					utilController.getCategories(), 201,
-					"Please enter all the required fields", new Listings()));
+					"Please enter all the required fields", new Listings(), user));
 		}
 		return ok();
 	}

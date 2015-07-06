@@ -76,7 +76,7 @@ public class userController extends Controller {
 					user.update();
 					return ok(views.html.login
 							.render(false, user, 202,
-									"Activation successfull please login to start using stumark"));
+									"Activation successfull please login to start using stumark", null));
 				} else
 					return ok(views.html.activate.render(user.Email, 201,
 							"Invalid activation code. Please check your entry and try again."
@@ -110,8 +110,9 @@ public class userController extends Controller {
 								.getNewListings();
 						List<Category> categoryList = utilController
 								.getCategories();
+						Users userData = Users.findById(user.UserId);
 						return ok(views.html.Home.render(true, allLists,
-								categoryList, null, null));
+								categoryList, null, null, userData));
 					} else {
 						return ok(views.html.activate.render(user.Email, 202,
 								"please activate your account using "
@@ -121,16 +122,16 @@ public class userController extends Controller {
 				} else {
 					return ok(views.html.login
 							.render(false, null, 201,
-									"Invalid user please enter a valid user name and password"));
+									"Invalid user please enter a valid user name and password", null));
 				}
 			} else {
 				return ok(views.html.login
 						.render(false, null, 201,
-								"Invalid user please enter a valid user name and password"));
+								"Invalid user please enter a valid user name and password", null));
 			}
 		} catch (Exception e) {
 			return ok(views.html.login.render(false, null, 201,
-					"Invalid user please enter a valid user name and password"));
+					"Invalid user please enter a valid user name and password", null));
 		}
 
 	}
@@ -153,6 +154,7 @@ public class userController extends Controller {
 	public Result updateUser() {
 		List<Listing> allLists = ListingController.getNewListings();
 		List<Category> categoryList = utilController.getCategories();
+		Users user = Users.findById(Integer.parseInt(session("usrid")));
 		
 		DynamicForm form = Form.form().bindFromRequest();
 		String firstname = form.get("fname");
@@ -170,12 +172,12 @@ public class userController extends Controller {
 				}
 				usr.update();
 				return ok(views.html.Home.render(true, allLists, categoryList,
-						null, null));
+						null, null, usr));
 			}
 		}
 		// something has gone wrong make the validations
 		return ok(views.html.Home.render(true, allLists, categoryList, null,
-				null));
+				null, user));
 
 	}
 

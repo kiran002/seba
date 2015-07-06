@@ -35,8 +35,9 @@ public class MessageController extends Controller {
 			List<Listing> allLists = ListingController.getNewListings();
 			List<Category> categoryList = utilController.getCategories();
 			if (isLoggedIn()) {
+				Users user = Users.findById(getUserId());
 				return ok(views.html.Home.render(true, allLists, categoryList,
-						202, "message sent succesfully!"));
+						202, "message sent succesfully!", user));
 			}
 		}
 		return ok(); // unsuccessful need to validate and other stuff
@@ -48,7 +49,7 @@ public class MessageController extends Controller {
 		List<utils.MessageList> recieved = new ArrayList<MessageList>();
 		if (isLoggedIn()) {
 			List<models.Messages> msgs = Messages.findAll(getUserId(), true);
-
+			Users user = Users.findById(getUserId());
 			SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
 			
 			for (Messages msg : msgs) {
@@ -74,9 +75,9 @@ public class MessageController extends Controller {
 				msglistItem.date = df.format(msg.CreationDate);
 				recieved.add(msglistItem);
 			}
-			return ok(views.html.messages.render(true, sent, recieved));
+			return ok(views.html.messages.render(true, sent, recieved, user));
 		}
-		return ok(views.html.messages.render(false, sent, recieved));
+		return ok(views.html.messages.render(false, sent, recieved, null));
 	}
 
 	@play.db.jpa.Transactional

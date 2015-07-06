@@ -1,5 +1,5 @@
 @(hasLoggedIn: Boolean, lists: List[utils.Listing], status:Integer,
-msg:String,categoryList: List[models.Category])
+msg:String,categoryList: List[models.Category], user:models.Users)
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +8,7 @@ msg:String,categoryList: List[models.Category])
 
 <body>
 	<div class="container">
-		@navbar(hasLoggedIn) @include_status(status,msg)
+		@navbar(hasLoggedIn, user) @include_status(status,msg)
 		<div class="row">
 			<div class="col-md-10">
 				<h3>All Offers</h3>

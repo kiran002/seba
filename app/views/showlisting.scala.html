@@ -1,9 +1,9 @@
-@(hasLoggedIn:Boolean,Listing:utils.Listing)
+@(hasLoggedIn:Boolean,Listing:utils.Listing, user:models.Users)
 <!DOCTYPE html>
 <html>
 @head(Listing.listing.Name + " -- Listing details")
 <body>
-	@navbar(hasLoggedIn)
+	@navbar(hasLoggedIn, user)
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1">

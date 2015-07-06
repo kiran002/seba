@@ -1,5 +1,5 @@
 @(hasLoggedIn: Boolean, sent: List[utils.MessageList], recieved:
-List[utils.MessageList])
+List[utils.MessageList], user:models.Users)
 <!DOCTYPE html>
 <html>
 @head("Your Messages")
@@ -7,7 +7,7 @@ List[utils.MessageList])
 
 	<div class="container" style="width: 80%">
 		<!-- Navigation bar code -->
-		@navbar(hasLoggedIn)
+		@navbar(hasLoggedIn, user)
 
 		<div class="row">
 			<div class="pull-left">

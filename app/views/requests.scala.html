@@ -1,4 +1,4 @@
-@(hasLoggedIn: Boolean, lists: List[models.Listings], status:Integer, msg:String)
+@(hasLoggedIn: Boolean, lists: List[models.Listings], status:Integer, msg:String, user: models.Users)
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +17,7 @@
 <body>
 	<div class="container" style="width:80%">
 		<!-- Navigation bar code -->
-		@navbar(hasLoggedIn)
+		@navbar(hasLoggedIn, user)
 		
 		<!-- Search criteria area -->
 		<div class="row">		
