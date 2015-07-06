@@ -16,48 +16,58 @@
 			<hr />
 		</div>
 		<div class="row">
-			<div class="col-md-10 col-md-offset-2">
+			<div class="col-md-11 col-md-offset-1">
 				<div class="row">
 					<div class="col-md-1">
 						@if(Listing.path!="") {
-						<div class="media-left">
-							<img width="300" height="200" class="media-object thumbnail"
-								src="assets/uploaded/@Listing.path" alt="Image">
-						</div>
+							<div class="media-left">
+								<img style="max-width:300px; max-height: 400px" class="media-object thumbnail"
+									src="assets/uploaded/@Listing.path" alt="Image">
+							</div>
 						} else {
-						<div class="media-left">
-							<img width="300" height="400" class="media-object thumbnail"
-								src="assets/images/request.png" alt="Image">
-						</div>
+							<div class="media-left">
+								<img style="max-width:300px; max-height: 400px" class="media-object thumbnail"
+									src="assets/images/request.png" alt="Image">
+							</div>
 						}
 					</div>
-					<div class="col-md-9 col-md-offset-2">
+					<div class="col-md-8 col-md-offset-2">
 						<div class="row">
 							<div class="col-md-12">
-								@if(Listing.isOwner) { <a
-									href="/edit_listing?lid=@Listing.listing.ListingId">Edit </a> <a
-									href="/delete_listing?lid=@Listing.listing.ListingId"
-									onclick="return confirm('Are you sure??')">Delete</a> }
-								<p>Article name: @Listing.listing.Name</p>
-								<p>Category: @Listing.categoryName</p>
-								@if(Listing.listing.ListingType=='R') {
-								<p>Willing to pay</p>
-								} @if(Listing.listing.TransactionType=='B') {
-								<p>Looking to Buy for</p>
-								<p>Price: @Listing.listing.Price</p>
-								} @if(Listing.listing.TransactionType=='R'){
-								<p>Looking to Rent for</p>
-								<p>Price: @Listing.listing.Price /
-									@Listing.listing.PricePeriod</p>
-								} @if(Listing.listing.TransactionType=='S') {
-								<p>Looking to sell for</p>
-								<p>Price: @Listing.listing.Price</p>
-								} @if(Listing.listing.PriceNegotiable) {
-								<p>Price is negotiable</p>
-								</p>
+								@if(Listing.isOwner) { 
+									<p class="col-md-12">
+										<a class="btn btn-primary btn-xs" style="width:50px;" href="/edit_listing?lid=@Listing.listing.ListingId">Edit </a> 
+										<a class="btn btn-primary btn-xs" style="width:50px;" href="/delete_listing?lid=@Listing.listing.ListingId"
+										onclick="return confirm('Are you sure??')">Delete</a> 
+									</p>
 								}
-								<p>Description:</p>
-								<p>@Listing.listing.Description</p>
+								<p class="col-md-3"><strong>Article name</strong></p>
+								<p class="col-md-9">@Listing.listing.Name</p>
+								
+								<p class="col-md-3"><strong>Category</strong></p>
+								<p class="col-md-9">@Listing.categoryName</p>
+								
+								@if(Listing.listing.ListingType=='R') {
+									<p class="col-md-12"><strong>Willing to pay</strong></p>
+								} @if(Listing.listing.TransactionType=='B') {
+									<p class="col-md-3"><strong>Looking to buy for price</strong></p>
+									<p class="col-md-9">@Listing.listing.Price</p>
+								} @if(Listing.listing.TransactionType=='R'){
+									<p class="col-md-3"><strong>Looking to rent for price</strong></p>
+									<p class="col-md-9">@Listing.listing.Price / @Listing.listing.PricePeriod </p>
+								} @if(Listing.listing.TransactionType=='S') {
+									<p class="col-md-3"><strong>Looking to sell for price</strong></p>
+									<p class="col-md-9">@Listing.listing.Price </p>
+								} 
+								<p class="col-md-3"><strong>Price negotiable</strong></p>
+								
+								@if(Listing.listing.PriceNegotiable) {
+									<p class="col-md-9">Yes</p>
+								} else {
+									<p class="col-md-9">No</p>
+								}
+								<p class="col-md-3"><strong>Description:</strong></p>
+								<p class="col-md-9">@Listing.listing.Description</p>
 							</div>
 						</div>
 					</div>
@@ -124,11 +134,11 @@
 				}
 				<form action="/post_message" method="post">
 					<div class="form-group">
-						<input type="hidden" name="ListingId"
-							value="@Listing.listing.ListingId" /> <input type="hidden"
-							name="ToUserId" value="@Listing.listing.UserId" /> <label>Message:</label>
-						<textarea class="form-control" rows="10" cols="10" name="Message"></textarea>
-						<input type="submit" class="btn btn-default" value="Send message" />
+						<input type="hidden" name="ListingId" value="@Listing.listing.ListingId" /> 
+						<input type="hidden" name="ToUserId" value="@Listing.listing.UserId" />
+						<textarea placeholder="Type your message" class="form-control" rows="5" cols="10" name="Message" tabindex="1"></textarea>
+						<input type="submit" class="btn btn-success" style="margin-top: 5px;" 
+							tabindex="2" value="Send message" />
 					</div>
 				</form>
 				}
