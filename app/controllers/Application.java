@@ -51,37 +51,37 @@ public class Application extends Controller {
 		String query = "SELECT l FROM Listings l where ";
 		String scnd_query = "";
 		DynamicForm form = Form.form().bindFromRequest();
-		if (isLoggedIn()) {
-			if (!isNull(form.get("keywords"))) {
-				query += " description like '%" + form.get("keywords")
-						+ "%' and";
-			}
-			if (Integer.parseInt(form.get("categoryId")) > 0) {
-				query += " categoryId = " + form.get("categoryId") + " and";
-			}
-			if (form.get("ltype").equals("O") || form.get("ltype").equals("R")) {
-				query += " listingtype = '" + form.get("ltype") + "' and";
-			}
-
-			if (!isNull(form.get("price"))) {
-				query += " Price <= " + form.get("price") + " and";
-			}
-
-			if (!isNull(form.get("pnegotiable"))) {
-				query += " PriceNegotiable = True ";
-			}
-
-			if (!isNull(form.get("price"))) {
-				query += " Price <=" + form.get("price") + " and";
-			}
-			if (!isNull(form.get("afrom"))) {
-				query += "  TransactionStart >= " + form.get("afrom");
-			}
-			if (query.endsWith("and")) {
-				query = query.substring(0, query.length() - 4);
-			}
-
+		//if (isLoggedIn()) {
+		if (!isNull(form.get("keywords"))) {
+			query += " description like '%" + form.get("keywords")
+					+ "%' and";
 		}
+		if (Integer.parseInt(form.get("categoryId")) > 0) {
+			query += " categoryId = " + form.get("categoryId") + " and";
+		}
+		if (form.get("ltype").equals("O") || form.get("ltype").equals("R")) {
+			query += " listingtype = '" + form.get("ltype") + "' and";
+		}
+
+		if (!isNull(form.get("price"))) {
+			query += " Price <= " + form.get("price") + " and";
+		}
+
+		if (!isNull(form.get("pnegotiable"))) {
+			query += " PriceNegotiable = True ";
+		}
+
+		if (!isNull(form.get("price"))) {
+			query += " Price <=" + form.get("price") + " and";
+		}
+		if (!isNull(form.get("afrom"))) {
+			query += "  TransactionStart >= " + form.get("afrom");
+		}
+		if (query.endsWith("and")) {
+			query = query.substring(0, query.length() - 4);
+		}
+
+		//}
 		List<Listing> allLists = ListingController.searchListings(query);
 		List<Category> categoryList = utilController.getCategories();
 
