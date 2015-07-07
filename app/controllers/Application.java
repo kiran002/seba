@@ -100,8 +100,9 @@ public class Application extends Controller {
 			List<Listing> offersLists = ListingController
 					.getTopOffers(getUserId());
 			Users user = Users.findById(getUserId());
+			String myOffers = "MyOffers";
 			return ok(views.html.offers.render(true, offersLists, 200, "",
-					utilController.getCategories(), user));
+					utilController.getCategories(), user, myOffers));
 		}
 		return ok(views.html.login.render(false, null,200,"Please login to continue", null));
 	}
@@ -112,8 +113,9 @@ public class Application extends Controller {
 			List<utils.Listing> requestsLists = ListingController
 					.getTopRequests(getUserId());
 			Users user = Users.findById(getUserId());
-			return ok(views.html.offers.render(true, requestsLists, 200, "",
-					utilController.getCategories(), user));
+			String myRequests = "MyRequests";
+			return ok(views.html.requests.render(true, requestsLists, 200, "",
+					utilController.getCategories(), user, myRequests));
 		}
 		return ok(views.html.login.render(false, null,200,"Please login to continue", null));
 	}

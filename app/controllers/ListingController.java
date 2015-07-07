@@ -101,7 +101,7 @@ public class ListingController extends Controller {
 			list.add(item);
 		}
 		return ok(views.html.offers.render(true, list, 200, "",
-				utilController.getCategories(), user));
+				utilController.getCategories(), user, null));
 	}
 
 	@play.db.jpa.Transactional
@@ -116,7 +116,7 @@ public class ListingController extends Controller {
 			list.add(item);
 		}
 		return ok(views.html.requests.render(true, list, 200, "",
-				utilController.getCategories(), user));
+				utilController.getCategories(), user, null));
 	}
 
 	@play.db.jpa.Transactional
@@ -165,13 +165,20 @@ public class ListingController extends Controller {
 				}
 				listing.save();
 				list = ListingController.getTopRequests(getUserId());
+				Users user = Users.findById(usrId);
+				String myOffers = "MyOffers";
+				String myRequests = "MyRequests";
 				if (listing.ListingType == 'O') {
 					list = ListingController.getTopOffers((getUserId()));
+					return ok(views.html.offers.render(true, list, 202,
+							"Update successful!", utilController.getCategories(),
+							user, myOffers));
+				} else {
+					list = ListingController.getTopRequests((getUserId()));
+					return ok(views.html.requests.render(true, list, 202,
+							"Update successful!", utilController.getCategories(),
+							user, myRequests));
 				}
-				Users user = Users.findById(usrId);
-				return ok(views.html.offers.render(true, list, 202,
-						"Update successful!", utilController.getCategories(),
-						user));
 			}
 		}
 		return ok(views.html.login.render(false, null, 200,
@@ -218,6 +225,8 @@ public class ListingController extends Controller {
 			Listings listing = Listings.findById(listingId);
 			Users user = Users.findById(usrId);
 			char type = listing.ListingType;
+			String myOffers = "MyOffers";
+			String myRequests = "MyRequests";
 			if (listing.UserId == usrId) {
 				// the listing was posted by this user and has permission to
 				// delete it
@@ -229,14 +238,25 @@ public class ListingController extends Controller {
 				list = ListingController.getTopRequests(getUserId());
 				if (type == 'O') {
 					list = ListingController.getTopOffers((getUserId()));
+					return ok(views.html.offers.render(true, list, 202,
+							"Delete successful!", utilController.getCategories(),
+							user, myOffers));
+				} else {
+					list = ListingController.getTopRequests((getUserId()));
+					return ok(views.html.requests.render(true, list, 202,
+							"Delete successful!", utilController.getCategories(),
+							user, myRequests));
 				}
-				return ok(views.html.offers.render(true, list, 202,
-						"Delete successful!", utilController.getCategories(),
-						user));
 			} else {
-				return ok(views.html.offers.render(true, list, 201,
-						"This listing does not belong to you",
-						utilController.getCategories(), user));
+				if (type == 'O') {
+					return ok(views.html.offers.render(true, list, 201,
+							"This listing does not belong to you",
+							utilController.getCategories(), user, null));
+				} else {
+					return ok(views.html.requests.render(true, list, 201,
+							"This listing does not belong to you",
+							utilController.getCategories(), user, null));
+				}
 			}
 		}
 		return ok(views.html.login.render(false, null, 200,
@@ -269,20 +289,22 @@ public class ListingController extends Controller {
 				listing.UserId = currentUser.UserId;
 				Users user = Users.findById(currentUser.UserId);
 				listing.save();
+				String myOffers = "MyOffers";
+				String myRequests = "MyRequests";
 				if (listing.ListingType == 'O' && picture != null
 						&& picture.getFile().length() > 0) {
 					this.uploadImage(picture, listing.ListingId);
 					List<utils.Listing> offersLists = ListingController
-							.getTopOffers(getUserId());
+							.getTopOffers(getUserId());					
 					return ok(views.html.offers.render(true, offersLists, 202,
 							"Listing successfully created",
-							utilController.getCategories(), user));
+							utilController.getCategories(), user, myOffers));
 				}
 				List<utils.Listing> requestsLists = ListingController
 						.getTopRequests(getUserId());
-				return ok(views.html.offers.render(true, requestsLists, 202,
+				return ok(views.html.requests.render(true, requestsLists, 202,
 						"Listing successfully created",
-						utilController.getCategories(), user));
+						utilController.getCategories(), user, myRequests));
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

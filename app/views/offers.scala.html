@@ -1,9 +1,9 @@
 @(hasLoggedIn: Boolean, lists: List[utils.Listing], status:Integer,
-msg:String,categoryList: List[models.Category], user:models.Users)
+msg:String,categoryList: List[models.Category], user:models.Users, myOffers: String)
 <!DOCTYPE html>
 <html>
 <head>
-@head("All Offers -- Stumark -- An online market place for university community")
+@head("Stumark Offers")
 </head>
 
 <body>
@@ -11,7 +11,11 @@ msg:String,categoryList: List[models.Category], user:models.Users)
 		@navbar(hasLoggedIn, user) @include_status(status,msg)
 		<div class="row">
 			<div class="col-md-10">
-				<h3>All Offers</h3>
+				@if(myOffers == "MyOffers") {
+					<h3>My Offers</h3>
+				} else {
+					<h3>All Offers</h3>
+				}				
 			</div>
 			<div class="pull-right pad-top-25">
 				<b>@lists.size result(s) </b>
