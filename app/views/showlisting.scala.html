@@ -119,12 +119,12 @@
 							<form action="/post_message" method="post">
 								<div class="form-group">
 									<input type="hidden" name="ListingId"
-										value="@Listing.listing.ListingId" /> <input type="hidden"
-										name="ToUserId" value="@key.UserId" /> <label>Message:</label>
-									<textarea class="form-control" rows="10" cols="10"
-										name="Message"></textarea>
-									<input type="submit" class="btn btn-default"
-										value="Send message" />
+										value="@Listing.listing.ListingId" /> 
+									<input type="hidden"
+										name="ToUserId" value="@key.UserId" /> 
+									<textarea placeholder="Type your message" class="form-control" rows="5" cols="10" name="Message" tabindex="1"></textarea>
+									<input type="submit" class="btn btn-success" style="margin-top: 5px;" 
+										tabindex="2" value="Send message" />
 								</div>
 							</form>
 						</div>

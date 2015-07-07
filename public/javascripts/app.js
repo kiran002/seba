@@ -11,6 +11,17 @@ $(document).ready( function() {
         $("#picture_field").val(label);
     });
     
+    
+    
+    $('.responseMsg').on('click', function() {
+    	var toID = $(this).parent().parent().find('input[name=from_id]').val();
+    	var listID = $(this).parent().parent().find('input[name=ListingIdValue]').val();
+    	    	
+    	$("#ListingId").val(listID);
+    	$("#ToUserId").val(toID);
+    	
+    });
+    
     $('.listDetails').on('click', function() {
     	var id = this.id;
     	    	    

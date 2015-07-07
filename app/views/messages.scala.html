@@ -77,13 +77,15 @@ List[utils.MessageList], user:models.Users)
 							<tbody class="received_searchable">
 								@for(index <- 0 to (recieved.size-1)) {
 								<tr>
-									<input type="hidden" name="from_id"
+									<input type="hidden" name="from_id" class="ToUserIdValue"
 										value="@recieved(index).ToUserId" />
+									<input type="hidden" name="ListingIdValue" class="ListingIdValue"
+										value="@recieved(index).ListingId" />
 									<td>@recieved(index).usrname</td>
 									<td>@recieved(index).Listing_name</td>
 									<td>@recieved(index).Message</td>
 									<td>
-										<button class="btn btn-primary" data-toggle="modal"
+										<button class="btn btn-primary responseMsg" data-toggle="modal"
 											data-target="#response_message" data-backdrop="false">Respond</button>
 
 									</td>
@@ -119,18 +121,17 @@ List[utils.MessageList], user:models.Users)
 								aria-hidden="true">&times;</button>
 							<h2 style="text-align: center">Respond to the offer</h2>
 						</div>
-						<div class="modal-body">
-							<div class="container-fluid">
-								<textarea class="col-sm-12" style="min-height: 250px;"
-									id="user_text" placeholder="Enter response message"></textarea>
-							</div>
-						</div>
 						<div class="modal-footer">
 							<div class="container-fluid">
-								<div class="row">
-									<button class="btn btn-default pull-left">Close</button>
-									<button class="btn btn-primary pull-right">Send</button>
-								</div>
+								<form action="/post_message" method="post">
+									<div class="form-group">
+										<input type="hidden" name="ListingId" id="ListingId" /> 
+										<input type="hidden" name="ToUserId" id="ToUserId" />
+										<textarea placeholder="Type your message" class="form-control" rows="5" cols="10" name="Message" tabindex="1"></textarea>
+										<input type="submit" class="btn btn-success" style="margin-top: 5px;" 
+											tabindex="2" value="Send message" />
+									</div>
+								</form>
 							</div>
 						</div>
 					</div>
