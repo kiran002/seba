@@ -167,16 +167,13 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `CreationDate` date NOT NULL,
   `Email` varchar(30) NOT NULL,
   `Password` varchar(30) NOT NULL,
-  `AuthCode` varchar(20) NOT NULL,
+  `AuthCode` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`UserId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `users`
 --
-
-INSERT INTO `Users` (`UserId`, `FirstName`, `LastName`, `ActivationCode`, `isActivated`, `CreationDate`, `Email`, `Password`, `AuthCode`) VALUES
-(1, 'sai', 'kiran', 'abcde', 1, '2015-06-07', '124234@gmail.com', '123456', '');
 
 --
 -- Constraints for dumped tables
