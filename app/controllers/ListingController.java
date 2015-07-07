@@ -330,7 +330,7 @@ public class ListingController extends Controller {
 				java.io.File fileUpload = picture.getFile();
 				String fileUploadExtension = contentType.split("/")[1];
 				if (fileUploadExtension.equals("jpg")
-						|| fileUploadExtension.equals("png")) {
+						|| fileUploadExtension.equals("png") || fileUploadExtension.equals("jpeg")) {
 					String fileName = "L"
 							+ ListingId
 							+ new SimpleDateFormat("yyyyMMddkkmmssS")
