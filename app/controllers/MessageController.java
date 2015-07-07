@@ -48,10 +48,9 @@ public class MessageController extends Controller {
 		List<utils.MessageList> sent = new ArrayList<MessageList>();
 		List<utils.MessageList> recieved = new ArrayList<MessageList>();
 		if (isLoggedIn()) {
-			List<models.Messages> msgs = Messages.findAll(getUserId(), true);
+			List<models.Messages> msgs = Messages.findAll(getUserId(), false);
 			Users user = Users.findById(getUserId());
-			SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
-			
+			SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");			
 			for (Messages msg : msgs) {
 				MessageList msglistItem = new MessageList();
 				msglistItem.ListingId = msg.ListingId;
@@ -61,9 +60,8 @@ public class MessageController extends Controller {
 						+ Users.findById(msg.ToUserId).FirstName;
 				msglistItem.date = df.format(msg.CreationDate);
 				sent.add(msglistItem);
-			}
-
-			msgs = Messages.findAll(getUserId(), false);
+			}			
+			msgs = Messages.findAll(getUserId(), true);
 			for (Messages msg : msgs) {
 				MessageList msglistItem = new MessageList();
 				msglistItem.ListingId = msg.ListingId;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import play.Logger;
 import play.data.validation.Constraints;
 import play.db.jpa.JPA;
 
@@ -61,11 +62,12 @@ public class Messages {
 		return query.setParameter("lid", listingId).getResultList();
 	}
 
-	public static List<Messages> findAll(int userId, boolean sent) {
+	public static List<Messages> findAll(int userId, boolean received) {
 		String tmp = "SELECT l FROM Messages l where l.FromUserId =:frm_uid order by CreationDate ASC";
-		if (sent) {
+		if (received) {
 			tmp = "SELECT l FROM Messages l where l.ToUserId =:frm_uid order by CreationDate ASC";
 		}
+		Logger.info(tmp);
 		TypedQuery<Messages> query = JPA.em().createQuery(tmp, Messages.class);
 		return query.setParameter("frm_uid", userId).getResultList();
 	}
