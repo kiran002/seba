@@ -12,6 +12,7 @@ import java.util.Map;
 
 import models.Listings;
 import models.Messages;
+import static controllers.login.isLoggedIn;
 
 public class Listing {
 	public Listings listing;
@@ -40,41 +41,43 @@ public class Listing {
 		this.categoryName = models.Category.findById(list.CategoryId).CategoryName;
 		messages = new ArrayList<MessageList>();
 		this.hasResponded = false;
-		if (!canEdit) {
-			for (Messages msg : findAll(getUserId(), list.ListingId)) {
-				this.hasResponded = true;
-				MessageList item = new MessageList();
-				if (msg.FromUserId == getUserId()) {
-					item.usrname = "You";
-				} else {
-					int usrId = list.UserId;
-					item.usrname = findById(usrId).FirstName;
-				}
-				item.date = df.format(msg.CreationDate);
-				item.Message = msg.Message;
-				messages.add(item);
-			}
-		} else {
-			// he is the owner, first need to get all the distinct users and
-			// then all the conversations
-			msg_map = new HashMap<models.Users, List<MessageList>>();
-			ArrayList<MessageList> messages_n;
-			for (int usrId : models.Messages.distinctUsers(list.ListingId)) {
-				if (usrId != getUserId()) {
-					messages_n = new ArrayList<MessageList>();
-					for (Messages msg : findAll(usrId, list.ListingId)) {
-						MessageList item = new MessageList();
-						if (msg.FromUserId == getUserId()) {
-							item.usrname = "You";
-						} else {
-							int tmp = msg.FromUserId;
-							item.usrname = findById(tmp).FirstName;
-						}
-						item.date = df.format(msg.CreationDate);
-						item.Message = msg.Message;
-						messages_n.add(item);
+		if (isLoggedIn()) {
+			if (!canEdit) {
+				for (Messages msg : findAll(getUserId(), list.ListingId)) {
+					this.hasResponded = true;
+					MessageList item = new MessageList();
+					if (msg.FromUserId == getUserId()) {
+						item.usrname = "You";
+					} else {
+						int usrId = list.UserId;
+						item.usrname = findById(usrId).FirstName;
 					}
-					msg_map.put(findById(usrId), messages_n);
+					item.date = df.format(msg.CreationDate);
+					item.Message = msg.Message;
+					messages.add(item);
+				}
+			} else {
+				// he is the owner, first need to get all the distinct users and
+				// then all the conversations
+				msg_map = new HashMap<models.Users, List<MessageList>>();
+				ArrayList<MessageList> messages_n;
+				for (int usrId : models.Messages.distinctUsers(list.ListingId)) {
+					if (usrId != getUserId()) {
+						messages_n = new ArrayList<MessageList>();
+						for (Messages msg : findAll(usrId, list.ListingId)) {
+							MessageList item = new MessageList();
+							if (msg.FromUserId == getUserId()) {
+								item.usrname = "You";
+							} else {
+								int tmp = msg.FromUserId;
+								item.usrname = findById(tmp).FirstName;
+							}
+							item.date = df.format(msg.CreationDate);
+							item.Message = msg.Message;
+							messages_n.add(item);
+						}
+						msg_map.put(findById(usrId), messages_n);
+					}
 				}
 			}
 		}
