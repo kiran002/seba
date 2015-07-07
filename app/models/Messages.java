@@ -63,9 +63,9 @@ public class Messages {
 	}
 
 	public static List<Messages> findAll(int userId, boolean received) {
-		String tmp = "SELECT l FROM Messages l where l.FromUserId =:frm_uid order by CreationDate ASC";
+		String tmp = "SELECT l FROM Messages l where l.FromUserId =:frm_uid order by MessageId DESC";
 		if (received) {
-			tmp = "SELECT l FROM Messages l where l.ToUserId =:frm_uid order by CreationDate ASC";
+			tmp = "SELECT l FROM Messages l where l.ToUserId =:frm_uid order by MessageId DESC";
 		}
 		Logger.info(tmp);
 		TypedQuery<Messages> query = JPA.em().createQuery(tmp, Messages.class);
