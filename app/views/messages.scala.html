@@ -34,18 +34,18 @@ List[utils.MessageList], user:models.Users)
 				<div class="tab-content">
 					<div role="tabpanel" class="tab-pane active" id="sent">
 						<div class="form-group">
-							<input type="text" id="filter" placeholder="Filter"
-								class="form-control">
+							<input type="text" id="sent_filter" placeholder="Filter" 
+								class="form-control margin-top-10">
 						</div>
 						<table class="table table-striped">
-							<thead class="searchable">
+							<thead>
 								<tr>
 									<th>To</th>
 									<th>Listing Name</th>
 									<th>Message</th>
 								</tr>
 							<thead>
-							<tbody class="searchable">
+							<tbody class="sent_searchable">
 								@for(index <- 0 to (sent.size-1)) {
 								<tr>
 									<input type="hidden" name="from_id"
@@ -62,11 +62,11 @@ List[utils.MessageList], user:models.Users)
 					<div role="tabpanel" class="tab-pane" id="recieved">
 
 						<div class="form-group">
-							<input type="text" id="filter" placeholder="Filter"
-								class="form-control">
+							<input type="text" id="received_filter" placeholder="Filter"
+								class="form-control margin-top-10">
 						</div>
 						<table class="table">
-							<thead class="searchable">
+							<thead>
 								<tr>
 									<th>From</th>
 									<th>Listing Name</th>
@@ -74,7 +74,7 @@ List[utils.MessageList], user:models.Users)
 									<th>Respond</th>
 								</tr>
 							<thead>
-							<tbody class="searchable">
+							<tbody class="received_searchable">
 								@for(index <- 0 to (recieved.size-1)) {
 								<tr>
 									<input type="hidden" name="from_id"
@@ -107,39 +107,6 @@ List[utils.MessageList], user:models.Users)
 						alt="Want to advertise on our site? We offer access to university staff, students and alumni."
 						src="/assets/images/Tech_Revolution.gif">
 					</a>
-				</div>
-			</div>
-
-			<div class="modal fade" id="view_offer_details" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
-				<div class="modal-dialog standard-modal">
-					<div class="modal-content">
-						<div class="modal-body">
-							<button type="button" class="close" data-dismiss="modal"
-								aria-hidden="true">&times;</button>
-							<h2 style="text-align: center">Offer Details</h2>
-							<div class="container-fluid">
-								<div class="row">
-									<table class="table">
-										<tr>
-											<th>Name</th>
-											<th>Material</th>
-											<th>Renting type</th>
-											<th>Valid Until</th>
-											<th>Price</th>
-										</tr>
-										<tr>
-											<td>Kevin</td>
-											<td>Motor Boat</td>
-											<td>Daily Rent</td>
-											<td>14/July/2015</td>
-											<td>5 Euro</td>
-										</tr>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 
@@ -176,11 +143,21 @@ List[utils.MessageList], user:models.Users)
 
 			(function($) {
 
-				$('#filter').keyup(function() {
+				$('#sent_filter').keyup(function() {
 
 					var rex = new RegExp($(this).val(), 'i');
-					$('.searchable tr').hide();
-					$('.searchable tr').filter(function() {
+					$('.sent_searchable tr').hide();
+					$('.sent_searchable tr').filter(function() {
+						return rex.test($(this).text());
+					}).show();
+
+				});
+				
+				$('#received_filter').keyup(function() {
+
+					var rex = new RegExp($(this).val(), 'i');
+					$('.received_searchable tr').hide();
+					$('.received_searchable tr').filter(function() {
 						return rex.test($(this).text());
 					}).show();
 

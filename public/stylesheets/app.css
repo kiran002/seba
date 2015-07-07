@@ -11,6 +11,10 @@ body {
     padding-bottom: 25px;
 }
 
+.margin-top-10 {
+	margin-top: 10px;
+}
+
 .hideMe {
     -moz-animation: cssAnimation 0s ease-in 1s forwards;
     /* Firefox */

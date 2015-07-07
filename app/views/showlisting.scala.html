@@ -55,7 +55,21 @@
 									<p class="col-md-9">@Listing.listing.Price</p>
 								} @if(Listing.listing.TransactionType=='R'){
 									<p class="col-md-3"><strong>Looking to rent for price</strong></p>
-									<p class="col-md-9">@Listing.listing.Price / @Listing.listing.PricePeriod </p>
+									@if(Listing.listing.PricePeriod == "D") {
+										<p class="col-md-9">@Listing.listing.Price / Day </p>
+									}
+									@if(Listing.listing.PricePeriod == "W") {
+										<p class="col-md-9">@Listing.listing.Price / Week </p>
+									}
+									@if(Listing.listing.PricePeriod == "M") {
+										<p class="col-md-9">@Listing.listing.Price / Month </p>
+									}
+									@if(Listing.listing.PricePeriod == "Y") {
+										<p class="col-md-9">@Listing.listing.Price / Year </p>
+									}
+									
+									
+									
 								} @if(Listing.listing.TransactionType=='S') {
 									<p class="col-md-3"><strong>Looking to sell for price</strong></p>
 									<p class="col-md-9">@Listing.listing.Price </p>

@@ -6,10 +6,17 @@
 		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 		<span class="sr-only">Error:</span> @msg
 	</div>
+	<script>
+		window.setTimeout(function() { $(".alert-danger").alert('close'); }, 2000);
+	</script>
 	} @if(status == 202) {
 	<div class="alert alert-success" role="alert">
-		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 		<span class="sr-only">Success:</span> @msg
 	</div>
+	<script>
+		window.setTimeout(function() { $(".alert-success").alert('close'); }, 2000);
+	</script>
 	}
 </div>
+
